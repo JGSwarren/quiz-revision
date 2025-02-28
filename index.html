@@ -3,602 +3,563 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz de Révision</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <title>Quiz CRPE Français</title>
     <style>
         :root {
-            --primary-color: #4361ee;
-            --secondary-color: #3f37c9;
-            --success-color: #4cc9f0;
-            --error-color: #f72585;
-            --background-color: #f8f9fa;
-            --card-color: #ffffff;
-            --text-color: #212529;
-            --text-light: #6c757d;
-            --border-radius: 10px;
-            --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            --transition: all 0.3s ease;
+            --primary: #4a6fa5;
+            --secondary: #e6edf7;
+            --correct: #6bc77f;
+            --incorrect: #e76e6e;
+            --neutral: #f5f5f5;
+            --text: #333;
+            --text-light: #777;
         }
-
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
+        
         body {
-            font-family: 'Roboto', sans-serif;
-            background-color: var(--background-color);
-            color: var(--text-color);
+            background-color: #fff;
+            color: var(--text);
             line-height: 1.6;
             padding: 20px;
             max-width: 800px;
             margin: 0 auto;
         }
-
-        .quiz-container {
-            background-color: var(--card-color);
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            padding: 30px;
-            margin-top: 20px;
-            transition: var(--transition);
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--secondary);
         }
-
-        h1, h2 {
-            color: var(--primary-color);
-            margin-bottom: 20px;
-            font-weight: 700;
-        }
-
+        
         h1 {
-            font-size: 2.2rem;
-            text-align: center;
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+        
+        .container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 10px;
+            background-color: var(--secondary);
+            border-radius: 5px;
             margin-bottom: 30px;
+            overflow: hidden;
         }
-
-        h2 {
-            font-size: 1.6rem;
+        
+        .progress-bar {
+            height: 100%;
+            background-color: var(--primary);
+            border-radius: 5px;
+            width: 0%;
+            transition: width 0.4s ease;
         }
-
-        .question-container {
-            background-color: var(--card-color);
-            border-radius: var(--border-radius);
-            padding: 20px;
-            margin-bottom: 25px;
-            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.04);
-            transition: var(--transition);
-        }
-
-        .question-text {
-            font-size: 1.2rem;
-            font-weight: 500;
-            margin-bottom: 20px;
-        }
-
-        .options {
-            display: grid;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .option {
-            padding: 15px;
-            background-color: var(--background-color);
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            transition: var(--transition);
-            border: 2px solid transparent;
-            font-weight: 400;
-        }
-
-        .option:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-color: var(--primary-color);
-        }
-
-        .selected {
-            border-color: var(--primary-color);
-            background-color: rgba(67, 97, 238, 0.1);
-        }
-
-        .correct {
-            background-color: rgba(76, 201, 240, 0.2);
-            border-color: var(--success-color);
-        }
-
-        .incorrect {
-            background-color: rgba(247, 37, 133, 0.2);
-            border-color: var(--error-color);
-        }
-
-        .result {
-            padding: 15px;
-            border-radius: var(--border-radius);
-            font-weight: 500;
-            margin-top: 20px;
-            text-align: center;
-            opacity: 0;
-            transform: translateY(10px);
-            transition: var(--transition);
-        }
-
-        .result.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .button {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: var(--border-radius);
-            padding: 12px 24px;
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--transition);
-            display: inline-block;
-            margin-top: 10px;
-            text-align: center;
-        }
-
-        .button:hover {
-            background-color: var(--secondary-color);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .buttons-container {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-        }
-
-        .quiz-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .progress {
-            display: flex;
-            align-items: center;
+        
+        .question-number {
             font-size: 0.9rem;
             color: var(--text-light);
+            margin-bottom: 15px;
         }
-
-        .progress-bar {
-            height: 8px;
-            background-color: #e9ecef;
-            border-radius: 4px;
-            margin-top: 5px;
-            overflow: hidden;
+        
+        .question {
+            font-size: 1.2rem;
+            font-weight: 500;
             margin-bottom: 25px;
         }
-
-        .progress-bar-fill {
-            height: 100%;
-            background-color: var(--primary-color);
-            border-radius: 4px;
-            transition: width 0.3s ease;
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
-
-        .score {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: var(--primary-color);
+        
+        .option {
+            background-color: var(--neutral);
+            border: 2px solid transparent;
+            border-radius: 8px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
         }
-
-        #questionForm {
+        
+        .option:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+        }
+        
+        .option.selected {
+            border-color: var(--primary);
+            background-color: var(--secondary);
+        }
+        
+        .option.correct {
+            background-color: var(--correct);
+            color: white;
+            border-color: var(--correct);
+        }
+        
+        .option.incorrect {
+            background-color: var(--incorrect);
+            color: white;
+            border-color: var(--incorrect);
+        }
+        
+        .explanation {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: var(--secondary);
+            border-radius: 8px;
             display: none;
-            background-color: var(--card-color);
-            border-radius: var(--border-radius);
-            padding: 25px;
-            margin-top: 30px;
-            box-shadow: var(--box-shadow);
         }
-
-        textarea, input, select {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
-            border-radius: var(--border-radius);
-            font-family: 'Roboto', sans-serif;
-            font-size: 1rem;
-            transition: var(--transition);
-        }
-
-        textarea:focus, input:focus, select:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-
-        .form-actions {
+        
+        .btn-container {
             display: flex;
             justify-content: space-between;
-            margin-top: 20px;
+            margin-top: 30px;
         }
-
-        .quiz-complete {
+        
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+        }
+        
+        .btn:hover {
+            background-color: #3a5a84;
+            transform: translateY(-2px);
+        }
+        
+        .btn:disabled {
+            background-color: var(--text-light);
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .result-container {
             text-align: center;
-            padding: 30px 0;
+            display: none;
         }
-
-        .quiz-complete h2 {
-            margin-bottom: 15px;
-            color: var(--primary-color);
+        
+        .score {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin: 20px 0;
         }
-
-        .confetti {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            opacity: 0;
+        
+        .category-selector {
+            margin-bottom: 30px;
+            text-align: center;
         }
-
+        
+        .category-btn {
+            background-color: var(--neutral);
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .category-btn:hover, .category-btn.active {
+            background-color: var(--primary);
+            color: white;
+        }
+        
         @media (max-width: 600px) {
-            .quiz-container {
+            .container {
                 padding: 20px;
             }
             
-            h1 {
-                font-size: 1.8rem;
+            .question {
+                font-size: 1.1rem;
             }
             
-            .option {
-                padding: 12px;
-            }
-            
-            .buttons-container {
+            .btn-container {
                 flex-direction: column;
                 gap: 10px;
             }
             
-            .button {
+            .btn {
                 width: 100%;
             }
         }
     </style>
 </head>
 <body>
-    <div class="quiz-container">
-        <h1>Quiz de Révision</h1>
+    <header>
+        <h1>Quiz CRPE Français</h1>
+        <p class="subtitle">Testez vos connaissances pour le concours de recrutement de professeurs des écoles</p>
+    </header>
+
+    <div class="category-selector">
+        <button class="category-btn active" data-category="all">Toutes les catégories</button>
+        <button class="category-btn" data-category="orthographe">Orthographe</button>
+        <button class="category-btn" data-category="conjugaison">Conjugaison</button>
+        <button class="category-btn" data-category="grammaire">Grammaire</button>
+        <button class="category-btn" data-category="litterature">Littérature</button>
+    </div>
+
+    <div class="container">
+        <div class="progress-container">
+            <div class="progress-bar"></div>
+        </div>
         
-        <div id="quiz-section">
-            <div class="progress">
-                <span id="progress-text">Question 1/3</span>
-            </div>
-            <div class="progress-bar">
-                <div id="progress-bar-fill" class="progress-bar-fill" style="width: 33%"></div>
-            </div>
+        <div id="quiz-container">
+            <div class="question-number">Question <span id="current-question">1</span>/<span id="total-questions">10</span></div>
+            <div class="question" id="question-text"></div>
+            <div class="options" id="options-container"></div>
+            <div class="explanation" id="explanation"></div>
             
-            <div id="question-container" class="question-container">
-                <div id="question-text" class="question-text"></div>
-                <div id="options-container" class="options"></div>
-            </div>
-            
-            <div id="result" class="result"></div>
-            
-            <div class="buttons-container">
-                <button id="next-btn" class="button">Question suivante</button>
-                <button id="add-question-btn" class="button" style="background-color: #4cc9f0;">Ajouter une question</button>
+            <div class="btn-container">
+                <button class="btn" id="check-btn">Vérifier</button>
+                <button class="btn" id="next-btn" disabled>Question suivante</button>
             </div>
         </div>
         
-        <div id="questionForm">
-            <h2>Ajouter une nouvelle question</h2>
-            
-            <div class="form-group">
-                <label for="newQuestion">Question</label>
-                <textarea id="newQuestion" rows="2" placeholder="Entrez votre question"></textarea>
-            </div>
-            
-            <div class="form-group">
-                <label>Options</label>
-                <input type="text" id="option1" placeholder="Option 1">
-                <input type="text" id="option2" placeholder="Option 2">
-                <input type="text" id="option3" placeholder="Option 3">
-                <input type="text" id="option4" placeholder="Option 4">
-            </div>
-            
-            <div class="form-group">
-                <label for="correctAnswer">Réponse correcte</label>
-                <select id="correctAnswer">
-                    <option value="0">Option 1 est correcte</option>
-                    <option value="1">Option 2 est correcte</option>
-                    <option value="2">Option 3 est correcte</option>
-                    <option value="3">Option 4 est correcte</option>
-                </select>
-            </div>
-            
-            <div class="form-actions">
-                <button id="save-question" class="button">Enregistrer</button>
-                <button id="cancel-question" class="button" style="background-color: #6c757d;">Annuler</button>
-            </div>
+        <div class="result-container" id="result-container">
+            <h2>Quiz terminé !</h2>
+            <p>Votre score :</p>
+            <div class="score"><span id="score">0</span>/<span id="max-score">0</span></div>
+            <button class="btn" id="restart-btn">Recommencer</button>
         </div>
     </div>
 
     <script>
-        // Les questions du quiz
-        let questions = [
+        // Définition des questions du quiz
+        const allQuestions = [
             {
-                question: "Quelle est la capitale de la France?",
-                options: ["Berlin", "Paris", "Londres", "Madrid"],
-                correctAnswer: 1
+                category: "orthographe",
+                question: "Quelle est la règle d'accord correcte pour le participe passé employé avec l'auxiliaire \"avoir\" ?",
+                options: [
+                    "Le participe passé s'accorde toujours avec le sujet",
+                    "Le participe passé s'accorde avec le COD si celui-ci est placé avant le verbe",
+                    "Le participe passé reste invariable",
+                    "Le participe passé s'accorde systématiquement au féminin pluriel"
+                ],
+                correctIndex: 1,
+                explanation: "Le participe passé employé avec l'auxiliaire \"avoir\" s'accorde en genre et en nombre avec le COD si celui-ci est placé avant le verbe. Exemple: \"Les lettres que j'ai reçues\" (accord avec \"que\", COD placé avant). Si le COD est placé après ou s'il n'y a pas de COD, le participe reste invariable: \"J'ai reçu des lettres\"."
             },
             {
-                question: "Quelle est la formule chimique de l'eau?",
-                options: ["CO2", "H2O", "NaCl", "O2"],
-                correctAnswer: 1
+                category: "orthographe",
+                question: "Dans quelle phrase l'adjectif \"demi\" est-il correctement accordé ?",
+                options: [
+                    "J'ai attendu une demie-heure",
+                    "Il est midi et demi",
+                    "Nous sommes à demie-distance du sommet",
+                    "La demie orange est sur la table"
+                ],
+                correctIndex: 1,
+                explanation: "L'adjectif \"demi\" placé avant le nom reste invariable et est joint par un trait d'union (une demi-heure). Placé après le nom, il s'accorde en genre mais pas en nombre (une heure et demie). Dans \"midi et demi\", il reste invariable car il qualifie \"midi\" qui est masculin."
             },
             {
-                question: "Qui a écrit 'Les Misérables'?",
-                options: ["Albert Camus", "Victor Hugo", "Émile Zola", "Gustave Flaubert"],
-                correctAnswer: 1
+                category: "conjugaison",
+                question: "Quel temps est utilisé dans la phrase: \"Si j'avais su, je ne serais pas venu.\" ?",
+                options: [
+                    "Imparfait et conditionnel présent",
+                    "Plus-que-parfait et conditionnel passé",
+                    "Imparfait et conditionnel passé",
+                    "Plus-que-parfait et conditionnel présent"
+                ],
+                correctIndex: 1,
+                explanation: "Cette phrase exprime une condition non réalisée dans le passé (irréel du passé). La proposition conditionnelle utilise le plus-que-parfait \"j'avais su\" et la principale utilise le conditionnel passé \"je ne serais pas venu\"."
+            },
+            {
+                category: "grammaire",
+                question: "Dans la phrase \"Sur la plage, les enfants construisent patiemment des châteaux de sable\", quelle est la fonction du groupe \"sur la plage\" ?",
+                options: [
+                    "Complément d'objet indirect",
+                    "Complément circonstanciel de lieu",
+                    "Complément du nom",
+                    "Attribut du sujet"
+                ],
+                correctIndex: 1,
+                explanation: "\"Sur la plage\" est un groupe prépositionnel (préposition \"sur\" + GN \"la plage\") qui indique le lieu où se déroule l'action. Il est facultatif et mobile dans la phrase (on pourrait dire \"Les enfants construisent patiemment des châteaux de sable sur la plage\"), ce qui confirme sa fonction de complément circonstanciel de lieu."
+            },
+            {
+                category: "grammaire",
+                question: "Dans la phrase \"Les élèves semblent fatigués après cette longue journée\", quelle est la fonction du mot \"fatigués\" ?",
+                options: [
+                    "Épithète",
+                    "Attribut du sujet",
+                    "Complément d'objet direct",
+                    "Apposition"
+                ],
+                correctIndex: 1,
+                explanation: "\"Fatigués\" est attribut du sujet car il est relié au sujet \"les élèves\" par le verbe attributif \"semblent\". Il exprime une caractéristique ou un état du sujet. L'attribut du sujet fait partie du groupe verbal et s'accorde en genre et en nombre avec le sujet."
+            },
+            {
+                category: "litterature",
+                question: "Parmi ces œuvres, laquelle appartient au genre du roman épistolaire ?",
+                options: [
+                    "Les Fleurs du mal de Baudelaire",
+                    "Les Liaisons dangereuses de Laclos",
+                    "Le Rouge et le Noir de Stendhal",
+                    "Le Misanthrope de Molière"
+                ],
+                correctIndex: 1,
+                explanation: "Les Liaisons dangereuses de Choderlos de Laclos (1782) est un roman épistolaire, c'est-à-dire un récit composé d'une succession de lettres fictives échangées entre les personnages. Cette forme narrative permet de multiplier les points de vue et de donner l'illusion d'accéder directement aux pensées des personnages."
+            },
+            {
+                category: "litterature",
+                question: "À quel mouvement littéraire appartient Victor Hugo ?",
+                options: [
+                    "Le classicisme",
+                    "Le naturalisme",
+                    "Le romantisme",
+                    "Le surréalisme"
+                ],
+                correctIndex: 2,
+                explanation: "Victor Hugo (1802-1885) est l'une des figures majeures du romantisme français. Ce mouvement, qui s'est développé en France au début du XIXe siècle, se caractérise par l'expression du \"moi\", l'exaltation des sentiments, le goût pour la nature, l'intérêt pour l'histoire et la remise en cause des règles classiques."
+            },
+            {
+                category: "conjugaison",
+                question: "Dans l'analyse d'un texte narratif, à quoi correspond la focalisation interne ?",
+                options: [
+                    "Le narrateur en sait plus que les personnages",
+                    "Le narrateur raconte l'histoire à la première personne",
+                    "Le narrateur en sait autant qu'un personnage",
+                    "Le narrateur décrit uniquement ce qui est visible de l'extérieur"
+                ],
+                correctIndex: 2,
+                explanation: "La focalisation interne correspond au cas où le narrateur adopte le point de vue d'un personnage, en limitant les informations à ce que ce personnage sait, pense et perçoit. Le lecteur n'a accès qu'aux pensées et perceptions de ce personnage, comme si la scène était vue à travers ses yeux."
+            },
+            {
+                category: "grammaire",
+                question: "À quelle classe grammaticale appartient le mot \"que\" dans la phrase \"Le livre que j'ai lu est passionnant\" ?",
+                options: [
+                    "Pronom relatif",
+                    "Conjonction de subordination",
+                    "Adverbe interrogatif",
+                    "Pronom démonstratif"
+                ],
+                correctIndex: 0,
+                explanation: "Dans cette phrase, \"que\" introduit une proposition subordonnée relative \"que j'ai lu\" qui se rapporte à l'antécédent \"le livre\". Il remplace cet antécédent dans la subordonnée où il a la fonction de COD du verbe \"ai lu\". Ces caractéristiques en font un pronom relatif."
+            },
+            {
+                category: "conjugaison",
+                question: "Quelle compétence est centrale dans l'apprentissage initial de la lecture selon les programmes de cycle 2 ?",
+                options: [
+                    "La compréhension globale des textes",
+                    "La connaissance des différents types de textes",
+                    "Le décodage phonologique",
+                    "L'acquisition d'un lexique riche"
+                ],
+                correctIndex: 2,
+                explanation: "Le décodage phonologique est considéré comme central dans l'apprentissage initial de la lecture selon les programmes de cycle 2. Cette compétence, qui consiste à établir les correspondances entre graphèmes et phonèmes, permet à l'élève d'identifier les mots écrits."
             }
         ];
 
-        // Sauvegarder les questions dans le stockage local
-        if (!localStorage.getItem('quizQuestions')) {
-            localStorage.setItem('quizQuestions', JSON.stringify(questions));
-        } else {
-            questions = JSON.parse(localStorage.getItem('quizQuestions'));
-        }
-
-        let currentQuestion = 0;
+        let questions = [...allQuestions];
+        let currentQuestionIndex = 0;
         let score = 0;
+        let selectedOptionIndex = null;
         let answered = false;
 
-        const questionContainer = document.getElementById('question-container');
+        // Éléments DOM
+        const questionNumber = document.getElementById('current-question');
+        const totalQuestions = document.getElementById('total-questions');
         const questionText = document.getElementById('question-text');
         const optionsContainer = document.getElementById('options-container');
-        const resultContainer = document.getElementById('result');
-        const nextButton = document.getElementById('next-btn');
-        const addQuestionBtn = document.getElementById('add-question-btn');
-        const questionForm = document.getElementById('questionForm');
-        const saveQuestionBtn = document.getElementById('save-question');
-        const cancelQuestionBtn = document.getElementById('cancel-question');
-        const progressText = document.getElementById('progress-text');
-        const progressBarFill = document.getElementById('progress-bar-fill');
+        const explanation = document.getElementById('explanation');
+        const checkBtn = document.getElementById('check-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const quizContainer = document.getElementById('quiz-container');
+        const resultContainer = document.getElementById('result-container');
+        const scoreElement = document.getElementById('score');
+        const maxScoreElement = document.getElementById('max-score');
+        const restartBtn = document.getElementById('restart-btn');
+        const progressBar = document.querySelector('.progress-bar');
+        const categoryBtns = document.querySelectorAll('.category-btn');
 
-        // Charger la question
-        function loadQuestion() {
-            if (questions.length === 0) {
-                questionContainer.innerHTML = "<h2>Aucune question disponible.</h2>";
-                optionsContainer.innerHTML = "";
-                nextButton.style.display = "none";
-                return;
-            }
+        // Initialisation du quiz
+        function initQuiz() {
+            // Mélanger les questions
+            questions = questions.sort(() => Math.random() - 0.5);
             
-            if (currentQuestion >= questions.length) {
-                showQuizComplete();
-                return;
-            }
+            // Mettre à jour le nombre total de questions
+            totalQuestions.textContent = questions.length;
+            maxScoreElement.textContent = questions.length;
+            
+            // Afficher la première question
+            displayQuestion();
+        }
 
-            answered = false;
-            resultContainer.innerHTML = "";
-            resultContainer.classList.remove('visible');
+        // Afficher une question
+        function displayQuestion() {
+            // Mettre à jour le numéro de la question
+            questionNumber.textContent = currentQuestionIndex + 1;
             
-            const questionData = questions[currentQuestion];
-            questionText.textContent = questionData.question;
+            // Mettre à jour la barre de progression
+            progressBar.style.width = `${((currentQuestionIndex) / questions.length) * 100}%`;
             
-            progressText.textContent = `Question ${currentQuestion + 1}/${questions.length}`;
-            progressBarFill.style.width = `${((currentQuestion + 1) / questions.length) * 100}%`;
+            // Récupérer la question actuelle
+            const currentQuestion = questions[currentQuestionIndex];
             
-            optionsContainer.innerHTML = "";
-            questionData.options.forEach((option, index) => {
+            // Afficher le texte de la question
+            questionText.textContent = currentQuestion.question;
+            
+            // Vider le conteneur des options
+            optionsContainer.innerHTML = '';
+            
+            // Ajouter les options
+            currentQuestion.options.forEach((option, index) => {
                 const optionElement = document.createElement('div');
-                optionElement.className = 'option';
+                optionElement.classList.add('option');
                 optionElement.textContent = option;
-                optionElement.onclick = () => checkAnswer(index);
+                optionElement.dataset.index = index;
+                
+                optionElement.addEventListener('click', () => {
+                    if (!answered) {
+                        // Désélectionner toutes les options
+                        document.querySelectorAll('.option').forEach(opt => {
+                            opt.classList.remove('selected');
+                        });
+                        
+                        // Sélectionner l'option cliquée
+                        optionElement.classList.add('selected');
+                        selectedOptionIndex = index;
+                        
+                        // Activer le bouton de vérification
+                        checkBtn.disabled = false;
+                    }
+                });
+                
                 optionsContainer.appendChild(optionElement);
             });
+            
+            // Réinitialiser l'explication
+            explanation.style.display = 'none';
+            explanation.textContent = '';
+            
+            // Réinitialiser les boutons
+            checkBtn.disabled = true;
+            nextBtn.disabled = true;
+            
+            // Réinitialiser la variable de suivi
+            answered = false;
+            selectedOptionIndex = null;
         }
 
         // Vérifier la réponse
-        function checkAnswer(selectedOption) {
-            if (answered) return;
+        function checkAnswer() {
+            if (selectedOptionIndex === null) return;
             
             answered = true;
-            const options = document.querySelectorAll('.option');
-            const correctAnswer = questions[currentQuestion].correctAnswer;
+            const currentQuestion = questions[currentQuestionIndex];
+            const correct = selectedOptionIndex === currentQuestion.correctIndex;
             
-            if (selectedOption === correctAnswer) {
-                options[selectedOption].classList.add('correct');
-                resultContainer.innerHTML = "<p style='color: var(--success-color); font-weight: 500;'>Correct! 👍</p>";
+            // Ajouter au score si correct
+            if (correct) {
                 score++;
-            } else {
-                options[selectedOption].classList.add('incorrect');
-                options[correctAnswer].classList.add('correct');
-                resultContainer.innerHTML = "<p style='color: var(--error-color); font-weight: 500;'>Incorrect! La bonne réponse est: " + 
-                                          questions[currentQuestion].options[correctAnswer] + "</p>";
             }
             
-            resultContainer.classList.add('visible');
+            // Mettre à jour l'affichage des options
+            const options = document.querySelectorAll('.option');
+            options.forEach((option, index) => {
+                if (index === currentQuestion.correctIndex) {
+                    option.classList.add('correct');
+                } else if (index === selectedOptionIndex && !correct) {
+                    option.classList.add('incorrect');
+                }
+            });
             
-            // Animation pour le résultat
-            setTimeout(() => {
-                resultContainer.style.opacity = 1;
-            }, 10);
-        }
-
-        // Afficher l'écran de fin du quiz
-        function showQuizComplete() {
-            const quizSection = document.getElementById('quiz-section');
-            quizSection.innerHTML = `
-                <div class="quiz-complete">
-                    <h2>Quiz terminé!</h2>
-                    <p>Votre score final: <span class="score">${score}/${questions.length}</span></p>
-                    <button id="restart-btn" class="button" style="margin-top: 20px;">Recommencer le quiz</button>
-                </div>
-            `;
+            // Afficher l'explication
+            explanation.textContent = currentQuestion.explanation;
+            explanation.style.display = 'block';
             
-            document.getElementById('restart-btn').addEventListener('click', resetQuiz);
-            createConfetti();
-        }
-
-        // Créer un effet de confetti
-        function createConfetti() {
-            const colors = ['#4361ee', '#4cc9f0', '#f72585', '#7209b7', '#3a0ca3'];
-            const containerRect = document.querySelector('.quiz-container').getBoundingClientRect();
-            
-            for (let i = 0; i < 50; i++) {
-                const confetti = document.createElement('div');
-                confetti.className = 'confetti';
-                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                confetti.style.left = Math.random() * containerRect.width + 'px';
-                confetti.style.top = '-10px';
-                confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
-                
-                document.querySelector('.quiz-complete').appendChild(confetti);
-                
-                const duration = Math.random() * 3 + 1;
-                const delay = Math.random() * 0.5;
-                
-                confetti.animate(
-                    [
-                        { transform: `translate(0, 0) rotate(0deg)`, opacity: 1 },
-                        { transform: `translate(${Math.random() * 100 - 50}px, ${containerRect.height}px) rotate(${Math.random() * 360}deg)`, opacity: 0 }
-                    ],
-                    {
-                        duration: duration * 1000,
-                        delay: delay * 1000,
-                        fill: 'forwards',
-                        easing: 'cubic-bezier(0.21, 0.98, 0.6, 0.99)'
-                    }
-                );
-            }
+            // Mettre à jour les boutons
+            checkBtn.disabled = true;
+            nextBtn.disabled = false;
         }
 
         // Passer à la question suivante
-        nextButton.addEventListener('click', () => {
-            currentQuestion++;
-            loadQuestion();
-        });
-
-        // Réinitialiser le quiz
-        function resetQuiz() {
-            currentQuestion = 0;
-            score = 0;
-            document.getElementById('quiz-section').innerHTML = `
-                <div class="progress">
-                    <span id="progress-text">Question 1/${questions.length}</span>
-                </div>
-                <div class="progress-bar">
-                    <div id="progress-bar-fill" class="progress-bar-fill" style="width: ${(1/questions.length) * 100}%"></div>
-                </div>
-                
-                <div id="question-container" class="question-container">
-                    <div id="question-text" class="question-text"></div>
-                    <div id="options-container" class="options"></div>
-                </div>
-                
-                <div id="result" class="result"></div>
-                
-                <div class="buttons-container">
-                    <button id="next-btn" class="button">Question suivante</button>
-                    <button id="add-question-btn" class="button" style="background-color: #4cc9f0;">Ajouter une question</button>
-                </div>
-            `;
+        function nextQuestion() {
+            currentQuestionIndex++;
             
-            // Récupérer les nouveaux éléments
-            const questionContainer = document.getElementById('question-container');
-            const questionText = document.getElementById('question-text');
-            const optionsContainer = document.getElementById('options-container');
-            const resultContainer = document.getElementById('result');
-            const nextButton = document.getElementById('next-btn');
-            const addQuestionBtn = document.getElementById('add-question-btn');
-            const progressText = document.getElementById('progress-text');
-            const progressBarFill = document.getElementById('progress-bar-fill');
-            
-            // Ajouter les événements
-            nextButton.addEventListener('click', () => {
-                currentQuestion++;
-                loadQuestion();
-            });
-            
-            addQuestionBtn.addEventListener('click', () => {
-                document.getElementById('quiz-section').style.display = 'none';
-                questionForm.style.display = 'block';
-            });
-            
-            loadQuestion();
+            if (currentQuestionIndex < questions.length) {
+                displayQuestion();
+            } else {
+                showResults();
+            }
         }
 
-        // Afficher le formulaire d'ajout de question
-        addQuestionBtn.addEventListener('click', () => {
-            document.getElementById('quiz-section').style.display = 'none';
-            questionForm.style.display = 'block';
-        });
+        // Afficher les résultats
+        function showResults() {
+            quizContainer.style.display = 'none';
+            resultContainer.style.display = 'block';
+            scoreElement.textContent = score;
+            progressBar.style.width = '100%';
+        }
 
-        // Enregistrer une nouvelle question
-        saveQuestionBtn.addEventListener('click', () => {
-            const newQuestion = document.getElementById('newQuestion').value;
-            const option1 = document.getElementById('option1').value;
-            const option2 = document.getElementById('option2').value;
-            const option3 = document.getElementById('option3').value;
-            const option4 = document.getElementById('option4').value;
-            const correctAnswer = parseInt(document.getElementById('correctAnswer').value);
-            
-            if (newQuestion && option1 && option2 && option3 && option4) {
-                const question = {
-                    question: newQuestion,
-                    options: [option1, option2, option3, option4],
-                    correctAnswer: correctAnswer
-                };
-                
-                questions.push(question);
-                localStorage.setItem('quizQuestions', JSON.stringify(questions));
-                
-                document.getElementById('newQuestion').value = '';
-                document.getElementById('option1').value = '';
-                document.getElementById('option2').value = '';
-                document.getElementById('option3').value = '';
-                document.getElementById('option4').value = '';
-                
-                questionForm.style.display = 'none';
-                document.getElementById('quiz-section').style.display = 'block';
-                
-                // Mettre à jour les indicateurs de progression
-                progressText.textContent = `Question ${currentQuestion + 1}/${questions.length}`;
-                progressBarFill.style.width = `${((currentQuestion + 1) / questions.length) * 100}%`;
-                
-                if (currentQuestion >= questions.length - 1) {
-                    resetQuiz();
-                } else {
-                    loadQuestion();
-                }
+        // Redémarrer le quiz
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            resultContainer.style.display = 'none';
+            quizContainer.style.display = 'block';
+            initQuiz();
+        }
+
+        // Filtrer les questions par catégorie
+        function filterQuestions(category) {
+            if (category === 'all') {
+                questions = [...allQuestions];
             } else {
-                alert('Veuillez remplir tous les champs!');
+                questions = allQuestions.filter(q => q.category === category);
             }
-        });
+            
+            // Réinitialiser le quiz
+            currentQuestionIndex = 0;
+            score = 0;
+            resultContainer.style.display = 'none';
+            quizContainer.style.display = 'block';
+            initQuiz();
+        }
 
-        // Annuler l'ajout de question
-        cancelQuestionBtn.addEventListener('click', () => {
-            questionForm.style.display = 'none';
-            document.getElementById('quiz-section').style.display = 'block';
+        // Événements
+        checkBtn.addEventListener('click', checkAnswer);
+        nextBtn.addEventListener('click', nextQuestion);
+        restartBtn.addEventListener('click', restartQuiz);
+        
+        categoryBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Mettre à jour les boutons de catégorie
+                categoryBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                // Filtrer les questions
+                filterQuestions(btn.dataset.category);
+            });
         });
-
-        // Exposer la fonction checkAnswer au scope global
-        window.checkAnswer = checkAnswer;
 
         // Démarrer le quiz
-        loadQuestion();
+        initQuiz();
     </script>
 </body>
 </html>
