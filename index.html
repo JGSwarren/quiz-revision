@@ -1,261 +1,120 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Quiz Interactif</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f9f9f9;
+    }
+    h1 {
+      text-align: center;
+    }
+    .question {
+      font-size: 1.2em;
+      margin-bottom: 10px;
+    }
+    .answers button {
+      margin: 5px;
+      padding: 10px 15px;
+      cursor: pointer;
+    }
+    .hidden {
+      display: none;
+    }
+    #quiz-container, #result {
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+  <h1>Quiz Interactif</h1>
+  <div id="quiz-container">
+    <div id="question" class="question"></div>
+    <div id="answers" class="answers"></div>
+    <button id="next" class="hidden">Question suivante</button>
+  </div>
+  <div id="result" class="hidden">
+    <h2>Résultats</h2>
+    <p id="score"></p>
+  </div>
 
-      <!DOCTYPE html>
-<html>
-<head>
-    <title>Quiz de Révision de Grammaire - CRPE</title>
-</head>
-<body>
-    <h1>Quiz de Révision de Grammaire pour le CRPE</h1>
-    
-    <p>Bienvenue dans ce quiz de révision pour préparer l'épreuve de français du CRPE.</p>
-    
-    <h2>Chapitres disponibles :</h2>
-    <table border="1" cellpadding="10" width="100%">
-        <tr>
-            <td bgcolor="#f0f0f0">
-                <h3><a href="classes-grammaticales/index.html">Les classes grammaticales</a></h3>
-                <p>Noms, déterminants, adjectifs, pronoms, verbes, adverbes, prépositions, conjonctions...</p>
-            </td>
-        </tr>
-        <tr>
-            <td bgcolor="#f0f0f0">
-                <h3><a href="fonctions-grammaticales/index.html">Les fonctions grammaticales</a></h3>
-                <p>Sujet, COD, COI, attributs, compléments circonstanciels...</p>
-            </td>
-        </tr>
-        <tr>
-            <td bgcolor="#f0f0f0">
-                <h3><a href="phrase-structure/index.html">La phrase et sa structure</a></h3>
-                <p>Types de phrases, formes de phrases, propositions...</p>
-            </td>
-        </tr>
-        <tr>
-            <td bgcolor="#f0f0f0">
-                <h3><a href="conjugaison/index.html">La conjugaison</a></h3>
-                <p>Temps, modes, voix, auxiliaires...</p>
-            </td>
-        </tr>
-        <tr>
-            <td bgcolor="#f0f0f0">
-                <h3><a href="accords/index.html">Les accords</a></h3>
-                <p>Accord sujet-verbe, accord du participe passé, accord dans le groupe nominal...</p>
-            </td>
-        </tr>
-        <tr>
-            <td bgcolor="#f0f0f0">
-                <h3><a href="orthographe-grammaticale/index.html">L'orthographe grammaticale</a></h3>
-                <p>Homophones grammaticaux, pluriels particuliers...</p>
-            </td>
-        </tr>
-    </table>
-</body>
-</html>
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Les classes grammaticales - Quiz CRPE</title>
-</head>
-<body>
-    <h1>Les classes grammaticales</h1>
-    
-    <p>Ce chapitre comporte 30 questions sur les différentes classes grammaticales : noms, déterminants, adjectifs, pronoms, verbes, adverbes, prépositions, conjonctions...</p>
-    
-    <h2>Instructions :</h2>
-    <ul>
-        <li>Répondez aux questions en sélectionnant la ou les bonnes réponses</li>
-        <li>Pour chaque question, vous aurez une explication détaillée</li>
-        <li>Vous pouvez naviguer entre les questions à votre rythme</li>
-    </ul>
-    
-    <p><a href="q1.html"><strong>Commencer le quiz →</strong></a></p>
-    
-    <p><a href="../index.html">← Retour à l'accueil</a></p>
-</body>
-</html>
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Question 1 - Les classes grammaticales</title>
-</head>
-<body>
-    <h1>Les classes grammaticales</h1>
-    
-    <!-- Barre de progression -->
-    <table width="100%" border="0" cellpadding="0" cellspacing="0">
-        <tr>
-            <td bgcolor="#5cb85c" width="3%" align="center">1</td>
-            <td bgcolor="#f0f0f0" width="3%" align="center">2</td>
-            <td bgcolor="#f0f0f0" width="3%" align="center">3</td>
-            <!-- etc. jusqu'à 30 -->
-            <td bgcolor="#f0f0f0" width="3%" align="center">30</td>
-        </tr>
-    </table>
-    
-    <h2>Question 1/30</h2>
-    
-    <form action="q1-resultat.html" method="get">
-        <p>Dans la phrase "<em>La petite fille lit attentivement son livre.</em>", le mot "attentivement" est :</p>
-        
-        <ul>
-            <li><input type="radio" name="reponse" value="a" id="rep_a"> <label for="rep_a">Un adjectif qualificatif</label></li>
-            <li><input type="radio" name="reponse" value="b" id="rep_b"> <label for="rep_b">Un adverbe</label></li>
-            <li><input type="radio" name="reponse" value="c" id="rep_c"> <label for="rep_c">Un complément circonstanciel</label></li>
-            <li><input type="radio" name="reponse" value="d" id="rep_d"> <label for="rep_d">Une préposition</label></li>
-        </ul>
-        
-        <p><input type="submit" value="Valider ma réponse"></p>
-    </form>
-    
-    <p>
-        <a href="index.html">← Retour au sommaire du chapitre</a> |
-        <a href="../index.html">Accueil</a> |
-        <a href="q2.html">Question suivante →</a>
-    </p>
-</body>
-</html>
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Résultat - Question 1</title>
-</head>
-<body>
-    <h1>Les classes grammaticales</h1>
-    
-    <table width="100%" bgcolor="#dff0d8" border="1" cellpadding="10">
-        <tr>
-            <td>
-                <h2>Correct !</h2>
-                <p>Le mot "attentivement" est bien un <strong>adverbe</strong>.</p>
-            </td>
-        </tr>
-    </table>
-    
-    <h3>Explication :</h3>
-    <p>Un adverbe est un mot invariable qui modifie ou précise le sens :</p>
-    <ul>
-        <li>d'un verbe : "Elle lit <strong>attentivement</strong>."</li>
-        <li>d'un adjectif : "Un livre <strong>très</strong> intéressant."</li>
-        <li>d'un autre adverbe : "Elle lit <strong>très</strong> attentivement."</li>
-    </ul>
-    
-    <p>Les adverbes se terminent souvent par le suffixe -ment, formé à partir d'un adjectif (comme "attentif" → "attentivement").</p>
-    
-    <p>Dans notre phrase, "attentivement" précise la manière dont l'action de lire est effectuée.</p>
-    
-    <p><a href="q2.html">Passer à la question suivante →</a></p>
-</body>
-</html>
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Résultat - Question 1</title>
-</head>
-<body>
-    <h1>Les classes grammaticales</h1>
-    
-    <table width="100%" bgcolor="#f2dede" border="1" cellpadding="10">
-        <tr>
-            <td>
-                <h2>Incorrect</h2>
-                <p>Le mot "attentivement" n'est pas un adjectif qualificatif mais un <strong>adverbe</strong>.</p>
-            </td>
-        </tr>
-    </table>
-    
-    <h3>Analyse de l'erreur :</h3>
-    <p>Vous avez confondu deux classes grammaticales importantes :</p>
-    <ul>
-        <li><strong>Adjectif qualificatif</strong> : Qualifie un nom, s'accorde en genre et en nombre avec ce nom (ex: "la <em>petite</em> fille")</li>
-        <li><strong>Adverbe</strong> : Mot invariable qui modifie un verbe, un adjectif ou un autre adverbe (ex: "Elle lit <em>attentivement</em>")</li>
-    </ul>
-    
-    <p>Dans notre phrase, "attentivement" précise la manière dont l'action de lire est effectuée. Il est invariable et se rapporte au verbe, c'est donc un adverbe.</p>
-    
-    <p><a href="q1.html">Réessayer cette question</a> | <a href="q2.html">Passer à la question suivante →</a></p>
-</body>
-</html>
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Question 2 - Les classes grammaticales</title>
-</head>
-<body>
-    <h1>Les classes grammaticales</h1>
-    
-    <!-- Barre de progression -->
-    <table width="100%" border="0" cellpadding="0" cellspacing="0">
-        <tr>
-            <td bgcolor="#5cb85c" width="3%" align="center">1</td>
-            <td bgcolor="#5cb85c" width="3%" align="center">2</td>
-            <td bgcolor="#f0f0f0" width="3%" align="center">3</td>
-            <!-- etc. jusqu'à 30 -->
-        </tr>
-    </table>
-    
-    <h2>Question 2/30</h2>
-    
-    <form action="q2-resultat.html" method="get">
-        <p>Dans la phrase "<em>Les enfants jouent dans le jardin.</em>", identifiez la classe grammaticale du mot "les" :</p>
-        
-        <p><input type="text" name="reponse" size="30"></p>
-        <p><small>Écrivez la réponse en toutes lettres (ex: "nom commun", "adjectif qualificatif", etc.)</small></p>
-        
-        <p><input type="submit" value="Valider ma réponse"></p>
-    </form>
-    
-    <p>
-        <a href="q1.html">← Question précédente</a> |
-        <a href="index.html">Sommaire du chapitre</a> |
-        <a href="q3.html">Question suivante →</a>
-    </p>
-</body>
-</html>
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Question 3 - Les classes grammaticales</title>
-</head>
-<body>
-    <h1>Les classes grammaticales</h1>
-    
-    <!-- Barre de progression -->
-    <table width="100%" border="0" cellpadding="0" cellspacing="0">
-        <tr>
-            <td bgcolor="#5cb85c" width="3%" align="center">1</td>
-            <td bgcolor="#5cb85c" width="3%" align="center">2</td>
-            <td bgcolor="#5cb85c" width="3%" align="center">3</td>
-            <td bgcolor="#f0f0f0" width="3%" align="center">4</td>
-            <!-- etc. jusqu'à 30 -->
-        </tr>
-    </table>
-    
-    <h2>Question 3/30</h2>
-    
-    <form action="q3-resultat.html" method="get">
-        <p>Indiquez si les affirmations suivantes sont vraies ou fausses :</p>
-        
-        <p>
-            <input type="checkbox" name="rep1" id="rep1">
-            <label for="rep1">Un verbe peut être à la fois transitif et pronominal.</label>
-        </p>
-        
-        <p>
-            <input type="checkbox" name="rep2" id="rep2">
-            <label for="rep2">Tous les adjectifs qualificatifs peuvent être attributs du sujet.</label>
-        </p>
-        
-        <p>
-            <input type="checkbox" name="rep3" id="rep3">
-            <label for="rep3">Les adverbes sont toujours invariables.</label>
-        </p>
-        
-        <p><input type="submit" value="Valider mes réponses"></p>
-    </form>
-    
-    <p>
-        <a href="q2.html">← Question précédente</a> |
-        <a href="index.html">Sommaire du chapitre</a> |
-        <a href="q4.html">Question suivante →</a>
-    </p>
+  <script>
+    // Définition des questions et réponses
+    const quiz = [
+      {
+        question: "Quelle est la capitale de la France ?",
+        answers: ["Paris", "Lyon", "Marseille", "Toulouse"],
+        correct: 0
+      },
+      {
+        question: "Quelle est la formule de l'eau ?",
+        answers: ["H2O", "CO2", "NaCl", "O2"],
+        correct: 0
+      }
+      // Vous pouvez ajouter d'autres questions ici.
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    const questionEl = document.getElementById('question');
+    const answersEl = document.getElementById('answers');
+    const nextBtn = document.getElementById('next');
+    const resultDiv = document.getElementById('result');
+    const scoreEl = document.getElementById('score');
+
+    // Affichage de la question actuelle
+    function displayQuestion() {
+      nextBtn.classList.add('hidden');
+      questionEl.textContent = quiz[currentQuestion].question;
+      answersEl.innerHTML = '';
+      quiz[currentQuestion].answers.forEach((answer, index) => {
+        const btn = document.createElement('button');
+        btn.textContent = answer;
+        btn.onclick = () => checkAnswer(index);
+        answersEl.appendChild(btn);
+      });
+    }
+
+    // Vérification de la réponse sélectionnée
+    function checkAnswer(selected) {
+      const isCorrect = selected === quiz[currentQuestion].correct;
+      if (isCorrect) {
+        score++;
+        alert("Bonne réponse !");
+      } else {
+        alert("Mauvaise réponse !");
+      }
+      nextBtn.classList.remove('hidden');
+    }
+
+    // Passage à la question suivante ou affichage du résultat final
+    nextBtn.addEventListener('click', () => {
+      currentQuestion++;
+      if (currentQuestion < quiz.length) {
+        displayQuestion();
+      } else {
+        displayResult();
+      }
+    });
+
+    // Affichage des résultats du quiz
+    function displayResult() {
+      document.getElementById('quiz-container').classList.add('hidden');
+      resultDiv.classList.remove('hidden');
+      scoreEl.textContent = "Votre score : " + score + " sur " + quiz.length;
+    }
+
+    // Démarrage du quiz
+    displayQuestion();
+  </script>
 </body>
 </html>
