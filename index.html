@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz de Révision</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .quiz-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        .options {
+            margin-bottom: 15px;
+        }
+        .option {
+            display: block;
+            padding: 10px;
+            margin-bottom: 5px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .option:hover {
+            background-color: #e0e0e0;
+        }
+        .selected {
+            background-color: #d4edda;
+        }
+        .correct {
+            background-color: #c3e6cb;
+        }
+        .incorrect {
+            background-color: #f8d7da;
+        }
+        .button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .add-question {
+            margin-top: 20px;
+        }
+        #questionForm {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+        textarea, input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h1>Quiz de Révision</h1>
+        <div id="quiz-section">
+            <div id="question-container" class="question"></div>
+            <div id="options-container" class="options"></div>
+            <div id="result" class="result"></div>
+            <button id="next-btn" class="button">Question suivante</button>
+            <div class="add-question">
+                <button id="add-question-btn" class="button">Ajouter une question</button>
+            </div>
+        </div>
+        
+        <div id="questionForm">
+            <h2>Ajouter une nouvelle question</h2>
+            <textarea id="newQuestion" rows="2" placeholder="Entrez votre question"></textarea>
+            <input type="text" id="option1" placeholder="Option 1">
+            <input type="text" id="option2" placeholder="Option 2">
+            <input type="text" id="option3" placeholder="Option 3">
+            <input type="text" id="option4" placeholder="Option 4">
+            <select id="correctAnswer">
+                <option value="0">Option 1 est correcte</option>
+                <option value="1">Option 2 est correcte</option>
+                <option value="2">Option 3 est correcte</option>
+                <option value="3">Option 4 est correcte</option>
+            </select>
+            <button id="save-question" class="button">Enregistrer</button>
+            <button id="cancel-question" class="button">Annuler</button>
+        </div>
+    </div>
+
+    <script>
+        // Les questions du quiz (modifiez selon vos besoins)
+        let questions = [
+            {
+                question: "Quelle est la capitale de la France?",
+                options: ["Berlin", "Paris", "Londres", "Madrid"],
+                correctAnswer: 1
+            },
+            {
+                question: "Quelle est la formule chimique de l'eau?",
+                options: ["CO2", "H2O", "NaCl", "O2"],
+                correctAnswer: 1
+            },
+            {
+                question: "Qui a écrit 'Les Misérables'?",
+                options: ["Albert Camus", "Victor Hugo", "Émile Zola", "Gustave Flaubert"],
+                correctAnswer: 1
+            }
+        ];
+
+        // Sauvegarder les questions dans le stockage local
+        if (!localStorage.getItem('quizQuestions')) {
+            localStorage.setItem('quizQuestions', JSON.stringify(questions));
+        } else {
+            questions = JSON.parse(localStorage.getItem('quizQuestions'));
+        }
+
+        let currentQuestion = 0;
+        let score = 0;
+        let answered = false;
+
+        const questionContainer = document.getElementById('question-container');
+        const optionsContainer = document.getElementById('options-container');
+        const resultContainer = document.getElementById('result');
+        const nextButton = document.getElementById('next-btn');
+        const addQuestionBtn = document.getElementById('add-question-btn');
+        const questionForm = document.getElementById('questionForm');
+        const saveQuestionBtn = document.getElementById('save-question');
+        const cancelQuestionBtn = document.getElementById('cancel-question');
+
+        // Charger la question
+        function loadQuestion() {
+            if (questions.length === 0) {
+                questionContainer.innerHTML = "<h2>Aucune question disponible.</h2>";
+                optionsContainer.innerHTML = "";
+                nextButton.style.display = "none";
+                return;
+            }
+            
+            if (currentQuestion >= questions.length) {
+                questionContainer.innerHTML = `<h2>Quiz terminé!</h2>`;
+                optionsContainer.innerHTML = `<p>Votre score: ${score}/${questions.length}</p>`;
+                resultContainer.innerHTML = "";
+                nextButton.textContent = "Recommencer";
+                nextButton.onclick = resetQuiz;
+                return;
+            }
+
+            answered = false;
+            resultContainer.innerHTML = "";
+            
+            const questionData = questions[currentQuestion];
+            questionContainer.innerHTML = `<h2>Question ${currentQuestion + 1}/${questions.length}</h2>
+                                          <p>${questionData.question}</p>`;
+            
+            optionsContainer.innerHTML = "";
+            questionData.options.forEach((option, index) => {
+                optionsContainer.innerHTML += `<div class="option" onclick="checkAnswer(${index})">${option}</div>`;
+            });
+        }
+
+        // Vérifier la réponse
+        window.checkAnswer = function(selectedOption) {
+            if (answered) return;
+            
+            answered = true;
+            const options = document.querySelectorAll('.option');
+            const correctAnswer = questions[currentQuestion].correctAnswer;
+            
+            if (selectedOption === correctAnswer) {
+                options[selectedOption].classList.add('correct');
+                resultContainer.innerHTML = "<p style='color: green;'>Correct!</p>";
+                score++;
+            } else {
+                options[selectedOption].classList.add('incorrect');
+                options[correctAnswer].classList.add('correct');
+                resultContainer.innerHTML = "<p style='color: red;'>Incorrect! La bonne réponse est: " + 
+                                          questions[currentQuestion].options[correctAnswer] + "</p>";
+            }
+        };
+
+        // Passer à la question suivante
+        nextButton.addEventListener('click', () => {
+            currentQuestion++;
+            loadQuestion();
+        });
+
+        // Réinitialiser le quiz
+        function resetQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            loadQuestion();
+            nextButton.textContent = "Question suivante";
+            nextButton.onclick = null;
+        }
+
+        // Afficher le formulaire d'ajout de question
+        addQuestionBtn.addEventListener('click', () => {
+            document.getElementById('quiz-section').style.display = 'none';
+            questionForm.style.display = 'block';
+        });
+
+        // Enregistrer une nouvelle question
+        saveQuestionBtn.addEventListener('click', () => {
+            const newQuestion = document.getElementById('newQuestion').value;
+            const option1 = document.getElementById('option1').value;
+            const option2 = document.getElementById('option2').value;
+            const option3 = document.getElementById('option3').value;
+            const option4 = document.getElementById('option4').value;
+            const correctAnswer = parseInt(document.getElementById('correctAnswer').value);
+            
+            if (newQuestion && option1 && option2 && option3 && option4) {
+                const question = {
+                    question: newQuestion,
+                    options: [option1, option2, option3, option4],
+                    correctAnswer: correctAnswer
+                };
+                
+                questions.push(question);
+                localStorage.setItem('quizQuestions', JSON.stringify(questions));
+                
+                document.getElementById('newQuestion').value = '';
+                document.getElementById('option1').value = '';
+                document.getElementById('option2').value = '';
+                document.getElementById('option3').value = '';
+                document.getElementById('option4').value = '';
+                
+                questionForm.style.display = 'none';
+                document.getElementById('quiz-section').style.display = 'block';
+                
+                if (currentQuestion >= questions.length - 1) {
+                    resetQuiz();
+                } else {
+                    loadQuestion();
+                }
+            } else {
+                alert('Veuillez remplir tous les champs!');
+            }
+        });
+
+        // Annuler l'ajout de question
+        cancelQuestionBtn.addEventListener('click', () => {
+            questionForm.style.display = 'none';
+            document.getElementById('quiz-section').style.display = 'block';
+        });
+
+        // Démarrer le quiz
+        loadQuestion();
+    </script>
+</body>
+</html>
