@@ -1,614 +1,283 @@
-<!DOCTYPE html>
-<html lang="fr">
+/quiz-grammaire-crpe/
+  ├── index.html (page d'accueil)
+  ├── classes-grammaticales/
+  │   ├── index.html (introduction du chapitre)
+  │   ├── q1.html (question 1)
+  │   ├── q2.html
+  │   └── ...
+  ├── fonctions-grammaticales/
+  │   ├── index.html
+  │   ├── q1.html
+  │   └── ...
+  ├── phrase-structure/
+  │   ├── index.html
+  │   └── ...
+  ├── conjugaison/
+  │   ├── index.html
+  │   └── ...
+  ├── accords/
+  │   ├── index.html
+  │   └── ...
+  └── orthographe-grammaticale/
+      ├── index.html
+      └── ...
+      <!DOCTYPE html>
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz CRPE Français</title>
-    <style>
-        :root {
-            --primary: #4a6fa5;
-            --secondary: #e6edf7;
-            --correct: #6bc77f;
-            --incorrect: #e76e6e;
-            --neutral: #f5f5f5;
-            --text: #333;
-            --text-light: #777;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        body {
-            background-color: #fff;
-            color: var(--text);
-            line-height: 1.6;
-            padding: 20px;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        
-        header {
-            text-align: center;
-            margin-bottom: 40px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid var(--secondary);
-        }
-        
-        h1 {
-            color: var(--primary);
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-        
-        .subtitle {
-            color: var(--text-light);
-            font-size: 1.1rem;
-        }
-        
-        .container {
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            padding: 30px;
-            margin-bottom: 20px;
-        }
-        
-        .progress-container {
-            width: 100%;
-            height: 10px;
-            background-color: var(--secondary);
-            border-radius: 5px;
-            margin-bottom: 30px;
-            overflow: hidden;
-        }
-        
-        .progress-bar {
-            height: 100%;
-            background-color: var(--primary);
-            border-radius: 5px;
-            width: 0%;
-            transition: width 0.4s ease;
-        }
-        
-        .question-number {
-            font-size: 0.9rem;
-            color: var(--text-light);
-            margin-bottom: 15px;
-        }
-        
-        .question {
-            font-size: 1.2rem;
-            font-weight: 500;
-            margin-bottom: 25px;
-        }
-        
-        .options {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        
-        .option {
-            background-color: var(--neutral);
-            border: 2px solid transparent;
-            border-radius: 8px;
-            padding: 15px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        
-        .option:hover {
-            background-color: var(--secondary);
-            transform: translateY(-2px);
-        }
-        
-        .option.selected {
-            border-color: var(--primary);
-            background-color: var(--secondary);
-        }
-        
-        .option.correct {
-            background-color: var(--correct);
-            color: white;
-            border-color: var(--correct);
-        }
-        
-        .option.incorrect {
-            background-color: var(--incorrect);
-            color: white;
-            border-color: var(--incorrect);
-        }
-        
-        .explanation {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: var(--secondary);
-            border-radius: 8px;
-            display: none;
-        }
-        
-        .btn-container {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 30px;
-        }
-        
-        .btn {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 12px 25px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: all 0.2s ease;
-        }
-        
-        .btn:hover {
-            background-color: #3a5a84;
-            transform: translateY(-2px);
-        }
-        
-        .btn:disabled {
-            background-color: var(--text-light);
-            cursor: not-allowed;
-            transform: none;
-        }
-        
-        .result-container {
-            text-align: center;
-            display: none;
-        }
-        
-        .score {
-            font-size: 2rem;
-            font-weight: bold;
-            color: var(--primary);
-            margin: 20px 0;
-        }
-        
-        .category-selector {
-            margin-bottom: 30px;
-            text-align: center;
-        }
-        
-        .category-btn {
-            background-color: var(--neutral);
-            border: none;
-            border-radius: 8px;
-            padding: 10px 20px;
-            margin: 5px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        
-        .category-btn:hover, .category-btn.active {
-            background-color: var(--primary);
-            color: white;
-        }
-        
-        @media (max-width: 600px) {
-            .container {
-                padding: 20px;
-            }
-            
-            .question {
-                font-size: 1.1rem;
-            }
-            
-            .btn-container {
-                flex-direction: column;
-                gap: 10px;
-            }
-            
-            .btn {
-                width: 100%;
-            }
-        }
-    </style>
+    <title>Quiz de Révision de Grammaire - CRPE</title>
 </head>
 <body>
-    <header>
-        <h1>Quiz CRPE Français</h1>
-        <p class="subtitle">Testez vos connaissances pour le concours de recrutement de professeurs des écoles</p>
-    </header>
-
-    <div class="category-selector">
-        <button class="category-btn active" data-category="all">Toutes les catégories</button>
-        <button class="category-btn" data-category="orthographe">Orthographe</button>
-        <button class="category-btn" data-category="conjugaison">Conjugaison</button>
-        <button class="category-btn" data-category="grammaire">Grammaire</button>
-        <button class="category-btn" data-category="didactique">Didactique</button>
-        <button class="category-btn" data-category="litterature">Littérature</button>
-    </div>
-
-    <div class="container">
-        <div class="progress-container">
-            <div class="progress-bar"></div>
-        </div>
+    <h1>Quiz de Révision de Grammaire pour le CRPE</h1>
+    
+    <p>Bienvenue dans ce quiz de révision pour préparer l'épreuve de français du CRPE.</p>
+    
+    <h2>Chapitres disponibles :</h2>
+    <table border="1" cellpadding="10" width="100%">
+        <tr>
+            <td bgcolor="#f0f0f0">
+                <h3><a href="classes-grammaticales/index.html">Les classes grammaticales</a></h3>
+                <p>Noms, déterminants, adjectifs, pronoms, verbes, adverbes, prépositions, conjonctions...</p>
+            </td>
+        </tr>
+        <tr>
+            <td bgcolor="#f0f0f0">
+                <h3><a href="fonctions-grammaticales/index.html">Les fonctions grammaticales</a></h3>
+                <p>Sujet, COD, COI, attributs, compléments circonstanciels...</p>
+            </td>
+        </tr>
+        <tr>
+            <td bgcolor="#f0f0f0">
+                <h3><a href="phrase-structure/index.html">La phrase et sa structure</a></h3>
+                <p>Types de phrases, formes de phrases, propositions...</p>
+            </td>
+        </tr>
+        <tr>
+            <td bgcolor="#f0f0f0">
+                <h3><a href="conjugaison/index.html">La conjugaison</a></h3>
+                <p>Temps, modes, voix, auxiliaires...</p>
+            </td>
+        </tr>
+        <tr>
+            <td bgcolor="#f0f0f0">
+                <h3><a href="accords/index.html">Les accords</a></h3>
+                <p>Accord sujet-verbe, accord du participe passé, accord dans le groupe nominal...</p>
+            </td>
+        </tr>
+        <tr>
+            <td bgcolor="#f0f0f0">
+                <h3><a href="orthographe-grammaticale/index.html">L'orthographe grammaticale</a></h3>
+                <p>Homophones grammaticaux, pluriels particuliers...</p>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Les classes grammaticales - Quiz CRPE</title>
+</head>
+<body>
+    <h1>Les classes grammaticales</h1>
+    
+    <p>Ce chapitre comporte 30 questions sur les différentes classes grammaticales : noms, déterminants, adjectifs, pronoms, verbes, adverbes, prépositions, conjonctions...</p>
+    
+    <h2>Instructions :</h2>
+    <ul>
+        <li>Répondez aux questions en sélectionnant la ou les bonnes réponses</li>
+        <li>Pour chaque question, vous aurez une explication détaillée</li>
+        <li>Vous pouvez naviguer entre les questions à votre rythme</li>
+    </ul>
+    
+    <p><a href="q1.html"><strong>Commencer le quiz →</strong></a></p>
+    
+    <p><a href="../index.html">← Retour à l'accueil</a></p>
+</body>
+</html>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Question 1 - Les classes grammaticales</title>
+</head>
+<body>
+    <h1>Les classes grammaticales</h1>
+    
+    <!-- Barre de progression -->
+    <table width="100%" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+            <td bgcolor="#5cb85c" width="3%" align="center">1</td>
+            <td bgcolor="#f0f0f0" width="3%" align="center">2</td>
+            <td bgcolor="#f0f0f0" width="3%" align="center">3</td>
+            <!-- etc. jusqu'à 30 -->
+            <td bgcolor="#f0f0f0" width="3%" align="center">30</td>
+        </tr>
+    </table>
+    
+    <h2>Question 1/30</h2>
+    
+    <form action="q1-resultat.html" method="get">
+        <p>Dans la phrase "<em>La petite fille lit attentivement son livre.</em>", le mot "attentivement" est :</p>
         
-        <div id="quiz-container">
-            <div class="question-number">Question <span id="current-question">1</span>/<span id="total-questions">10</span></div>
-            <div class="question" id="question-text"></div>
-            <div class="options" id="options-container"></div>
-            <div class="explanation" id="explanation"></div>
-            
-            <div class="btn-container">
-                <button class="btn" id="check-btn">Vérifier</button>
-                <button class="btn" id="next-btn" disabled>Question suivante</button>
-            </div>
-        </div>
+        <ul>
+            <li><input type="radio" name="reponse" value="a" id="rep_a"> <label for="rep_a">Un adjectif qualificatif</label></li>
+            <li><input type="radio" name="reponse" value="b" id="rep_b"> <label for="rep_b">Un adverbe</label></li>
+            <li><input type="radio" name="reponse" value="c" id="rep_c"> <label for="rep_c">Un complément circonstanciel</label></li>
+            <li><input type="radio" name="reponse" value="d" id="rep_d"> <label for="rep_d">Une préposition</label></li>
+        </ul>
         
-        <div class="result-container" id="result-container">
-            <h2>Quiz terminé !</h2>
-            <p>Votre score :</p>
-            <div class="score"><span id="score">0</span>/<span id="max-score">0</span></div>
-            <button class="btn" id="restart-btn">Recommencer</button>
-        </div>
-    </div>
-
-    <script>
-        // Définition des questions du quiz
-        const allQuestions = [
-            {
-                category: "orthographe",
-                question: "Quelle est la règle d'accord correcte pour le participe passé employé avec l'auxiliaire \"avoir\" ?",
-                options: [
-                    "Le participe passé s'accorde toujours avec le sujet",
-                    "Le participe passé s'accorde avec le COD si celui-ci est placé avant le verbe",
-                    "Le participe passé reste invariable",
-                    "Le participe passé s'accorde systématiquement au féminin pluriel"
-                ],
-                correctIndex: 1,
-                explanation: "Le participe passé employé avec l'auxiliaire \"avoir\" s'accorde en genre et en nombre avec le COD si celui-ci est placé avant le verbe. Exemple: \"Les lettres que j'ai reçues\" (accord avec \"que\", COD placé avant). Si le COD est placé après ou s'il n'y a pas de COD, le participe reste invariable: \"J'ai reçu des lettres\"."
-            },
-            {
-                category: "orthographe",
-                question: "Dans quelle phrase l'adjectif \"demi\" est-il correctement accordé ?",
-                options: [
-                    "J'ai attendu une demie-heure",
-                    "Il est midi et demi",
-                    "Nous sommes à demie-distance du sommet",
-                    "La demie orange est sur la table"
-                ],
-                correctIndex: 1,
-                explanation: "L'adjectif \"demi\" placé avant le nom reste invariable et est joint par un trait d'union (une demi-heure). Placé après le nom, il s'accorde en genre mais pas en nombre (une heure et demie). Dans \"midi et demi\", il reste invariable car il qualifie \"midi\" qui est masculin."
-            },
-            {
-                category: "conjugaison",
-                question: "Quel temps est utilisé dans la phrase: \"Si j'avais su, je ne serais pas venu.\" ?",
-                options: [
-                    "Imparfait et conditionnel présent",
-                    "Plus-que-parfait et conditionnel passé",
-                    "Imparfait et conditionnel passé",
-                    "Plus-que-parfait et conditionnel présent"
-                ],
-                correctIndex: 1,
-                explanation: "Cette phrase exprime une condition non réalisée dans le passé (irréel du passé). La proposition conditionnelle utilise le plus-que-parfait \"j'avais su\" et la principale utilise le conditionnel passé \"je ne serais pas venu\"."
-            },
-            {
-                category: "grammaire",
-                question: "Dans la phrase \"Sur la plage, les enfants construisent patiemment des châteaux de sable\", quelle est la fonction du groupe \"sur la plage\" ?",
-                options: [
-                    "Complément d'objet indirect",
-                    "Complément circonstanciel de lieu",
-                    "Complément du nom",
-                    "Attribut du sujet"
-                ],
-                correctIndex: 1,
-                explanation: "\"Sur la plage\" est un groupe prépositionnel (préposition \"sur\" + GN \"la plage\") qui indique le lieu où se déroule l'action. Il est facultatif et mobile dans la phrase (on pourrait dire \"Les enfants construisent patiemment des châteaux de sable sur la plage\"), ce qui confirme sa fonction de complément circonstanciel de lieu."
-            },
-            {
-                category: "grammaire",
-                question: "Dans la phrase \"Les élèves semblent fatigués après cette longue journée\", quelle est la fonction du mot \"fatigués\" ?",
-                options: [
-                    "Épithète",
-                    "Attribut du sujet",
-                    "Complément d'objet direct",
-                    "Apposition"
-                ],
-                correctIndex: 1,
-                explanation: "\"Fatigués\" est attribut du sujet car il est relié au sujet \"les élèves\" par le verbe attributif \"semblent\". Il exprime une caractéristique ou un état du sujet. L'attribut du sujet fait partie du groupe verbal et s'accorde en genre et en nombre avec le sujet."
-            },
-            {
-                category: "litterature",
-                question: "Parmi ces œuvres, laquelle appartient au genre du roman épistolaire ?",
-                options: [
-                    "Les Fleurs du mal de Baudelaire",
-                    "Les Liaisons dangereuses de Laclos",
-                    "Le Rouge et le Noir de Stendhal",
-                    "Le Misanthrope de Molière"
-                ],
-                correctIndex: 1,
-                explanation: "Les Liaisons dangereuses de Choderlos de Laclos (1782) est un roman épistolaire, c'est-à-dire un récit composé d'une succession de lettres fictives échangées entre les personnages. Cette forme narrative permet de multiplier les points de vue et de donner l'illusion d'accéder directement aux pensées des personnages."
-            },
-            {
-                category: "litterature",
-                question: "À quel mouvement littéraire appartient Victor Hugo ?",
-                options: [
-                    "Le classicisme",
-                    "Le naturalisme",
-                    "Le romantisme",
-                    "Le surréalisme"
-                ],
-                correctIndex: 2,
-                explanation: "Victor Hugo (1802-1885) est l'une des figures majeures du romantisme français. Ce mouvement, qui s'est développé en France au début du XIXe siècle, se caractérise par l'expression du \"moi\", l'exaltation des sentiments, le goût pour la nature, l'intérêt pour l'histoire et la remise en cause des règles classiques."
-            },
-            {
-                category: "litterature",
-                question: "Dans l'analyse d'un texte narratif, à quoi correspond la focalisation interne ?",
-                options: [
-                    "Le narrateur en sait plus que les personnages",
-                    "Le narrateur raconte l'histoire à la première personne",
-                    "Le narrateur en sait autant qu'un personnage",
-                    "Le narrateur décrit uniquement ce qui est visible de l'extérieur"
-                ],
-                correctIndex: 2,
-                explanation: "La focalisation interne correspond au cas où le narrateur adopte le point de vue d'un personnage, en limitant les informations à ce que ce personnage sait, pense et perçoit. Le lecteur n'a accès qu'aux pensées et perceptions de ce personnage, comme si la scène était vue à travers ses yeux."
-            },
-            {
-                category: "grammaire",
-                question: "À quelle classe grammaticale appartient le mot \"que\" dans la phrase \"Le livre que j'ai lu est passionnant\" ?",
-                options: [
-                    "Pronom relatif",
-                    "Conjonction de subordination",
-                    "Adverbe interrogatif",
-                    "Pronom démonstratif"
-                ],
-                correctIndex: 0,
-                explanation: "Dans cette phrase, \"que\" introduit une proposition subordonnée relative \"que j'ai lu\" qui se rapporte à l'antécédent \"le livre\". Il remplace cet antécédent dans la subordonnée où il a la fonction de COD du verbe \"ai lu\". Ces caractéristiques en font un pronom relatif."
-            },
-            {
-                category: "didactique",
-                question: "Quelle compétence est centrale dans l'apprentissage initial de la lecture selon les programmes de cycle 2 ?",
-                options: [
-                    "La compréhension globale des textes",
-                    "La connaissance des différents types de textes",
-                    "Le décodage phonologique",
-                    "L'acquisition d'un lexique riche"
-                ],
-                correctIndex: 2,
-                explanation: "Le décodage phonologique est considéré comme central dans l'apprentissage initial de la lecture selon les programmes de cycle 2. Cette compétence, qui consiste à établir les correspondances entre graphèmes et phonèmes, permet à l'élève d'identifier les mots écrits."
-            },
-            {
-                category: "didactique",
-                question: "D'après les programmes officiels de cycle 2, quelle approche est recommandée pour l'apprentissage de la grammaire ?",
-                options: [
-                    "Une approche exclusivement implicite",
-                    "Une approche explicite dès le CP",
-                    "Un enseignement explicite mais progressif",
-                    "Un apprentissage par imprégnation uniquement"
-                ],
-                correctIndex: 2,
-                explanation: "Les programmes officiels de cycle 2 (CP, CE1, CE2) préconisent un enseignement explicite mais progressif de la grammaire. Si certaines notions grammaticales sont abordées implicitement au CP, l'enseignement se structure progressivement pour devenir plus explicite en CE1 et CE2."
-            },
-            {
-                category: "didactique",
-                question: "Quelle démarche didactique part de l'observation de corpus pour découvrir une règle ?",
-                options: [
-                    "La démarche déductive",
-                    "La démarche inductive",
-                    "La démarche de résolution de problème",
-                    "La démarche d'étude de la langue"
-                ],
-                correctIndex: 1,
-                explanation: "La démarche inductive part de l'observation d'exemples pour faire émerger une règle. Les élèves manipulent des corpus, repèrent des régularités et en déduisent la règle."
-            },
-            {
-                category: "didactique",
-                question: "Quelle est la principale finalité de l'enseignement de la grammaire ?",
-                options: [
-                    "Acquérir une culture linguistique théorique",
-                    "Développer uniquement des compétences orthographiques",
-                    "Améliorer les compétences langagières (lecture, écriture, oral)",
-                    "Préparer aux évaluations nationales"
-                ],
-                correctIndex: 2,
-                explanation: "L'enseignement de la grammaire vise avant tout à améliorer les compétences langagières des élèves, que ce soit en lecture (compréhension), en production d'écrits ou en expression orale."
-            },
-            {
-                category: "didactique",
-                question: "Dans l'enseignement du lexique à l'école primaire, qu'est-ce qui permet de comprendre la formation des mots ?",
-                options: [
-                    "La sémantique",
-                    "La morphologie",
-                    "La phonologie",
-                    "La syntaxe"
-                ],
-                correctIndex: 1,
-                explanation: "La morphologie étudie la formation des mots (préfixes, suffixes, dérivation, composition) et permet de comprendre comment les mots sont construits."
-            }
-        ];
-
-        let questions = [...allQuestions];
-        let currentQuestionIndex = 0;
-        let score = 0;
-        let selectedOptionIndex = null;
-        let answered = false;
-
-        // Éléments DOM
-        const questionNumber = document.getElementById('current-question');
-        const totalQuestions = document.getElementById('total-questions');
-        const questionText = document.getElementById('question-text');
-        const optionsContainer = document.getElementById('options-container');
-        const explanation = document.getElementById('explanation');
-        const checkBtn = document.getElementById('check-btn');
-        const nextBtn = document.getElementById('next-btn');
-        const quizContainer = document.getElementById('quiz-container');
-        const resultContainer = document.getElementById('result-container');
-        const scoreElement = document.getElementById('score');
-        const maxScoreElement = document.getElementById('max-score');
-        const restartBtn = document.getElementById('restart-btn');
-        const progressBar = document.querySelector('.progress-bar');
-        const categoryBtns = document.querySelectorAll('.category-btn');
-
-        // Initialisation du quiz
-        function initQuiz() {
-            // Mélanger les questions
-            questions = questions.sort(() => Math.random() - 0.5);
-            
-            // Mettre à jour le nombre total de questions
-            totalQuestions.textContent = questions.length;
-            maxScoreElement.textContent = questions.length;
-            
-            // Afficher la première question
-            displayQuestion();
-        }
-
-        // Afficher une question
-        function displayQuestion() {
-            // Mettre à jour le numéro de la question
-            questionNumber.textContent = currentQuestionIndex + 1;
-            
-            // Mettre à jour la barre de progression
-            progressBar.style.width = `${((currentQuestionIndex) / questions.length) * 100}%`;
-            
-            // Récupérer la question actuelle
-            const currentQuestion = questions[currentQuestionIndex];
-            
-            // Afficher le texte de la question
-            questionText.textContent = currentQuestion.question;
-            
-            // Vider le conteneur des options
-            optionsContainer.innerHTML = '';
-            
-            // Ajouter les options
-            currentQuestion.options.forEach((option, index) => {
-                const optionElement = document.createElement('div');
-                optionElement.classList.add('option');
-                optionElement.textContent = option;
-                optionElement.dataset.index = index;
-                
-                optionElement.addEventListener('click', () => {
-                    if (!answered) {
-                        // Désélectionner toutes les options
-                        document.querySelectorAll('.option').forEach(opt => {
-                            opt.classList.remove('selected');
-                        });
-                        
-                        // Sélectionner l'option cliquée
-                        optionElement.classList.add('selected');
-                        selectedOptionIndex = index;
-                        
-                        // Activer le bouton de vérification
-                        checkBtn.disabled = false;
-                    }
-                });
-                
-                optionsContainer.appendChild(optionElement);
-            });
-            
-            // Réinitialiser l'explication
-            explanation.style.display = 'none';
-            explanation.textContent = '';
-            
-            // Réinitialiser les boutons
-            checkBtn.disabled = true;
-            nextBtn.disabled = true;
-            
-            // Réinitialiser la variable de suivi
-            answered = false;
-            selectedOptionIndex = null;
-        }
-
-        // Vérifier la réponse
-        function checkAnswer() {
-            if (selectedOptionIndex === null) return;
-            
-            answered = true;
-            const currentQuestion = questions[currentQuestionIndex];
-            const correct = selectedOptionIndex === currentQuestion.correctIndex;
-            
-            // Ajouter au score si correct
-            if (correct) {
-                score++;
-            }
-            
-            // Mettre à jour l'affichage des options
-            const options = document.querySelectorAll('.option');
-            options.forEach((option, index) => {
-                if (index === currentQuestion.correctIndex) {
-                    option.classList.add('correct');
-                } else if (index === selectedOptionIndex && !correct) {
-                    option.classList.add('incorrect');
-                }
-            });
-            
-            // Afficher l'explication
-            explanation.textContent = currentQuestion.explanation;
-            explanation.style.display = 'block';
-            
-            // Mettre à jour les boutons
-            checkBtn.disabled = true;
-            nextBtn.disabled = false;
-        }
-
-        // Passer à la question suivante
-        function nextQuestion() {
-            currentQuestionIndex++;
-            
-            if (currentQuestionIndex < questions.length) {
-                displayQuestion();
-            } else {
-                showResults();
-            }
-        }
-
-        // Afficher les résultats
-        function showResults() {
-            quizContainer.style.display = 'none';
-            resultContainer.style.display = 'block';
-            scoreElement.textContent = score;
-            progressBar.style.width = '100%';
-        }
-
-        // Redémarrer le quiz
-        function restartQuiz() {
-            currentQuestionIndex = 0;
-            score = 0;
-            resultContainer.style.display = 'none';
-            quizContainer.style.display = 'block';
-            initQuiz();
-        }
-
-        // Filtrer les questions par catégorie
-        function filterQuestions(category) {
-            if (category === 'all') {
-                questions = [...allQuestions];
-            } else {
-                questions = allQuestions.filter(q => q.category === category);
-            }
-            
-            // Réinitialiser le quiz
-            currentQuestionIndex = 0;
-            score = 0;
-            resultContainer.style.display = 'none';
-            quizContainer.style.display = 'block';
-            initQuiz();
-        }
-
-        // Événements
-        checkBtn.addEventListener('click', checkAnswer);
-        nextBtn.addEventListener('click', nextQuestion);
-        restartBtn.addEventListener('click', restartQuiz);
+        <p><input type="submit" value="Valider ma réponse"></p>
+    </form>
+    
+    <p>
+        <a href="index.html">← Retour au sommaire du chapitre</a> |
+        <a href="../index.html">Accueil</a> |
+        <a href="q2.html">Question suivante →</a>
+    </p>
+</body>
+</html>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Résultat - Question 1</title>
+</head>
+<body>
+    <h1>Les classes grammaticales</h1>
+    
+    <table width="100%" bgcolor="#dff0d8" border="1" cellpadding="10">
+        <tr>
+            <td>
+                <h2>Correct !</h2>
+                <p>Le mot "attentivement" est bien un <strong>adverbe</strong>.</p>
+            </td>
+        </tr>
+    </table>
+    
+    <h3>Explication :</h3>
+    <p>Un adverbe est un mot invariable qui modifie ou précise le sens :</p>
+    <ul>
+        <li>d'un verbe : "Elle lit <strong>attentivement</strong>."</li>
+        <li>d'un adjectif : "Un livre <strong>très</strong> intéressant."</li>
+        <li>d'un autre adverbe : "Elle lit <strong>très</strong> attentivement."</li>
+    </ul>
+    
+    <p>Les adverbes se terminent souvent par le suffixe -ment, formé à partir d'un adjectif (comme "attentif" → "attentivement").</p>
+    
+    <p>Dans notre phrase, "attentivement" précise la manière dont l'action de lire est effectuée.</p>
+    
+    <p><a href="q2.html">Passer à la question suivante →</a></p>
+</body>
+</html>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Résultat - Question 1</title>
+</head>
+<body>
+    <h1>Les classes grammaticales</h1>
+    
+    <table width="100%" bgcolor="#f2dede" border="1" cellpadding="10">
+        <tr>
+            <td>
+                <h2>Incorrect</h2>
+                <p>Le mot "attentivement" n'est pas un adjectif qualificatif mais un <strong>adverbe</strong>.</p>
+            </td>
+        </tr>
+    </table>
+    
+    <h3>Analyse de l'erreur :</h3>
+    <p>Vous avez confondu deux classes grammaticales importantes :</p>
+    <ul>
+        <li><strong>Adjectif qualificatif</strong> : Qualifie un nom, s'accorde en genre et en nombre avec ce nom (ex: "la <em>petite</em> fille")</li>
+        <li><strong>Adverbe</strong> : Mot invariable qui modifie un verbe, un adjectif ou un autre adverbe (ex: "Elle lit <em>attentivement</em>")</li>
+    </ul>
+    
+    <p>Dans notre phrase, "attentivement" précise la manière dont l'action de lire est effectuée. Il est invariable et se rapporte au verbe, c'est donc un adverbe.</p>
+    
+    <p><a href="q1.html">Réessayer cette question</a> | <a href="q2.html">Passer à la question suivante →</a></p>
+</body>
+</html>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Question 2 - Les classes grammaticales</title>
+</head>
+<body>
+    <h1>Les classes grammaticales</h1>
+    
+    <!-- Barre de progression -->
+    <table width="100%" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+            <td bgcolor="#5cb85c" width="3%" align="center">1</td>
+            <td bgcolor="#5cb85c" width="3%" align="center">2</td>
+            <td bgcolor="#f0f0f0" width="3%" align="center">3</td>
+            <!-- etc. jusqu'à 30 -->
+        </tr>
+    </table>
+    
+    <h2>Question 2/30</h2>
+    
+    <form action="q2-resultat.html" method="get">
+        <p>Dans la phrase "<em>Les enfants jouent dans le jardin.</em>", identifiez la classe grammaticale du mot "les" :</p>
         
-        categoryBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                // Mettre à jour les boutons de catégorie
-                categoryBtns.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                
-                // Filtrer les questions
-                filterQuestions(btn.dataset.category);
-            });
-        });
-
-        // Démarrer le quiz
-        initQuiz();
-    </script>
+        <p><input type="text" name="reponse" size="30"></p>
+        <p><small>Écrivez la réponse en toutes lettres (ex: "nom commun", "adjectif qualificatif", etc.)</small></p>
+        
+        <p><input type="submit" value="Valider ma réponse"></p>
+    </form>
+    
+    <p>
+        <a href="q1.html">← Question précédente</a> |
+        <a href="index.html">Sommaire du chapitre</a> |
+        <a href="q3.html">Question suivante →</a>
+    </p>
+</body>
+</html>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Question 3 - Les classes grammaticales</title>
+</head>
+<body>
+    <h1>Les classes grammaticales</h1>
+    
+    <!-- Barre de progression -->
+    <table width="100%" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+            <td bgcolor="#5cb85c" width="3%" align="center">1</td>
+            <td bgcolor="#5cb85c" width="3%" align="center">2</td>
+            <td bgcolor="#5cb85c" width="3%" align="center">3</td>
+            <td bgcolor="#f0f0f0" width="3%" align="center">4</td>
+            <!-- etc. jusqu'à 30 -->
+        </tr>
+    </table>
+    
+    <h2>Question 3/30</h2>
+    
+    <form action="q3-resultat.html" method="get">
+        <p>Indiquez si les affirmations suivantes sont vraies ou fausses :</p>
+        
+        <p>
+            <input type="checkbox" name="rep1" id="rep1">
+            <label for="rep1">Un verbe peut être à la fois transitif et pronominal.</label>
+        </p>
+        
+        <p>
+            <input type="checkbox" name="rep2" id="rep2">
+            <label for="rep2">Tous les adjectifs qualificatifs peuvent être attributs du sujet.</label>
+        </p>
+        
+        <p>
+            <input type="checkbox" name="rep3" id="rep3">
+            <label for="rep3">Les adverbes sont toujours invariables.</label>
+        </p>
+        
+        <p><input type="submit" value="Valider mes réponses"></p>
+    </form>
+    
+    <p>
+        <a href="q2.html">← Question précédente</a> |
+        <a href="index.html">Sommaire du chapitre</a> |
+        <a href="q4.html">Question suivante →</a>
+    </p>
 </body>
 </html>
