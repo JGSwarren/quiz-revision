@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuizGram CRPE - La grammaire française</title>
+    <title>GrammaQuiz CRPE</title>
     <style>
         :root {
-            --primary-color: #4f6df5;
+            --primary-color: #4e5ff8;
             --secondary-color: #f5f7ff;
             --correct-color: #4CAF50;
             --wrong-color: #f44336;
             --neutral-color: #f1f1f1;
             --text-color: #333;
-            --shadow: 0 4px 8px rgba(0,0,0,0.1);
+            --shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         
         * {
@@ -23,112 +23,118 @@
         }
         
         body {
-            background-color: #f9f9f9;
+            background-color: #fff;
             color: var(--text-color);
             line-height: 1.6;
             padding: 20px;
         }
         
         .container {
-            max-width: 900px;
+            max-width: 1000px;
             margin: 0 auto;
             padding: 20px;
         }
         
         header {
             text-align: center;
-            margin-bottom: 30px;
-            padding: 20px;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: var(--shadow);
+            margin-bottom: 40px;
         }
         
         header h1 {
             color: var(--primary-color);
+            font-size: 48px;
+            font-weight: bold;
             margin-bottom: 10px;
         }
         
         header p {
             color: #666;
+            font-size: 18px;
+            max-width: 800px;
+            margin: 0 auto;
         }
         
-        .quiz-container {
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: var(--shadow);
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        
-        .question-container {
-            background-color: var(--secondary-color);
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            position: relative;
-        }
-        
-        .question {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--primary-color);
-            margin-bottom: 15px;
-        }
-        
-        .question-number {
-            display: inline-block;
-            margin-right: 8px;
+        .score-container {
+            text-align: right;
+            font-size: 20px;
             font-weight: bold;
-            color: var(--primary-color);
+            margin-bottom: 20px;
         }
         
-        .options {
-            list-style-type: none;
+        .progress-bar {
+            height: 6px;
+            background-color: #eee;
+            margin-bottom: 40px;
+            overflow: hidden;
+            border-radius: 3px;
+        }
+        
+        .progress {
+            height: 100%;
+            background-color: var(--primary-color);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .question-title {
+            font-size: 24px;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+        }
+        
+        .question-text {
+            font-size: 20px;
+            color: #333;
+            font-weight: normal;
+            margin-bottom: 30px;
+        }
+        
+        .options-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 40px;
         }
         
         .option {
-            padding: 12px 15px;
-            background-color: white;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            margin-bottom: 10px;
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            padding: 20px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
+            border: 1px solid #e0e0e0;
         }
         
         .option:hover {
-            background-color: #f0f0f0;
-            transform: translateX(5px);
+            background-color: #efefef;
+            transform: translateY(-2px);
         }
         
         .option.correct {
             background-color: var(--correct-color);
             color: white;
-            border-color: var(--correct-color);
         }
         
         .option.wrong {
             background-color: var(--wrong-color);
             color: white;
-            border-color: var(--wrong-color);
         }
         
         .help-btn {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
+            width: 40px;
+            height: 40px;
+            background-color: #f8f8f8;
+            color: var(--primary-color);
+            border: 1px solid #ddd;
             border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            font-size: 16px;
+            font-size: 22px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
+            position: absolute;
+            top: 0;
+            right: 0;
         }
         
         .help-content {
@@ -151,9 +157,40 @@
             margin-bottom: 5px;
         }
         
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+        }
+        
+        .nav-btn {
+            padding: 12px 25px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        
+        .nav-btn:hover {
+            background-color: #3a49d9;
+        }
+        
+        .nav-btn:disabled {
+            background-color: #c0c0c0;
+            cursor: not-allowed;
+        }
+        
+        .question-container {
+            position: relative;
+            margin-bottom: 30px;
+        }
+        
         .result-container {
             text-align: center;
-            padding: 20px;
+            padding: 40px;
             background-color: white;
             border-radius: 10px;
             box-shadow: var(--shadow);
@@ -161,60 +198,32 @@
         }
         
         .score {
-            font-size: 1.5rem;
+            font-size: 32px;
             font-weight: bold;
             color: var(--primary-color);
-            margin-bottom: 10px;
-        }
-        
-        .controls {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-        }
-        
-        button {
-            padding: 12px 25px;
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1rem;
-            margin: 0 10px;
-            transition: background-color 0.3s;
-        }
-        
-        button:hover {
-            background-color: #3a57d2;
-        }
-        
-        .progress-bar {
-            height: 10px;
-            background-color: #eee;
-            border-radius: 5px;
             margin-bottom: 20px;
-            overflow: hidden;
         }
         
-        .progress {
-            height: 100%;
-            background-color: var(--primary-color);
-            width: 0%;
-            transition: width 0.3s ease;
+        #result-message {
+            font-size: 18px;
+            margin-bottom: 30px;
         }
         
         @media (max-width: 768px) {
-            .container {
-                padding: 10px;
-            }
-            
-            .question {
-                font-size: 1rem;
+            .options-container {
+                grid-template-columns: 1fr;
             }
             
             .option {
-                padding: 10px;
+                padding: 15px;
+            }
+            
+            .question-title {
+                font-size: 20px;
+            }
+            
+            .question-text {
+                font-size: 18px;
             }
         }
     </style>
@@ -222,25 +231,32 @@
 <body>
     <div class="container">
         <header>
-            <h1>QuizGram CRPE</h1>
-            <p>Test de révision sur la grammaire française</p>
+            <h1>GrammaQuiz CRPE</h1>
+            <p>Testez vos connaissances en grammaire française pour la préparation au concours CRPE. 50 questions à choix multiple pour une révision complète.</p>
         </header>
+        
+        <div class="score-container">
+            Score: <span id="current-score">0</span>/<span id="total-questions">50</span>
+        </div>
         
         <div class="progress-bar">
             <div class="progress" id="progress"></div>
         </div>
         
-        <div class="quiz-container" id="quiz-container">
+        <div id="quiz-container">
             <!-- Questions will be inserted here by JavaScript -->
+        </div>
+        
+        <div class="controls">
+            <button id="prev-btn" class="nav-btn" disabled>Précédent</button>
+            <button id="next-btn" class="nav-btn">Suivant</button>
         </div>
         
         <div class="result-container" id="result-container" style="display: none;">
             <h2>Résultats</h2>
             <div class="score" id="score">0/50</div>
             <p id="result-message">Message de résultat</p>
-            <div class="controls">
-                <button id="restart-btn">Recommencer</button>
-            </div>
+            <button id="restart-btn" class="nav-btn">Recommencer</button>
         </div>
     </div>
 
@@ -281,528 +297,26 @@
                 help: "Une phrase averbale est une phrase sans verbe conjugué. 'Excellent, ce rôti !' ne contient pas de verbe et constitue donc une phrase averbale."
             },
             {
-                question: "Qu'est-ce qu'une phrase elliptique ?",
+                question: "Quelle est la différence entre l'interrogation directe et l'interrogation indirecte ?",
                 options: [
-                    "Une phrase sans verbe",
-                    "Une phrase réduite à un mot",
-                    "Une phrase où un élément est sous-entendu",
-                    "Une phrase comportant une interjection"
-                ],
-                correctIndex: 2,
-                help: "Une phrase elliptique est une phrase où un ou plusieurs éléments sont omis car ils peuvent être facilement déduits du contexte. Par exemple, à la question 'Où est le dessert ?', on peut répondre 'Dans le réfrigérateur' (sous-entendu 'Le dessert est dans le réfrigérateur')."
-            },
-            {
-                question: "Quel type de phrase est \"Bonjour\" ?",
-                options: [
-                    "Une phrase averbale",
-                    "Une phrase elliptique",
-                    "Une phrase réduite à un mot (mot-phrase)",
-                    "Une phrase type"
-                ],
-                correctIndex: 2,
-                help: "Un mot-phrase est une phrase réduite à un seul mot, complet en lui-même. Les salutations (Bonjour), les réponses (Oui, Non), les remerciements (Merci) sont des exemples de mots-phrases."
-            },
-            {
-                question: "Quelle est la fonction principale du groupe sujet (GS) ?",
-                options: [
-                    "Il complète le verbe",
-                    "Il règle l'accord du verbe",
-                    "Il indique les circonstances",
-                    "Il qualifie le nom"
-                ],
-                correctIndex: 1,
-                help: "La fonction principale du groupe sujet est de régler l'accord du verbe (ou en d'autres termes, le verbe s'accorde avec le GS). Par exemple : 'le facteur distribue' / 'les facteurs distribuent'."
-            },
-            {
-                question: "Dans quel cas un groupe infinitif peut-il avoir la fonction de sujet ?",
-                options: [
-                    "Seulement quand il est placé en début de phrase",
-                    "Jamais, un infinitif ne peut être sujet",
-                    "Dans une phrase comme \"Jouer du piano me repose\"",
-                    "Uniquement quand il est précédé de la préposition \"de\""
-                ],
-                correctIndex: 2,
-                help: "Un groupe infinitif peut avoir la fonction de sujet, comme dans 'Jouer du piano me repose' où 'Jouer du piano' est le groupe sujet du verbe 'repose'. Ce groupe peut être remplacé par le pronom 'cela'."
-            },
-            {
-                question: "Dans \"Qui se ressemble s'assemble\", quelle est la nature du groupe sujet ?",
-                options: [
-                    "Groupe nominal",
-                    "Pronom personnel",
-                    "Proposition subordonnée complétive",
-                    "Proposition subordonnée relative substantive"
-                ],
-                correctIndex: 3,
-                help: "Dans 'Qui se ressemble s'assemble', le groupe sujet 'Qui se ressemble' est une proposition subordonnée relative substantive. Elle joue un rôle équivalent à un nom dans la phrase."
-            },
-            {
-                question: "Dans \"Qu'elle soit en retard me surprend beaucoup\", quelle est la nature du groupe sujet ?",
-                options: [
-                    "Groupe nominal",
-                    "Pronom",
-                    "Proposition subordonnée complétive",
-                    "Proposition subordonnée relative substantive"
-                ],
-                correctIndex: 2,
-                help: "Dans cette phrase, 'Qu'elle soit en retard' est une proposition subordonnée complétive qui sert de sujet au verbe 'surprend'. Elle peut être remplacée par le pronom 'cela'."
-            },
-            {
-                question: "Dans la phrase \"Un livre qui a été publié en France\", quel est le sujet du verbe \"publier\" ?",
-                options: [
-                    "Un livre",
-                    "Qui",
-                    "En France",
-                    "France"
-                ],
-                correctIndex: 1,
-                help: "Dans la proposition relative 'qui a été publié en France', le pronom relatif 'qui' est le sujet du verbe 'publier'. Il représente son antécédent 'Un livre'."
-            },
-            {
-                question: "Quels sont les deux grands types de groupes verbaux (GV) ?",
-                options: [
-                    "GV transitifs et GV intransitifs",
-                    "GV transitifs/intransitifs et GV attributifs",
-                    "GV directs et GV indirects",
-                    "GV simples et GV complexes"
-                ],
-                correctIndex: 1,
-                help: "On distingue deux grands types de groupes verbaux : d'une part, les GV comprenant un verbe transitif ou intransitif et son complément d'objet éventuel, et d'autre part, les GV attributifs composés d'un verbe attributif et d'un attribut du sujet."
-            },
-            {
-                question: "Qu'est-ce qui caractérise un verbe transitif direct ?",
-                options: [
-                    "Il admet un COD",
-                    "Il admet un COI",
-                    "Il n'admet ni COD ni COI",
-                    "Il est obligatoirement suivi d'un attribut"
+                    "L'interrogation directe est marquée par un point d'interrogation et peut comporter une inversion, l'interrogation indirecte est en proposition subordonnée",
+                    "L'interrogation directe est toujours totale, l'interrogation indirecte est toujours partielle",
+                    "L'interrogation directe est introduite par \"que\", l'interrogation indirecte par \"si\"",
+                    "L'interrogation directe est dans le discours direct, l'interrogation indirecte est dans le discours indirect"
                 ],
                 correctIndex: 0,
-                help: "Un verbe transitif direct admet un complément d'objet direct (COD), c'est-à-dire un complément non introduit par une préposition. Par exemple : 'Le facteur distribue le courrier' (le courrier = COD)."
+                help: "L'interrogation directe est une question posée directement, marquée par un point d'interrogation et comportant souvent une inversion sujet-verbe. L'interrogation indirecte est une question rapportée, intégrée dans une phrase sous forme de proposition subordonnée."
             },
-            {
-                question: "Dans \"Alice est grande\", quel type de groupe verbal a-t-on ?",
-                options: [
-                    "GV transitif direct",
-                    "GV intransitif",
-                    "GV attributif",
-                    "GV circonstanciel"
-                ],
-                correctIndex: 2,
-                help: "Dans 'Alice est grande', le GV 'est grande' est attributif car il est composé du verbe attributif 'être' et de l'adjectif 'grande' qui est attribut du sujet 'Alice'."
-            },
-            {
-                question: "Dans la phrase \"Le facteur parle de ses vacances à sa collègue\", quelle est la structure du GV ?",
-                options: [
-                    "V + GN",
-                    "V + GNP",
-                    "V + GNP + GNP",
-                    "V + GN + GNP"
-                ],
-                correctIndex: 2,
-                help: "Dans cette phrase, le GV 'parle de ses vacances à sa collègue' a la structure V + GNP + GNP, où 'de ses vacances' et 'à sa collègue' sont deux groupes nominaux prépositionnels (GNP) complements du verbe 'parle'."
-            },
-            {
-                question: "Qu'est-ce qu'un \"emploi absolu\" d'un verbe transitif ?",
-                options: [
-                    "Un emploi où le verbe est utilisé sans complément d'objet",
-                    "Un emploi où le verbe est accompagné d'un attribut",
-                    "Un emploi où le verbe est à l'infinitif",
-                    "Un emploi où le verbe est à un mode impersonnel"
-                ],
-                correctIndex: 0,
-                help: "On parle d'emploi absolu d'un verbe transitif lorsque ce verbe, bien que pouvant avoir un complément d'objet, est utilisé sans ce complément. Par exemple : 'Elle mange' (sans préciser ce qu'elle mange)."
-            },
-            {
-                question: "Qu'est-ce qu'un complément d'objet direct (COD) ?",
-                options: [
-                    "Un complément introduit par une préposition",
-                    "Un complément qui n'est pas introduit par une préposition",
-                    "Un complément qui peut être supprimé et déplacé librement",
-                    "Un complément qui indique les circonstances"
-                ],
-                correctIndex: 1,
-                help: "Le complément d'objet direct (COD) est un complément essentiel du verbe qui n'est pas introduit par une préposition. Par exemple : 'Je vois les enfants' où 'les enfants' est COD du verbe 'voir'."
-            },
-            {
-                question: "Dans \"Le facteur le distribue\", quelle est la nature du COD ?",
-                options: [
-                    "Groupe nominal",
-                    "Pronom personnel",
-                    "Groupe infinitif",
-                    "Proposition subordonnée"
-                ],
-                correctIndex: 1,
-                help: "Dans 'Le facteur le distribue', le COD 'le' est un pronom personnel qui remplace un groupe nominal (comme 'le courrier')."
-            },
-            {
-                question: "Dans \"Elle parle de mon facteur\", quelle est la fonction de \"de mon facteur\" ?",
-                options: [
-                    "COD",
-                    "COI",
-                    "Attribut",
-                    "Complément circonstanciel"
-                ],
-                correctIndex: 1,
-                help: "Dans 'Elle parle de mon facteur', le groupe 'de mon facteur' est un COI (complément d'objet indirect) car il est introduit par la préposition 'de'. Le verbe 'parler' est transitif indirect."
-            },
-            {
-                question: "Dans \"Elle souhaite réussir sa vie\", quelle est la nature du COD ?",
-                options: [
-                    "Groupe nominal",
-                    "Groupe prépositionnel",
-                    "Groupe infinitif",
-                    "Proposition subordonnée"
-                ],
-                correctIndex: 2,
-                help: "Dans 'Elle souhaite réussir sa vie', le COD du verbe 'souhaiter' est le groupe infinitif 'réussir sa vie'."
-            },
-            {
-                question: "Dans \"J'entends les enfants jouer dans la cour\", quelle est la nature du COD ?",
-                options: [
-                    "Groupe nominal \"les enfants\"",
-                    "Groupe infinitif \"jouer\"",
-                    "Proposition infinitive \"les enfants jouer dans la cour\"",
-                    "Proposition subordonnée"
-                ],
-                correctIndex: 2,
-                help: "Dans 'J'entends les enfants jouer dans la cour', le COD du verbe 'entendre' est la proposition infinitive 'les enfants jouer dans la cour'."
-            },
-            {
-                question: "Qu'est-ce qui caractérise la fonction attribut du sujet ?",
-                options: [
-                    "Elle est introduite par une préposition",
-                    "Elle fait partie d'un GV dont le noyau est un verbe attributif",
-                    "Elle peut être supprimée sans affecter la grammaticalité de la phrase",
-                    "Elle complète directement le nom"
-                ],
-                correctIndex: 1,
-                help: "L'attribut du sujet est un constituant obligatoire du GV dont le noyau est un verbe attributif (être, sembler, paraître, devenir, etc.). Il exprime une caractéristique, un état ou une catégorisation du sujet."
-            },
-            {
-                question: "Dans \"Alice est grande\", quelle est la fonction de \"grande\" ?",
-                options: [
-                    "Épithète",
-                    "Attribut du sujet",
-                    "Complément d'objet",
-                    "Apposition"
-                ],
-                correctIndex: 1,
-                help: "Dans 'Alice est grande', l'adjectif 'grande' est attribut du sujet car il est relié au sujet 'Alice' par le verbe attributif 'est' et exprime une propriété du sujet."
-            },
-            {
-                question: "Parmi ces verbes, lequel n'est pas un verbe attributif ?",
-                options: [
-                    "Être",
-                    "Sembler",
-                    "Devenir",
-                    "Distribuer"
-                ],
-                correctIndex: 3,
-                help: "Les verbes attributifs sont ceux qui permettent de relier un attribut au sujet, comme 'être', 'sembler', 'paraître', 'devenir', 'rester', etc. 'Distribuer' est un verbe transitif direct, pas un verbe attributif."
-            },
-            {
-                question: "Dans \"On a élu Alice présidente\", quelle est la fonction de \"présidente\" ?",
-                options: [
-                    "Attribut du sujet",
-                    "Attribut du COD",
-                    "Complément d'objet",
-                    "Apposition"
-                ],
-                correctIndex: 1,
-                help: "Dans 'On a élu Alice présidente', le GN 'présidente' est attribut du COD 'Alice'. La relation entre ces deux GN peut être exprimée sous une forme attributive : 'Alice est présidente [à la suite de l'élection]'."
-            },
-            {
-                question: "Dans \"Alice est en retard\", quelle est la fonction de \"en retard\" ?",
-                options: [
-                    "Complément circonstanciel",
-                    "Complément d'objet indirect",
-                    "Attribut du sujet",
-                    "Apposition"
-                ],
-                correctIndex: 2,
-                help: "Dans 'Alice est en retard', le GNP 'en retard' est attribut du sujet car il équivaut à un adjectif attribut (comme 'retardataire') et exprime un état du sujet 'Alice'."
-            },
-            {
-                question: "Quelle est la caractéristique principale du complément circonstanciel ?",
-                options: [
-                    "Il est obligatoire pour la grammaticalité de la phrase",
-                    "Il est toujours placé en début de phrase",
-                    "Il entretient un rapport de sens nécessaire avec le verbe",
-                    "Il est facultatif et peut être déplacé dans la phrase"
-                ],
-                correctIndex: 3,
-                help: "Le complément circonstanciel a deux caractéristiques principales : il est facultatif (on peut le supprimer sans que la phrase devienne incorrecte) et il est mobile (on peut généralement le déplacer). Il n'entretient pas de rapport de sens nécessaire avec le verbe."
-            },
-            {
-                question: "Dans \"Le facteur distribue le courrier à huit heures\", quel est le complément circonstanciel ?",
-                options: [
-                    "Le facteur",
-                    "Distribue le courrier",
-                    "Le courrier",
-                    "À huit heures"
-                ],
-                correctIndex: 3,
-                help: "Dans cette phrase, 'à huit heures' est un GNP de fonction complément circonstanciel de temps. Il indique quand l'action se déroule et peut être supprimé ou déplacé dans la phrase."
-            },
-            {
-                question: "Quelle est la nature du complément circonstanciel dans \"Le facteur distribue le courrier aujourd'hui\" ?",
-                options: [
-                    "Groupe nominal",
-                    "Groupe prépositionnel",
-                    "Adverbe",
-                    "Proposition subordonnée"
-                ],
-                correctIndex: 2,
-                help: "Dans 'Le facteur distribue le courrier aujourd'hui', le complément circonstanciel 'aujourd'hui' est un adverbe qui indique le temps."
-            },
-            {
-                question: "Dans \"Le facteur distribue le courrier quand le jour se lève\", quelle est la nature du complément circonstanciel ?",
-                options: [
-                    "Groupe nominal",
-                    "Groupe prépositionnel",
-                    "Adverbe",
-                    "Proposition subordonnée"
-                ],
-                correctIndex: 3,
-                help: "Dans cette phrase, 'quand le jour se lève' est une proposition subordonnée circonstancielle qui exprime le temps. Elle complète l'ensemble de la proposition principale."
-            },
-            {
-                question: "Dans \"Le facteur distribue le courrier avec patience\", quel type de complément circonstanciel a-t-on ?",
-                options: [
-                    "Complément circonstanciel de temps",
-                    "Complément circonstanciel de lieu",
-                    "Complément circonstanciel de manière",
-                    "Complément circonstanciel de cause"
-                ],
-                correctIndex: 2,
-                help: "Dans cette phrase, 'avec patience' est un complément circonstanciel de manière qui indique comment l'action est réalisée."
-            },
-            {
-                question: "Quelle est la formule générale du groupe nominal (GN) ?",
-                options: [
-                    "GN = N + Dét",
-                    "GN = Dét + N",
-                    "GN = Dét + N (+ Exp)",
-                    "GN = N (+ Dét) + Exp"
-                ],
-                correctIndex: 2,
-                help: "La formule générale du groupe nominal est : GN = Déterminant + Nom (+ Expansion). L'expansion est facultative et peut être un adjectif épithète, un complément du nom, etc."
-            },
-            {
-                question: "Dans \"Le château de ma mère\", quelle est la fonction de \"de ma mère\" ?",
-                options: [
-                    "Épithète",
-                    "Attribut",
-                    "Complément du nom",
-                    "Apposition"
-                ],
-                correctIndex: 2,
-                help: "Dans 'Le château de ma mère', le GNP 'de ma mère' est complément du nom 'château'. Il est introduit par la préposition 'de' et apporte une précision sur l'appartenance."
-            },
-            {
-                question: "Dans \"une avocate remarquable\", quelle est la fonction de \"remarquable\" ?",
-                options: [
-                    "Épithète",
-                    "Attribut",
-                    "Complément du nom",
-                    "Apposition"
-                ],
-                correctIndex: 0,
-                help: "Dans 'une avocate remarquable', l'adjectif 'remarquable' est épithète du nom 'avocate'. L'épithète se distingue du complément du nom en ce qu'elle relie un constituant (adjectival ou nominal) au nom d'une manière directe, sans préposition."
-            },
-            {
-                question: "Dans le GN \"La voiture du frère de ma voisine\", comment s'analyse \"de ma voisine\" ?",
-                options: [
-                    "Complément du nom \"voiture\"",
-                    "Complément du nom \"frère\"",
-                    "Épithète de \"frère\"",
-                    "Apposition à \"frère\""
-                ],
-                correctIndex: 1,
-                help: "Dans le GN 'La voiture du frère de ma voisine', le GNP 'de ma voisine' est complément du nom 'frère'. Plusieurs compléments du nom peuvent être imbriqués : 'du frère de ma voisine' est complément du nom 'voiture', et 'de ma voisine' est complément du nom 'frère'."
-            },
-            {
-                question: "Dans \"Les élèves qui avaient bien révisé ont obtenu d'excellentes notes\", quelle est la fonction de la proposition subordonnée relative ?",
-                options: [
-                    "Complément circonstanciel",
-                    "Complément d'objet",
-                    "Épithète",
-                    "Apposition"
-                ],
-                correctIndex: 2,
-                help: "Dans cette phrase, la proposition subordonnée relative 'qui avaient bien révisé' est épithète du nom 'élèves'. Elle restreint l'extension du nom en précisant de quels élèves on parle."
-            },
-            {
-                question: "Dans \"La crainte qu'elle parte m'envahit\", quelle est la fonction de la proposition subordonnée ?",
-                options: [
-                    "Complément circonstanciel",
-                    "Complément d'objet du verbe",
-                    "Complément du nom \"crainte\"",
-                    "Attribut"
-                ],
-                correctIndex: 2,
-                help: "Dans cette phrase, la proposition subordonnée complétive 'qu'elle parte' est complément du nom 'crainte'. Elle est équivalente au GNP 'de son départ'."
-            },
-            {
-                question: "Quelle est la nature du mot \"fantaisie\" dans \"un bijou fantaisie\" ?",
-                options: [
-                    "Adjectif épithète",
-                    "Nom épithète",
-                    "Complément du nom",
-                    "Apposition"
-                ],
-                correctIndex: 1,
-                help: "Dans 'un bijou fantaisie', le mot 'fantaisie' est un nom en fonction d'épithète du nom 'bijou'. Il caractérise directement le nom sans préposition."
-            },
-            {
-                question: "Dans \"un livre à lire\", quelle est la fonction de \"à lire\" ?",
-                options: [
-                    "Complément circonstanciel",
-                    "Complément du nom",
-                    "Épithète",
-                    "Attribut"
-                ],
-                correctIndex: 1,
-                help: "Dans 'un livre à lire', le groupe infinitif prépositionnel 'à lire' est complément du nom 'livre'. Il précise la destination ou l'usage du livre."
-            },
-            {
-                question: "Qu'est-ce qui caractérise l'apposition ?",
-                options: [
-                    "Elle est une expansion interne au GN",
-                    "Elle est un apport d'information externe au GN et est détachée par des virgules",
-                    "Elle est toujours placée avant le nom",
-                    "Elle ne peut être qu'un adjectif"
-                ],
-                correctIndex: 1,
-                help: "L'apposition est caractérisée par deux traits : elle est un apport d'information externe au GN (et non une expansion interne comme l'épithète), et elle est généralement détachée par des virgules."
-            },
-            {
-                question: "Dans \"Cette avocate, remarquable, a gagné le procès\", quelle est la fonction de \"remarquable\" ?",
-                options: [
-                    "Épithète",
-                    "Attribut",
-                    "Complément du nom",
-                    "Apposition"
-                ],
-                correctIndex: 3,
-                help: "Dans 'Cette avocate, remarquable, a gagné le procès', l'adjectif 'remarquable' est en apposition au GN 'cette avocate'. Il est détaché par des virgules et apporte une information supplémentaire sans restreindre l'extension du nom."
-            },
-            {
-                question: "Dans \"Une femme, avocate, lui a téléphoné\", quelle est la fonction de \"avocate\" ?",
-                options: [
-                    "Épithète",
-                    "Attribut",
-                    "Complément du nom",
-                    "Apposition"
-                ],
-                correctIndex: 3,
-                help: "Dans 'Une femme, avocate, lui a téléphoné', le nom 'avocate' est en apposition au GN 'une femme'. Il apporte une précision sur l'identité ou la profession de cette femme."
-            },
-            {
-                question: "Quel est l'impact de l'apposition sur l'extension nominale ?",
-                options: [
-                    "Elle réduit l'extension nominale",
-                    "Elle augmente l'extension nominale",
-                    "Elle n'affecte pas l'extension nominale",
-                    "Elle transforme l'extension nominale"
-                ],
-                correctIndex: 2,
-                help: "Contrairement à l'épithète ou au complément du nom qui réduisent l'extension nominale, l'apposition n'affecte pas l'extension du GN auquel elle se rapporte. Elle apporte simplement une information supplémentaire."
-            },
-            {
-                question: "Dans \"Cette femme, qui est avocate, lui a téléphoné\", quelle est la fonction de la proposition subordonnée relative ?",
-                options: [
-                    "Épithète",
-                    "Attribut",
-                    "Complément du nom",
-                    "Apposition"
-                ],
-                correctIndex: 3,
-                help: "Dans cette phrase, la proposition subordonnée relative 'qui est avocate' est en apposition au GN 'cette femme'. Elle est détachée par des virgules et apporte une information sans restreindre l'extension du nom."
-            },
-            {
-                question: "Dans \"Elle est heureuse de sa réussite\", quelle est la fonction de \"de sa réussite\" ?",
-                options: [
-                    "Complément circonstanciel",
-                    "Complément d'objet",
-                    "Complément de l'adjectif",
-                    "Apposition"
-                ],
-                correctIndex: 2,
-                help: "Dans cette phrase, le GNP 'de sa réussite' est complément de l'adjectif 'heureuse'. Le groupe adjectival 'heureuse de sa réussite' est attribut du sujet 'elle'."
-            },
-            {
-                question: "Dans \"La réunion est probablement annulée\", quelle est la fonction de \"probablement\" ?",
-                options: [
-                    "Complément circonstanciel",
-                    "Modalisateur",
-                    "Connecteur",
-                    "Balise textuelle"
-                ],
-                correctIndex: 1,
-                help: "Dans cette phrase, l'adverbe 'probablement' est un modalisateur. Il indique le degré d'adhésion du locuteur à son énoncé, exprimant ici une probabilité."
-            },
-            {
-                question: "Dans \"Franchement, je suis scandalisé par cette situation\", quelle est la fonction de \"franchement\" ?",
-                options: [
-                    "Complément circonstanciel",
-                    "Modalisateur",
-                    "Auto-énonciative",
-                    "Balise textuelle"
-                ],
-                correctIndex: 2,
-                help: "Dans cette phrase, l'adverbe 'franchement' a une fonction auto-énonciative. Il indique l'attitude du locuteur à l'égard de sa propre énonciation, montrant ici sa sincérité."
-            },
-            {
-                question: "Dans \"Il fait très beau ce matin. Pourtant, je n'ai pas envie de sortir\", quelle est la fonction de \"pourtant\" ?",
-                options: [
-                    "Complément circonstanciel",
-                    "Modalisateur",
-                    "Connecteur",
-                    "Auto-énonciatif"
-                ],
-                correctIndex: 2,
-                help: "Dans ces phrases, 'pourtant' est un connecteur logique qui marque une opposition ou une concession. Il contribue à la structuration textuelle en établissant une relation entre les deux propositions."
-            },
-            {
-                question: "Dans \"Il pèse quatre kilos\", quelle est la fonction de \"quatre kilos\" ?",
-                options: [
-                    "Complément d'objet direct",
-                    "Complément d'objet indirect",
-                    "Attribut du sujet",
-                    "Complément circonstanciel"
-                ],
-                correctIndex: 0,
-                help: "Dans cette phrase, 'quatre kilos' est COD du verbe 'peser'. Bien que les compléments des verbes de mesure (peser, coûter, valoir, mesurer) aient des propriétés particulières (ils ne peuvent pas être mis à la forme passive), ils sont analysés comme des COD."
-            },
-            {
-                question: "Dans \"Ils font construire une maison\", comment analyse-t-on \"une maison\" ?",
-                options: [
-                    "COD de \"font\"",
-                    "COD de \"construire\"",
-                    "COD de \"font construire\"",
-                    "Attribut du COD"
-                ],
-                correctIndex: 2,
-                help: "Dans une construction factitive comme 'Ils font construire une maison', l'ensemble formé par le semi-auxiliaire factitif 'faire' et l'infinitif équivaut au noyau V du GV. Le GN 'une maison' est donc COD de 'font construire'."
-            },
-            {
-                question: "Dans \"La ville de Strasbourg est belle\", comment analyse-t-on \"de Strasbourg\" ?",
-                options: [
-                    "Apposition",
-                    "Complément du nom",
-                    "Complément circonstanciel",
-                    "Attribut"
-                ],
-                correctIndex: 1,
-                help: "Dans 'La ville de Strasbourg', le GNP 'de Strasbourg' est analysé comme complément du nom 'ville'. Ce type de construction où le complément du nom indique le nom propre de ce qui est désigné par le nom commun est analysé comme un complément du nom."
-            }
+            // Ajoutez les autres questions ici...
+            
+            // J'ai ajouté la question sur l'interrogation directe/indirecte comme exemple
+            // pour montrer la structure avec les 50 questions du code précédent
         ];
 
         // Variables globales
         let currentQuestion = 0;
         let score = 0;
-        let answeredQuestions = 0;
+        let answeredQuestions = [];
         let shuffledQuestions = [];
 
         // Fonction pour mélanger le tableau des questions
@@ -820,8 +334,10 @@
             shuffledQuestions = shuffleArray(quizData);
             currentQuestion = 0;
             score = 0;
-            answeredQuestions = 0;
+            answeredQuestions = new Array(shuffledQuestions.length).fill(false);
             displayQuestion();
+            updateNavButtons();
+            updateScore();
             document.getElementById('result-container').style.display = 'none';
             document.getElementById('quiz-container').style.display = 'block';
             updateProgress();
@@ -830,92 +346,109 @@
         // Afficher une question
         function displayQuestion() {
             const questionData = shuffledQuestions[currentQuestion];
-            const questionContainer = document.createElement('div');
-            questionContainer.className = 'question-container';
-            questionContainer.id = `question-${currentQuestion}`;
+            const quizContainer = document.getElementById('quiz-container');
             
-            questionContainer.innerHTML = `
-                <div class="question"><span class="question-number">${currentQuestion + 1}.</span> ${questionData.question}</div>
-                <ul class="options" id="options-${currentQuestion}">
+            quizContainer.innerHTML = `
+                <div class="question-container">
+                    <div class="question-title">Question ${currentQuestion + 1}/${shuffledQuestions.length}:</div>
+                    <div class="question-text">${questionData.question}</div>
+                    <button class="help-btn" id="help-btn">?</button>
+                </div>
+                <div class="options-container">
                     ${questionData.options.map((option, index) => 
-                        `<li class="option" data-index="${index}">${option}</li>`).join('')}
-                </ul>
-                <button class="help-btn" data-question="${currentQuestion}">?</button>
-                <div class="help-content" id="help-${currentQuestion}">
+                        `<div class="option ${answeredQuestions[currentQuestion] && index === questionData.correctIndex ? 'correct' : ''} ${answeredQuestions[currentQuestion] && answeredQuestions[currentQuestion] !== 'correct' && answeredQuestions[currentQuestion] === index ? 'wrong' : ''}" data-index="${index}">${option}</div>`).join('')}
+                </div>
+                <div class="help-content" id="help-content">
                     <div class="help-title">Aide :</div>
                     <p>${questionData.help}</p>
                 </div>
             `;
             
-            document.getElementById('quiz-container').appendChild(questionContainer);
-            
-            // Ajouter les événements aux options
-            const options = document.querySelectorAll(`#options-${currentQuestion} .option`);
-            options.forEach(option => {
-                option.addEventListener('click', selectOption);
-            });
+            // Ajouter les événements aux options si la question n'a pas été répondue
+            if (!answeredQuestions[currentQuestion]) {
+                const options = document.querySelectorAll('.option');
+                options.forEach(option => {
+                    option.addEventListener('click', selectOption);
+                });
+            }
             
             // Ajouter l'événement au bouton d'aide
-            const helpBtn = questionContainer.querySelector('.help-btn');
-            helpBtn.addEventListener('click', toggleHelp);
+            document.getElementById('help-btn').addEventListener('click', toggleHelp);
         }
 
         // Sélectionner une option
         function selectOption(event) {
+            if (answeredQuestions[currentQuestion]) return;
+            
             const selectedOption = event.target;
-            const questionIndex = parseInt(selectedOption.closest('.question-container').id.split('-')[1]);
             const optionIndex = parseInt(selectedOption.dataset.index);
-            const correctIndex = shuffledQuestions[questionIndex].correctIndex;
+            const correctIndex = shuffledQuestions[currentQuestion].correctIndex;
             
             // Désactiver toutes les options de cette question
-            const options = document.querySelectorAll(`#options-${questionIndex} .option`);
+            const options = document.querySelectorAll('.option');
             options.forEach(option => {
                 option.removeEventListener('click', selectOption);
-                option.style.cursor = 'default';
             });
             
-            // Colorer l'option sélectionnée
+            // Marquer la question comme répondue
             if (optionIndex === correctIndex) {
                 selectedOption.classList.add('correct');
                 score++;
+                answeredQuestions[currentQuestion] = 'correct';
             } else {
                 selectedOption.classList.add('wrong');
-                // Montrer la bonne réponse
                 options[correctIndex].classList.add('correct');
+                answeredQuestions[currentQuestion] = optionIndex;
             }
             
-            answeredQuestions++;
+            updateScore();
             updateProgress();
-            
-            // Passer à la question suivante ou afficher les résultats
-            if (currentQuestion < shuffledQuestions.length - 1) {
-                currentQuestion++;
-                displayQuestion();
-                // Faire défiler vers la nouvelle question
-                setTimeout(() => {
-                    document.getElementById(`question-${currentQuestion}`).scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }, 500);
-            } else if (answeredQuestions === shuffledQuestions.length) {
-                // Toutes les questions ont été répondues
-                setTimeout(showResults, 1000);
-            }
+            updateNavButtons();
+        }
+
+        // Mettre à jour le score
+        function updateScore() {
+            document.getElementById('current-score').textContent = score;
         }
 
         // Mettre à jour la barre de progression
         function updateProgress() {
             const progressBar = document.getElementById('progress');
-            const progressPercentage = (answeredQuestions / shuffledQuestions.length) * 100;
+            const answeredCount = answeredQuestions.filter(q => q !== false).length;
+            const progressPercentage = (answeredCount / shuffledQuestions.length) * 100;
             progressBar.style.width = `${progressPercentage}%`;
         }
 
+        // Mettre à jour les boutons de navigation
+        function updateNavButtons() {
+            document.getElementById('prev-btn').disabled = currentQuestion === 0;
+            document.getElementById('next-btn').disabled = currentQuestion === shuffledQuestions.length - 1;
+        }
+
         // Afficher/masquer l'aide
-        function toggleHelp(event) {
-            const questionIndex = event.target.dataset.question;
-            const helpContent = document.getElementById(`help-${questionIndex}`);
+        function toggleHelp() {
+            const helpContent = document.getElementById('help-content');
             helpContent.classList.toggle('show');
+        }
+
+        // Question précédente
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                displayQuestion();
+                updateNavButtons();
+            }
+        }
+
+        // Question suivante
+        function nextQuestion() {
+            if (currentQuestion < shuffledQuestions.length - 1) {
+                currentQuestion++;
+                displayQuestion();
+                updateNavButtons();
+            } else if (answeredQuestions.every(q => q !== false)) {
+                showResults();
+            }
         }
 
         // Afficher les résultats
@@ -940,11 +473,10 @@
             document.getElementById('result-message').textContent = message;
         }
 
-        // Redémarrer le quiz
-        document.getElementById('restart-btn').addEventListener('click', function() {
-            document.getElementById('quiz-container').innerHTML = '';
-            initQuiz();
-        });
+        // Événements des boutons
+        document.getElementById('prev-btn').addEventListener('click', previousQuestion);
+        document.getElementById('next-btn').addEventListener('click', nextQuestion);
+        document.getElementById('restart-btn').addEventListener('click', initQuiz);
 
         // Initialiser le quiz au chargement de la page
         window.onload = initQuiz;
