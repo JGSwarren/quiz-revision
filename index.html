@@ -1,374 +1,874 @@
+```html
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz CRPE étude de la langue - Français</title>
+    <title>GrammaQuiz CRPE</title>
     <style>
-        /* Styles généraux */
-        body {
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --correct-color: #4caf50;
+            --incorrect-color: #f44336;
+            --neutral-color: #f5f5f5;
+            --text-color: #333;
+            --light-text: #666;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
+        }
+        
+        body {
+            background-color: #f9f9f9;
+            color: var(--text-color);
+            line-height: 1.6;
             padding: 20px;
-            background-color: #f5f7fa;
-            color: #333;
         }
         
         .quiz-container {
+            max-width: 800px;
+            margin: 0 auto;
             background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
             padding: 30px;
-            margin-top: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
         }
         
         h1 {
-            text-align: center;
-            color: #2c3e50;
-            margin-bottom: 30px;
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
         }
         
-        /* Barre de progression */
+        .quiz-intro {
+            color: var(--light-text);
+            margin-bottom: 20px;
+        }
+        
         .progress-container {
-            width: 100%;
-            height: 8px;
-            background-color: #e0e0e0;
-            border-radius: 5px;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
         
         .progress-bar {
+            height: 8px;
+            background-color: var(--neutral-color);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress {
             height: 100%;
-            background-color: #3498db;
-            border-radius: 5px;
+            background-color: var(--primary-color);
             width: 0%;
             transition: width 0.3s ease;
         }
         
-        /* Style des questions */
-        .question-container {
-            margin-bottom: 30px;
-        }
-        
-        .question {
-            font-size: 18px;
-            margin-bottom: 15px;
-            font-weight: 600;
-        }
-        
-        .section-tag {
-            display: inline-block;
-            padding: 4px 10px;
-            font-size: 12px;
-            border-radius: 15px;
+        .score-display {
+            text-align: right;
             margin-bottom: 10px;
             font-weight: bold;
         }
         
-        .analyse-verbale {
-            background-color: #e8f4fd;
-            color: #2980b9;
+        .question-container {
+            margin-bottom: 30px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 0.5s forwards;
         }
         
-        .analyse-phrase {
-            background-color: #e8f8ef;
-            color: #27ae60;
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
-        .fonctions-grammaticales {
-            background-color: #fef5e7;
-            color: #e67e22;
+        .question-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
         }
         
-        .orthographe-grammaticale {
-            background-color: #f9ebf5;
-            color: #8e44ad;
+        .question {
+            font-size: 1.2rem;
+            font-weight: bold;
+            flex-grow: 1;
         }
         
-        /* Style des options */
+        .help-btn {
+            background-color: #f0f0f0;
+            color: var(--primary-color);
+            border: 1px solid #ddd;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .help-btn:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .help-content {
+            display: none;
+            background-color: #f9f9f9;
+            border-left: 4px solid var(--primary-color);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+            font-size: 0.95rem;
+        }
+        
+        .help-content.active {
+            display: block;
+            animation: slideDown 0.3s forwards;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
         .options {
-            list-style-type: none;
-            padding: 0;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
         }
         
         .option {
-            padding: 12px 15px;
-            background-color: #f8f9fa;
-            border: 1px solid #e0e0e0;
-            border-radius: 5px;
-            margin-bottom: 10px;
+            padding: 15px;
+            background-color: var(--neutral-color);
+            border-radius: var(--border-radius);
             cursor: pointer;
             transition: all 0.2s ease;
         }
         
         .option:hover {
-            background-color: #f0f2f5;
-        }
-        
-        .option.selected {
-            background-color: #d0e8f9;
-            border-color: #3498db;
+            background-color: #e9e9e9;
+            transform: translateY(-2px);
+            box-shadow: var(--box-shadow);
         }
         
         .option.correct {
-            background-color: #d4edda;
-            border-color: #28a745;
+            background-color: var(--correct-color);
+            color: white;
         }
         
         .option.incorrect {
-            background-color: #f8d7da;
-            border-color: #dc3545;
-        }
-        
-        /* Feedback et explications */
-        .feedback {
-            padding: 15px;
-            border-radius: 5px;
-            margin-top: 15px;
-            display: none;
-        }
-        
-        .feedback.correct {
-            background-color: #d4edda;
-            color: #155724;
-        }
-        
-        .feedback.incorrect {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-        
-        .help-btn {
-            background-color: #6c757d;
+            background-color: var(--incorrect-color);
             color: white;
-            border: none;
-            border-radius: 5px;
-            padding: 8px 15px;
-            font-size: 14px;
-            cursor: pointer;
-            margin-top: 15px;
         }
         
-        .help-btn:hover {
-            background-color: #5a6268;
+        .option.disabled {
+            pointer-events: none;
         }
         
-        .explanation {
-            background-color: #e9ecef;
-            padding: 15px;
-            border-radius: 5px;
-            margin-top: 15px;
-            display: none;
-        }
-        
-        /* Navigation */
         .navigation {
             display: flex;
             justify-content: space-between;
-            margin-top: 30px;
+            margin-top: 20px;
         }
         
-        .nav-btn {
-            background-color: #3498db;
+        button {
+            padding: 12px 24px;
+            background-color: var(--primary-color);
             color: white;
             border: none;
-            border-radius: 5px;
-            padding: 10px 20px;
-            font-size: 16px;
+            border-radius: var(--border-radius);
             cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.2s;
         }
         
-        .nav-btn:hover {
-            background-color: #2980b9;
+        button:hover {
+            background-color: var(--secondary-color);
         }
         
-        .nav-btn:disabled {
-            background-color: #b3b3b3;
+        button:disabled {
+            background-color: var(--light-text);
             cursor: not-allowed;
         }
         
-        /* Affichage du score */
-        .score-display {
-            text-align: center;
-            font-size: 18px;
-            margin-bottom: 30px;
-        }
-        
-        /* Résultats */
-        .results-container {
+        .results {
             text-align: center;
             display: none;
         }
         
-        .results-container h2 {
+        .results h2 {
+            color: var(--primary-color);
             margin-bottom: 20px;
-            color: #2c3e50;
         }
         
         .score-result {
-            font-size: 24px;
-            margin-bottom: 15px;
+            font-size: 3rem;
+            margin: 20px 0;
+            color: var(--secondary-color);
         }
         
         .restart-btn {
-            background-color: #3498db;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            padding: 12px 25px;
-            font-size: 16px;
-            cursor: pointer;
             margin-top: 20px;
         }
         
-        .restart-btn:hover {
-            background-color: #2980b9;
+        @media (min-width: 768px) {
+            .options {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .question-number {
+            font-weight: normal;
+            color: var(--primary-color);
+            margin-right: 8px;
         }
         
-        /* Responsive */
-        @media (max-width: 600px) {
-            body {
-                padding: 10px;
-            }
-            
-            .quiz-container {
-                padding: 15px;
-            }
-            
-            .question {
-                font-size: 16px;
-            }
-        }
     </style>
 </head>
 <body>
-    <h1>Quiz CRPE étude de la langue - Français</h1>
-    
     <div class="quiz-container">
+        <header>
+            <h1>GrammaQuiz CRPE</h1>
+            <p class="quiz-intro">Testez vos connaissances en grammaire française pour la préparation au concours CRPE. 50 questions à choix multiple pour une révision complète.</p>
+        </header>
+        
         <div class="progress-container">
-            <div class="progress-bar" id="progress-bar"></div>
+            <div class="score-display">Score: <span id="score">0</span>/<span id="total-questions">50</span></div>
+            <div class="progress-bar">
+                <div class="progress" id="progress"></div>
+            </div>
         </div>
         
-        <div class="score-display">
-            Score: <span id="current-score">0</span>/<span id="total-questions">50</span>
+        <div id="quiz-content">
+            <div id="question-container" class="question-container">
+                <div class="question-header">
+                    <div id="question" class="question"></div>
+                    <button id="help-btn" class="help-btn" title="Aide">?</button>
+                </div>
+                <div id="help-content" class="help-content"></div>
+                <div id="options" class="options"></div>
+            </div>
+            
+            <div class="navigation">
+                <button id="prev-btn" disabled>Précédent</button>
+                <button id="next-btn">Suivant</button>
+            </div>
         </div>
         
-        <div id="question-container" class="question-container">
-            <!-- Les questions seront insérées ici par JavaScript -->
-        </div>
-        
-        <div class="navigation">
-            <button id="prev-btn" class="nav-btn" disabled>Précédent</button>
-            <button id="next-btn" class="nav-btn">Suivant</button>
-        </div>
-        
-        <div id="results-container" class="results-container">
-            <h2>Résultats du Quiz</h2>
-            <div class="score-result">Vous avez obtenu <span id="final-score">0</span> sur <span id="final-total">50</span></div>
-            <div id="feedback-message"></div>
-            <button id="restart-btn" class="restart-btn">Recommencer le Quiz</button>
+        <div id="results" class="results">
+            <h2>Résultats du quiz</h2>
+            <p>Vous avez terminé le quiz!</p>
+            <div class="score-result">
+                <span id="final-score">0</span>/50
+            </div>
+            <p id="score-message"></p>
+            <button id="restart-btn" class="restart-btn">Recommencer le quiz</button>
         </div>
     </div>
 
     <script>
-        // Questions du quiz regroupées par sections
-        const quizQuestions = [
-            // Section A: Analyse verbale (13 questions)
+        const quizData = [
             {
-                section: "Analyse verbale",
-                question: "Quel est le temps du verbe dans la phrase : 'Il avait terminé son travail quand je suis arrivé.'",
-                options: ["Plus-que-parfait", "Passé composé", "Imparfait", "Passé antérieur"],
-                correctAnswer: 0,
-                explanation: "Le verbe 'avait terminé' est conjugué au plus-que-parfait. Ce temps exprime une action antérieure à une autre action passée (ici, 'suis arrivé')."
+                question: "Qu'est-ce qu'une phrase simple ?",
+                options: [
+                    "Une phrase contenant plusieurs propositions",
+                    "Une phrase formée d'une seule proposition",
+                    "Une phrase sans verbe conjugué",
+                    "Une phrase comportant uniquement un sujet et un verbe"
+                ],
+                correct: 1,
+                help: "Une phrase simple contient une seule proposition avec un seul verbe conjugué à un mode personnel. Elle peut être analysée selon la formule P = [GS + GV] (+ GC), où GS est le groupe sujet, GV le groupe verbal et GC un éventuel groupe circonstanciel."
             },
             {
-                section: "Analyse verbale",
-                question: "Dans 'Les élèves écrivent une lettre', quel est le type de verbe 'écrire' ?",
-                options: ["Intransitif", "Transitif direct", "Transitif indirect", "Attributif"],
-                correctAnswer: 1,
-                explanation: "Le verbe 'écrire' est transitif direct car il admet un complément d'objet direct (ici, 'une lettre') sans préposition."
+                question: "Comment définit-on une phrase complexe ?",
+                options: [
+                    "Une phrase contenant plusieurs verbes",
+                    "Une phrase comprenant plusieurs propositions",
+                    "Une phrase contenant un verbe au mode impersonnel",
+                    "Une phrase de plus de quinze mots"
+                ],
+                correct: 1,
+                help: "Une phrase complexe contient plusieurs propositions, chacune avec son propre verbe conjugué à un mode personnel. Elle se distingue de la phrase simple qui ne contient qu'une seule proposition."
             },
             {
-                section: "Analyse verbale",
-                question: "Identifiez la voix utilisée dans la phrase : 'Le château a été construit au XVe siècle.'",
-                options: ["Voix active", "Voix passive", "Voix pronominale", "Voix factitive"],
-                correctAnswer: 1,
-                explanation: "La phrase est à la voix passive, car le sujet 'château' subit l'action exprimée par le verbe 'construire'. La forme passive est construite avec l'auxiliaire être + participe passé."
-            },
-            // Ajout des autres questions d'analyse verbale...
-
-            // Section B: Analyse de la phrase (12 questions)
-            {
-                section: "Analyse de la phrase",
-                question: "Quel est le type de phrase : 'Comme il fait beau aujourd'hui !' ?",
-                options: ["Déclarative", "Interrogative", "Exclamative", "Injonctive"],
-                correctAnswer: 2,
-                explanation: "C'est une phrase exclamative qui exprime un sentiment, une émotion. Elle se termine par un point d'exclamation et a souvent une intonation particulière."
+                question: "Quels sont les deux principaux types de phrases complexes ?",
+                options: [
+                    "La phrase complexe par coordination et la phrase complexe par subordination",
+                    "La phrase complexe par subordination et la phrase complexe par juxtaposition",
+                    "La phrase complexe par coordination ou juxtaposition et la phrase complexe par subordination",
+                    "La phrase complexe verbale et la phrase complexe nominale"
+                ],
+                correct: 2,
+                help: "On distingue deux principaux types de phrases complexes : 1) la phrase complexe par coordination ou juxtaposition, où les propositions sont sur le même plan et reliées par une conjonction de coordination ou un signe de ponctuation; 2) la phrase complexe par subordination, où une proposition est incluse dans une autre et en dépend grammaticalement."
             },
             {
-                section: "Analyse de la phrase",
-                question: "Identifiez la forme de la phrase : 'Il n'a jamais rien compris à ce problème.'",
-                options: ["Affirmative", "Négative simple", "Négative renforcée", "Emphatique"],
-                correctAnswer: 2,
-                explanation: "C'est une phrase à la forme négative renforcée. Elle contient une double négation avec 'ne...jamais' et 'rien'."
-            },
-            // Ajout des autres questions d'analyse de la phrase...
-
-            // Section C: Fonctions grammaticales (12 questions)
-            {
-                section: "Fonctions grammaticales",
-                question: "Quelle est la fonction du groupe souligné : 'Les élèves ont rendu leur devoir à la professeure.' ?",
-                options: ["Complément d'objet direct", "Complément d'objet indirect", "Complément circonstanciel", "Attribut du sujet"],
-                correctAnswer: 0,
-                explanation: "Le groupe 'leur devoir' est complément d'objet direct (COD) du verbe 'ont rendu'. On peut le vérifier en posant la question 'qu'est-ce que les élèves ont rendu ?'"
+                question: "Comment définit-on une proposition subordonnée ?",
+                options: [
+                    "Une proposition indépendante introduite par une conjonction",
+                    "Une proposition incluse dans une autre proposition et dépendant de celle-ci",
+                    "Une proposition reliée à une autre par une conjonction de coordination",
+                    "Une proposition sans verbe conjugué"
+                ],
+                correct: 1,
+                help: "Une proposition subordonnée est une proposition incluse dans une autre proposition, dite 'principale', et dépendant grammaticalement de celle-ci. Elle ne peut pas exister seule et est généralement introduite par un mot subordonnant (conjonction ou pronom relatif)."
             },
             {
-                section: "Fonctions grammaticales",
-                question: "Identifiez la fonction du mot 'content' dans 'Il semble content de ses résultats.'",
-                options: ["Épithète", "Attribut du sujet", "Complément du nom", "Attribut du COD"],
-                correctAnswer: 1,
-                explanation: "'Content' est attribut du sujet 'il'. Il est relié au sujet par le verbe d'état 'sembler'."
-            },
-            // Ajout des autres questions de fonctions grammaticales...
-
-            // Section D: Orthographe grammaticale (13 questions)
-            {
-                section: "Orthographe grammaticale",
-                question: "Comment s'écrit le participe passé dans 'Elles se sont (laver) les mains.' ?",
-                options: ["lavé", "lavés", "lavée", "lavées"],
-                correctAnswer: 0,
-                explanation: "Dans cette phrase avec le verbe pronominal 'se laver', le COD 'les mains' est placé après le verbe. Le participe passé reste donc invariable : 'lavé'."
+                question: "Qu'est-ce qu'un mot subordonnant ?",
+                options: [
+                    "Un mot qui relie deux propositions de même niveau",
+                    "Un mot qui introduit une proposition subordonnée (conjonction de subordination ou pronom relatif)",
+                    "Un mot qui remplace un groupe nominal",
+                    "Un mot qui introduit une proposition indépendante"
+                ],
+                correct: 1,
+                help: "Un mot subordonnant est un outil grammatical qui introduit une proposition subordonnée. Il peut s'agir d'une conjonction de subordination (que, si, quand, parce que, etc.) ou d'un pronom relatif (qui, que, dont, où, etc.). Il établit un lien de dépendance entre la subordonnée et la principale."
             },
             {
-                section: "Orthographe grammaticale",
-                question: "Quelle est la forme correcte ? 'Les bouteilles que j'ai (acheter) sont en verre.'",
-                options: ["acheter", "acheté", "achetés", "achetées"],
-                correctAnswer: 3,
-                explanation: "Le participe passé s'accorde avec le COD 'que' placé avant le verbe et qui remplace 'les bouteilles' (féminin pluriel). On écrit donc 'achetées'."
+                question: "Quels sont les cas de subordination sans conjonction ?",
+                options: [
+                    "La proposition subordonnée infinitive, participiale et interrogative partielle",
+                    "La proposition subordonnée relative, infinitive et participiale",
+                    "La proposition subordonnée circonstancielle et la proposition subordonnée complétive",
+                    "La proposition subordonnée juxtaposée et coordonnée"
+                ],
+                correct: 0,
+                help: "Il existe trois cas de subordination sans conjonction : 1) la proposition subordonnée infinitive (J'entends l'oiseau chanter), 2) la proposition subordonnée participiale (Le chat parti, les souris dansent), et 3) la proposition subordonnée interrogative partielle (Je me demande qui chante)."
+            },
+            {
+                question: "Combien de grands types de propositions subordonnées peut-on distinguer ?",
+                options: [
+                    "Deux types",
+                    "Trois types",
+                    "Quatre types",
+                    "Cinq types"
+                ],
+                correct: 2,
+                help: "On distingue quatre grands types de propositions subordonnées : 1) les propositions subordonnées complétives, 2) les propositions subordonnées circonstancielles, 3) les propositions subordonnées relatives, et 4) les propositions subordonnées sans conjonction de subordination."
+            },
+            {
+                question: "Quelle est la particularité des propositions subordonnées complétives ?",
+                options: [
+                    "Elles sont introduites par un pronom relatif",
+                    "Elles sont équivalentes à des groupes nominaux",
+                    "Elles expriment une circonstance",
+                    "Elles ont toujours une fonction d'attribut"
+                ],
+                correct: 1,
+                help: "Les propositions subordonnées complétives sont équivalentes à des groupes nominaux et peuvent donc avoir les fonctions du GN : sujet, COD, attribut, etc. Par exemple, 'Je souhaite qu'elle réussisse' = 'Je souhaite sa réussite'. Elles sont généralement introduites par 'que' ou 'si'."
+            },
+            {
+                question: "Quel est le rôle de la conjonction de subordination dans les complétives ?",
+                options: [
+                    "Elle apporte une information spécifique sur la relation entre la principale et la subordonnée",
+                    "Elle joue un rôle de pur outil grammatical sans apporter d'information spécifique",
+                    "Elle a une fonction grammaticale dans la subordonnée",
+                    "Elle remplace un pronom"
+                ],
+                correct: 1,
+                help: "Dans les propositions subordonnées complétives, la conjonction de subordination (que, si) joue uniquement un rôle de pur outil grammatical pour relier la subordonnée à la principale, sans apporter d'information spécifique sur leur relation sémantique, contrairement aux conjonctions des circonstancielles."
+            },
+            {
+                question: "Dans la phrase \"Je crois qu'il va faire beau\", quelle est la fonction de la proposition subordonnée ?",
+                options: [
+                    "Sujet",
+                    "COD",
+                    "COI",
+                    "Complément circonstanciel"
+                ],
+                correct: 1,
+                help: "Dans la phrase 'Je crois qu'il va faire beau', la proposition subordonnée 'qu'il va faire beau' est COD du verbe 'croire' dans la principale. On peut la remplacer par le pronom 'cela' : 'Je crois cela'. Les complétives ont souvent la fonction de COD."
+            },
+            {
+                question: "Comment se forme une proposition subordonnée interrogative totale ?",
+                options: [
+                    "Elle est introduite par \"que\"",
+                    "Elle est introduite par \"si\"",
+                    "Elle est introduite par un pronom interrogatif",
+                    "Elle est introduite par un adverbe interrogatif"
+                ],
+                correct: 1,
+                help: "Une proposition subordonnée interrogative totale est introduite par la conjonction 'si'. Elle constitue une interrogation indirecte portant sur l'ensemble de la phrase, à laquelle on pourrait répondre par 'oui' ou 'non'. Exemple : 'Je me demande s'il fera beau' (interrogation indirecte) correspond à 'Fera-t-il beau ?' (interrogation directe)."
+            },
+            {
+                question: "Quelle est la caractéristique des propositions subordonnées circonstancielles ?",
+                options: [
+                    "Elles sont introduites par un pronom relatif",
+                    "Elles sont équivalentes à des groupes nominaux",
+                    "Elles indiquent une circonstance et sont introduites par une conjonction qui précise cette relation",
+                    "Elles ont toujours une fonction d'attribut"
+                ],
+                correct: 2,
+                help: "Les propositions subordonnées circonstancielles indiquent une circonstance (temps, cause, but, condition, etc.) et sont introduites par une conjonction de subordination qui, en plus de son rôle d'outil de subordination, précise la nature de la relation entre la subordonnée et la principale (quand, parce que, pour que, si, etc.)."
+            },
+            {
+                question: "Dans la phrase \"Je sortirai quand tu auras fini\", quelle est la valeur de la proposition subordonnée ?",
+                options: [
+                    "Causale",
+                    "Temporelle",
+                    "Consécutive",
+                    "Concessive"
+                ],
+                correct: 1,
+                help: "Dans 'Je sortirai quand tu auras fini', la proposition subordonnée 'quand tu auras fini' a une valeur temporelle. La conjonction 'quand' indique une relation de temps entre les deux actions : l'action de sortir se produira au moment où l'autre personne aura fini."
+            },
+            {
+                question: "Qu'est-ce qu'une proposition subordonnée corrélative ?",
+                options: [
+                    "Une subordonnée liée à la principale uniquement par une conjonction",
+                    "Une subordonnée liée à la principale par une conjonction et annoncée par un mot dans la principale",
+                    "Une subordonnée reliée à une autre subordonnée",
+                    "Une subordonnée introduite par un pronom relatif"
+                ],
+                correct: 1,
+                help: "Une proposition subordonnée corrélative est liée à la principale non seulement par une conjonction de subordination mais aussi par un mot dans la principale qui l'annonce. Exemple : 'Il a tant plu que la rivière a débordé' (tant... que), 'Elle est aussi intelligente que sa mère l'était' (aussi... que)."
+            },
+            {
+                question: "Quelle est la particularité des propositions subordonnées relatives ?",
+                options: [
+                    "Elles sont introduites par une conjonction de subordination",
+                    "Elles sont introduites par un pronom relatif qui a une fonction dans la subordonnée",
+                    "Elles ont toujours une fonction circonstancielle",
+                    "Elles n'ont jamais d'antécédent"
+                ],
+                correct: 1,
+                help: "Les propositions subordonnées relatives sont introduites par un pronom relatif (qui, que, dont, où, etc.) qui a une double fonction : 1) il joue un rôle de subordonnant en reliant la relative à la principale, et 2) il a une fonction grammaticale dans la subordonnée (sujet, COD, complément, etc.)."
+            },
+            {
+                question: "Dans la phrase \"L'homme que tu as vu est un ami\", quelle est la fonction du pronom relatif \"que\" ?",
+                options: [
+                    "Sujet de la subordonnée",
+                    "COD de la subordonnée",
+                    "COI de la subordonnée",
+                    "Complément circonstanciel"
+                ],
+                correct: 1,
+                help: "Dans 'L'homme que tu as vu est un ami', le pronom relatif 'que' est COD du verbe 'voir' dans la subordonnée. Il remplace 'l'homme' (tu as vu l'homme). Contrairement à 'qui' qui serait sujet, 'que' est toujours COD dans la relative."
+            },
+            {
+                question: "Quels sont les deux principaux types de propositions subordonnées relatives ?",
+                options: [
+                    "Les relatives adjectives et les relatives substantives",
+                    "Les relatives complétives et les relatives circonstancielles",
+                    "Les relatives directes et les relatives indirectes",
+                    "Les relatives essentielles et les relatives accessoires"
+                ],
+                correct: 0,
+                help: "On distingue deux principaux types de relatives : 1) les relatives adjectives, qui ont des fonctions adjectivales (épithète, apposition) et se rapportent à un antécédent nominal, et 2) les relatives substantives, qui ont des fonctions nominales (sujet, COD, etc.) et n'ont pas d'antécédent nominal explicite."
+            },
+            {
+                question: "Qu'est-ce qui caractérise une proposition subordonnée relative substantive ?",
+                options: [
+                    "Elle a une fonction adjectivale",
+                    "Elle a un nom comme antécédent",
+                    "Elle a des fonctions nominales et n'a pas un nom comme antécédent",
+                    "Elle est toujours introduite par \"que\""
+                ],
+                correct: 2,
+                help: "Une proposition subordonnée relative substantive a des fonctions nominales (sujet, COD, etc.) et n'a pas un nom comme antécédent, mais renvoie à un ensemble indéterminé. Exemple : 'Qui veut voyager loin ménage sa monture' (= 'Celui qui veut voyager loin...'). Elle est souvent introduite par 'qui', 'quiconque' ou précédée d'un démonstratif."
+            },
+            {
+                question: "Dans le proverbe \"Qui veut voyager loin ménage sa monture\", quelle est la fonction de la proposition relative \"Qui veut voyager loin\" ?",
+                options: [
+                    "Sujet",
+                    "COD",
+                    "COI",
+                    "Complément circonstanciel"
+                ],
+                correct: 0,
+                help: "Dans le proverbe 'Qui veut voyager loin ménage sa monture', la proposition relative substantive 'Qui veut voyager loin' est sujet du verbe 'ménage'. Elle équivaut à 'Celui qui veut voyager loin' et joue le rôle d'un groupe nominal sujet."
+            },
+            {
+                question: "Qu'est-ce qu'une proposition subordonnée infinitive ?",
+                options: [
+                    "Un groupe infinitif ayant son propre sujet, distinct du sujet de la principale",
+                    "Un groupe infinitif dont le sujet est le même que celui de la principale",
+                    "Un groupe infinitif introduit par une conjonction de subordination",
+                    "Un groupe infinitif en fonction d'attribut"
+                ],
+                correct: 0,
+                help: "Une proposition subordonnée infinitive est un groupe infinitif qui a son propre sujet, distinct de celui de la proposition principale. Exemple : 'J'entends l'oiseau chanter', où 'l'oiseau' est sujet sémantique de l'infinitif 'chanter', alors que 'je' est sujet de 'entends'."
+            },
+            {
+                question: "Dans la phrase \"J'entends l'oiseau chanter\", quelle est la fonction de \"l'oiseau\" ?",
+                options: [
+                    "Sujet de la principale",
+                    "Sujet sémantique (agent) de \"chanter\" et COD de \"entendre\"",
+                    "COI de la principale",
+                    "Attribut du sujet"
+                ],
+                correct: 1,
+                help: "Dans 'J'entends l'oiseau chanter', 'l'oiseau' est à la fois COD du verbe 'entendre' et sujet sémantique (agent) de l'infinitif 'chanter'. Si on pronominalise : 'Je l'entends chanter', le pronom 'l'' remplace 'l'oiseau' en position de COD du verbe principal."
+            },
+            {
+                question: "Qu'est-ce qu'une proposition subordonnée participiale ?",
+                options: [
+                    "Une proposition dont le verbe est au participe présent ou passé avec un sujet propre",
+                    "Une proposition introduite par un participe présent",
+                    "Une proposition comportant un verbe au participe passé",
+                    "Une proposition qui a pour sujet un participe"
+                ],
+                correct: 0,
+                help: "Une proposition subordonnée participiale est une proposition dont le verbe est au participe présent ou passé et qui possède un sujet propre, distinct de celui de la principale. Exemples : 'Le temps s'améliorant, ils décidèrent de sortir' (participe présent), 'Le chat parti, les souris dansent' (participe passé)."
+            },
+            {
+                question: "Quelle est la fonction de la proposition subordonnée participiale ?",
+                options: [
+                    "COD",
+                    "COI",
+                    "Attribut",
+                    "Complément circonstanciel"
+                ],
+                correct: 3,
+                help: "La proposition subordonnée participiale a généralement une fonction de complément circonstanciel (temps, cause, condition, etc.). Elle peut souvent être remplacée par une proposition subordonnée circonstancielle introduite par une conjonction appropriée."
+            },
+            {
+                question: "Dans la phrase \"Le chat parti, les souris dansent\", à quel type de proposition circonstancielle équivaut la participiale ?",
+                options: [
+                    "Causale ou temporelle",
+                    "Concessive",
+                    "Conditionnelle",
+                    "Consécutive"
+                ],
+                correct: 0,
+                help: "Dans 'Le chat parti, les souris dansent', la proposition participiale 'Le chat parti' équivaut à une proposition circonstancielle de temps ('Quand le chat est parti, les souris dansent') ou de cause ('Puisque le chat est parti, les souris dansent')."
+            },
+            {
+                question: "Comment se caractérise la proposition subordonnée interrogative partielle ?",
+                options: [
+                    "Elle est introduite par \"si\"",
+                    "Elle est introduite par un mot interrogatif (pronom, adverbe, déterminant)",
+                    "Elle est toujours précédée d'une négation",
+                    "Elle est introduite par une conjonction de subordination"
+                ],
+                correct: 1,
+                help: "Une proposition subordonnée interrogative partielle est introduite par un mot interrogatif : pronom (qui, que), adverbe (où, quand, comment, pourquoi) ou déterminant (quel). Elle correspond à une interrogation indirecte portant sur un constituant particulier de la phrase. Exemple : 'Je me demande qui chante', 'Je me demande quand il viendra'."
+            },
+            {
+                question: "Dans la phrase \"Je me demande qui chante\", pourquoi le mot \"qui\" n'est-il pas considéré comme un mot subordonnant ?",
+                options: [
+                    "Parce qu'il a une fonction dans la subordonnée",
+                    "Parce qu'il introduit une relative",
+                    "Parce qu'on le trouve aussi en l'absence de subordination dans l'interrogation directe",
+                    "Parce qu'il ne peut pas être remplacé par \"que\""
+                ],
+                correct: 2,
+                help: "Dans 'Je me demande qui chante', le mot 'qui' n'est pas considéré comme un mot subordonnant car on le trouve aussi dans l'interrogation directe 'Qui chante ?'. C'est un pronom interrogatif qui a une fonction dans la proposition (sujet de 'chante') et non un pur outil de subordination."
+            },
+            {
+                question: "Qu'est-ce que la coordination dans une phrase complexe ?",
+                options: [
+                    "Une relation entre deux propositions où l'une dépend de l'autre",
+                    "Une relation entre deux propositions qui se situent sur le même plan et sont reliées par une conjonction",
+                    "Une relation entre deux propositions introduites par un pronom relatif",
+                    "Une relation entre une proposition principale et une proposition subordonnée"
+                ],
+                correct: 1,
+                help: "La coordination dans une phrase complexe est une relation entre deux propositions indépendantes qui se situent sur le même plan syntaxique et sont reliées par une conjonction de coordination (mais, ou, et, donc, or, ni, car). Exemple : 'Il fait beau et les oiseaux chantent'."
+            },
+            {
+                question: "Qu'est-ce que la juxtaposition dans une phrase complexe ?",
+                options: [
+                    "Une relation entre deux propositions reliées par une conjonction de coordination",
+                    "Une relation entre deux propositions reliées par un signe de ponctuation (virgule, point-virgule, deux points)",
+                    "Une relation entre une proposition principale et une proposition subordonnée",
+                    "Une relation établie par un pronom relatif"
+                ],
+                correct: 1,
+                help: "La juxtaposition dans une phrase complexe est une relation entre deux propositions indépendantes qui se situent sur le même plan syntaxique et sont reliées par un signe de ponctuation (virgule, point-virgule, deux points) sans conjonction. Exemple : 'Il fait beau ; les oiseaux chantent'."
+            },
+            {
+                question: "Dans quels cas la juxtaposition peut-elle avoir une valeur subordonnante ?",
+                options: [
+                    "Lorsqu'elle exprime une énumération",
+                    "Lorsqu'elle peut être remplacée par une subordination (comme dans \"Tu aurais travaillé, tu aurais eu de meilleurs résultats\" = \"Si tu avais travaillé...\")",
+                    "Lorsqu'elle est suivie d'une coordination",
+                    "Lorsqu'elle introduit un discours direct"
+                ],
+                correct: 1,
+                help: "La juxtaposition peut avoir une valeur subordonnante implicite lorsqu'elle peut être remplacée par une subordination sans changer le sens. Exemple : 'Tu aurais travaillé, tu aurais eu de meilleurs résultats' équivaut à 'Si tu avais travaillé, tu aurais eu de meilleurs résultats'. On parle de 'subordination implicite'."
+            },
+            {
+                question: "Quels sont les trois types d'actes fondamentaux correspondant aux types de phrases ?",
+                options: [
+                    "L'assertion, l'exclamation et l'injonction",
+                    "La déclaration, l'interrogation et l'ordre",
+                    "L'assertion, l'interrogation et l'injonction",
+                    "La narration, le dialogue et la description"
+                ],
+                correct: 2,
+                help: "Les trois types d'actes fondamentaux correspondant aux types de phrases sont : 1) l'assertion (affirmer quelque chose comme vrai, type déclaratif), 2) l'interrogation (poser une question, type interrogatif), et 3) l'injonction (donner un ordre, type impératif)."
+            },
+            {
+                question: "Qu'est-ce qui caractérise une phrase de type déclaratif ?",
+                options: [
+                    "Elle se termine par un point d'interrogation",
+                    "Elle exprime un ordre",
+                    "Elle présente généralement la forme canonique de la phrase (GS + GV)",
+                    "Elle se termine toujours par un point d'exclamation"
+                ],
+                correct: 2,
+                help: "Une phrase de type déclaratif se caractérise par la forme canonique P = [GS + GV] (+ GC) et a une valeur d'assertion (affirmer quelque chose comme vrai). Elle se termine généralement par un point. C'est le type de phrase le plus courant. Exemple : 'Le soleil brille aujourd'hui'."
+            },
+            {
+                question: "Quels sont les différents marqueurs possibles d'une phrase de type interrogatif ?",
+                options: [
+                    "Uniquement l'inversion du sujet",
+                    "Uniquement la locution \"est-ce que\"",
+                    "Inversion du sujet, locution \"est-ce que\", pronoms ou adverbes interrogatifs, intonation",
+                    "Uniquement les pronoms interrogatifs"
+                ],
+                correct: 2,
+                help: "Une phrase de type interrogatif peut être marquée par différents procédés : l'inversion du sujet ('Viens-tu ?'), la locution 'est-ce que' ('Est-ce que tu viens ?'), des pronoms ou adverbes interrogatifs ('Qui vient ?', 'Quand viens-tu ?'), ou simplement par l'intonation et le point d'interrogation ('Tu viens ?')."
+            },
+            {
+                question: "Quelle est la différence entre l'interrogation directe et l'interrogation indirecte ?",
+                options: [
+                    "L'interrogation directe est marquée par un point d'interrogation et peut comporter une inversion, l'interrogation indirecte est en proposition subordonnée",
+                    "L'interrogation directe est toujours totale, l'interrogation indirecte est toujours partielle",
+                    "L'interrogation directe est introduite par \"que\", l'interrogation indirecte par \"si\"",
+                    "L'interrogation directe est dans le discours direct, l'interrogation indirecte est dans le discours indirect"
+                ],
+                correct: 0,
+                help: "L'interrogation directe est une phrase interrogative indépendante, marquée par un point d'interrogation et pouvant comporter une inversion du sujet. L'interrogation indirecte est une construction interrogative en proposition subordonnée, sans point d'interrogation ni inversion. Exemple : 'Viendras-tu ?' (directe) → 'Je te demande si tu viendras' (indirecte)."
+            },
+            {
+                question: "Qu'est-ce qu'une interrogation totale ?",
+                options: [
+                    "Une interrogation qui porte sur l'ensemble de la phrase et appelle généralement une réponse par oui/non/si",
+                    "Une interrogation qui porte sur un constituant particulier de la phrase",
+                    "Une interrogation qui comporte plusieurs questions",
+                    "Une interrogation qui est nécessairement indirecte"
+                ],
+                correct: 0,
+                help: "Une interrogation totale porte sur l'ensemble de la phrase et appelle généralement une réponse par 'oui', 'non' ou 'si'. Elle peut être formée par l'inversion du sujet, la locution 'est-ce que' ou l'intonation. Exemples : 'Viens-tu ?', 'Est-ce que tu viens ?', 'Tu viens ?'."
+            },
+            {
+                question: "Dans la phrase \"Pourquoi vas-tu à la plage ?\", sur quel élément porte l'interrogation ?",
+                options: [
+                    "Le sujet",
+                    "Le COD",
+                    "Le COI",
+                    "Le complément circonstanciel"
+                ],
+                correct: 3,
+                help: "Dans la phrase 'Pourquoi vas-tu à la plage ?', l'interrogation porte sur le complément circonstanciel de cause. L'adverbe interrogatif 'pourquoi' interroge sur la raison ou le motif de l'action (= pour quelle raison vas-tu à la plage ?)."
+            },
+            {
+                question: "Quel est le mode verbal principal utilisé dans les phrases de type impératif ?",
+                options: [
+                    "L'indicatif",
+                    "Le conditionnel",
+                    "L'impératif ou le subjonctif",
+                    "L'infinitif"
+                ],
+                correct: 2,
+                help: "Dans les phrases de type impératif, on utilise principalement le mode impératif pour la 2e personne du singulier et du pluriel et la 1re personne du pluriel ('Viens', 'Venez', 'Venons') ou le subjonctif pour la 3e personne ('Qu'il vienne', 'Qu'ils viennent')."
+            },
+            {
+                question: "Comment peut-on exprimer un ordre de manière indirecte ?",
+                options: [
+                    "Uniquement par une phrase de type impératif",
+                    "Par une phrase de type déclaratif ou interrogatif avec certaines modalités",
+                    "Uniquement par un infinitif",
+                    "Uniquement par le futur"
+                ],
+                correct: 1,
+                help: "On peut exprimer un ordre indirectement par : 1) une phrase déclarative ('Tu fermes la porte', 'Tu fermeras la porte'), 2) une phrase interrogative ('Peux-tu fermer la porte ?'), 3) un infinitif ('Fermer la porte'). Ces formes peuvent adoucir l'ordre ou le rendre plus autoritaire selon le contexte."
+            },
+            {
+                question: "Quelle est la différence entre les types de phrases et les formes de phrases ?",
+                options: [
+                    "Les types sont obligatoires (déclaratif, interrogatif, impératif), les formes sont facultatives",
+                    "Les types concernent la ponctuation, les formes concernent le sens",
+                    "Les types concernent le mode du verbe, les formes concernent le temps",
+                    "Les types et les formes sont synonymes"
+                ],
+                correct: 0,
+                help: "Les types de phrases sont obligatoires : toute phrase appartient nécessairement à l'un des trois types (déclaratif, interrogatif, impératif). Les formes de phrases sont facultatives : une phrase peut être à la forme négative, passive, exclamative, emphatique ou impersonnelle, mais ne l'est pas nécessairement."
+            },
+            {
+                question: "Qu'est-ce qui caractérise la forme négative d'une phrase ?",
+                options: [
+                    "La présence d'un verbe à la voix passive",
+                    "La présence d'adverbes de négation (ne...pas, ne...plus, ne...jamais, etc.)",
+                    "L'inversion du sujet",
+                    "La présence d'un point d'exclamation"
+                ],
+                correct: 1,
+                help: "La forme négative d'une phrase se caractérise par la présence d'adverbes de négation comme ne...pas, ne...plus, ne...jamais, ne...guère, ne...point, etc. La négation inverse généralement la valeur de vérité de la proposition. Exemple : 'Elle viendra' → 'Elle ne viendra pas'."
+            },
+            {
+                question: "Quels sont les trois types de négation qu'on peut distinguer ?",
+                options: [
+                    "La négation totale, partielle et exceptive",
+                    "La négation simple, double et triple",
+                    "La négation verbale, nominale et adverbiale",
+                    "La négation explicite, implicite et dérivée"
+                ],
+                correct: 0,
+                help: "On distingue trois types de négation : 1) la négation totale, qui porte sur l'ensemble de l'énoncé ('Elle n'aime pas le cinéma'), 2) la négation partielle, qui porte sur un constituant particulier ('Personne ne vient', 'Aucun détail ne lui échappe'), et 3) la négation exceptive ('Je n'aime que les films français')."
+            },
+            {
+                question: "Dans la phrase \"Je n'aime que les films français\", quel type de négation est employé ?",
+                options: [
+                    "Négation totale",
+                    "Négation partielle",
+                    "Négation exceptive",
+                    "Double négation"
+                ],
+                correct: 2,
+                help: "Dans 'Je n'aime que les films français', il s'agit d'une négation exceptive (ne...que). Elle signifie à la fois 'J'aime les films français' (valeur positive explicite) et 'Je n'aime pas les films qui ne sont pas français' (valeur négative implicite). La négation ne porte que sur ce qui n'est pas mentionné après 'que'."
+            },
+            {
+                question: "Qu'est-ce que le \"ne\" explétif ?",
+                options: [
+                    "Un \"ne\" qui fait partie de la négation",
+                    "Un \"ne\" employé dans certains contextes négatifs mais qui n'est pas une négation",
+                    "Un \"ne\" qui renforce la négation",
+                    "Un \"ne\" utilisé uniquement à l'oral"
+                ],
+                correct: 1,
+                help: "Le 'ne' explétif est un 'ne' employé dans certains contextes supposant un contexte négatif (après craindre, avant que, à moins que), mais qui n'a pas de valeur négative. Son emploi est facultatif. Exemple : 'Je crains qu'il ne pleuve' = 'Je crains qu'il pleuve' (le 'ne' n'a pas de valeur négative ici)."
+            },
+            {
+                question: "Qu'est-ce qu'une phrase de forme passive ?",
+                options: [
+                    "Une phrase dont le sujet subit l'action",
+                    "Une phrase dont le verbe principal est employé à la voix passive",
+                    "Une phrase comportant un participe passé",
+                    "Une phrase avec un verbe pronominal"
+                ],
+                correct: 1,
+                help: "Une phrase est à la forme passive lorsque son verbe principal est employé à la voix passive (être + participe passé). Dans une transformation passive, le COD de la phrase active devient sujet, et le sujet devient complément d'agent introduit par 'par' ou 'de'. Exemple : 'Le chat mange la souris' → 'La souris est mangée par le chat'."
+            },
+            {
+                question: "Dans la transformation passive de la phrase \"Bérénice aime Titus\", quel est le complément d'agent ?",
+                options: [
+                    "Bérénice",
+                    "Titus",
+                    "par Bérénice",
+                    "par Titus"
+                ],
+                correct: 3,
+                help: "Dans la transformation passive de 'Bérénice aime Titus' → 'Titus est aimé par Bérénice', le complément d'agent est 'par Titus'. Le complément d'agent correspond au sujet de la phrase active (Bérénice) et est introduit par la préposition 'par' (ou parfois 'de')."
+            },
+            {
+                question: "Qu'est-ce qui caractérise une phrase de forme exclamative ?",
+                options: [
+                    "Elle se termine par un point d'exclamation ou comporte un mot exclamatif",
+                    "Elle contient nécessairement un verbe à l'impératif",
+                    "Elle est obligatoirement de type déclaratif",
+                    "Elle comporte toujours un verbe de sentiment"
+                ],
+                correct: 0,
+                help: "Une phrase de forme exclamative se caractérise par la présence d'un point d'exclamation et/ou de mots exclamatifs (que, comme, quel). Elle exprime une émotion ou un sentiment intense du locuteur. Elle peut être de type déclaratif ('Qu'il fait beau !'), interrogatif ('Quand vas-tu comprendre !') ou impératif ('Viens ici !')."
+            },
+            {
+                question: "Quels sont les moyens grammaticaux pour obtenir la forme emphatique d'une phrase ?",
+                options: [
+                    "La négation et l'exclamation",
+                    "L'interrogation et l'impératif",
+                    "L'extraction et le détachement",
+                    "La passivation et l'interrogation"
+                ],
+                correct: 2,
+                help: "La forme emphatique d'une phrase s'obtient par deux moyens grammaticaux principaux : 1) l'extraction, qui consiste à encadrer un constituant par 'c'est... qui/que' ('C'est Pierre qui a gagné'), et 2) le détachement, qui consiste à placer en tête ou en fin de phrase un constituant et à le détacher par une virgule ('Pierre, il a gagné')."
+            },
+            {
+                question: "Quelle est la condition pour qu'une phrase soit considérée de forme impersonnelle ?",
+                options: [
+                    "Elle doit contenir un verbe impersonnel comme \"pleuvoir\"",
+                    "Son verbe principal doit être à la voix impersonnelle et elle doit être équivalente à une phrase non impersonnelle",
+                    "Elle doit commencer par \"il y a\"",
+                    "Elle ne doit pas avoir de sujet identifiable"
+                ],
+                correct: 1,
+                help: "Pour qu'une phrase soit considérée de forme impersonnelle, deux conditions doivent être réunies : 1) son verbe principal doit être à la voix impersonnelle (avec le sujet apparent 'il'), et 2) la phrase doit pouvoir être transformée en phrase non impersonnelle. Exemple : 'Il souffle un vent de panique' = 'Un vent de panique souffle'."
+            },
+            {
+                question: "Qu'est-ce qu'une phrase averbale ?",
+                options: [
+                    "Une phrase sans verbe conjugué, comportant un sujet et un prédicat",
+                    "Une phrase comportant uniquement un verbe infinitif",
+                    "Une phrase dont le verbe est sous-entendu",
+                    "Une phrase nominale comportant uniquement un groupe nominal"
+                ],
+                correct: 0,
+                help: "Une phrase averbale est une phrase sans verbe conjugué à un mode personnel, mais qui comporte néanmoins un sujet et un prédicat (ce qu'on dit du sujet). Exemple : 'Excellent, ce rôti !' (sujet = ce rôti, prédicat = excellent). Le sujet peut être implicite : 'Incroyable !' (= Cela est incroyable)."
+            },
+            {
+                question: "Quelle est la différence entre une phrase averbale et une phrase elliptique ?",
+                options: [
+                    "La phrase averbale contient un sujet et un prédicat, la phrase elliptique dépend du contexte pour être comprise",
+                    "La phrase averbale est plus longue que la phrase elliptique",
+                    "La phrase averbale est à l'écrit, la phrase elliptique est à l'oral",
+                    "La phrase averbale est au présent, la phrase elliptique est au passé"
+                ],
+                correct: 0,
+                help: "La phrase averbale est une phrase sans verbe conjugué mais avec une structure complète (sujet-prédicat). La phrase elliptique est une phrase incomplète qui dépend du contexte pour être comprise, où certains éléments sont omis mais peuvent être récupérés dans le contexte. Exemple phrase elliptique : '—Où vas-tu ? —À la plage' (= Je vais à la plage)."
+            },
+            {
+                question: "Qu'est-ce qu'un mot-phrase ?",
+                options: [
+                    "Un mot qui à lui seul constitue une phrase (oui, non, bonjour, merci)",
+                    "Un mot qui introduit une phrase",
+                    "Un mot qui résume toute une phrase",
+                    "Un mot qui peut être utilisé comme verbe et comme nom"
+                ],
+                correct: 0,
+                help: "Un mot-phrase est un mot qui, à lui seul, constitue une phrase complète et autonome, sans nécessiter d'autres éléments. Il s'agit notamment des adverbes d'affirmation (oui, si), de négation (non), des formules de politesse (bonjour, merci) et des interjections (oh !, ah !). Ces mots forment des phrases réduites à un seul mot."
             }
-            // Ajout des autres questions d'orthographe grammaticale...
         ];
 
-        // Variables pour le quiz
-        let currentQuestionIndex = 0;
+        // Variables pour gérer l'état du quiz
+        let currentQuestion = 0;
         let score = 0;
-        let answeredQuestions = [];
-        
-        // Éléments du DOM
+        let answeredQuestions = 0;
+        let shuffledQuizData = [...quizData];
+
+        // Éléments DOM
         const questionContainer = document.getElementById('question-container');
-        const progressBar = document.getElementById('progress-bar');
-        const currentScoreElement = document.getElementById('current-score');
-        const totalQuestionsElement = document.getElementById('total-questions');
+        const questionElement = document.getElementById('question');
+        const optionsContainer = document.getElementById('options');
+        const helpBtn = document.getElementById('help-btn');
+        const helpContent = document.getElementById('help-content');
         const prevButton = document.getElementById('prev-btn');
         const nextButton = document.getElementById('next-btn');
-        const resultsContainer = document.getElementById('results-container');
-        const finalScoreElement = document.getElementById('final-score');
-        const finalTotalElement = document.getElementById('final-total');
-        const feedbackMessage = document.getElementById('feedback-message');
+        const progressBar = document.getElementById('progress');
+        const scoreDisplay = document.getElementById('score');
+        const totalQuestionsDisplay = document.getElementById('total-questions');
+        const resultsContainer = document.getElementById('results');
+        const finalScoreDisplay = document.getElementById('final-score');
+        const scoreMessage = document.getElementById('score-message');
         const restartButton = document.getElementById('restart-btn');
-        
-        // Mélanger les questions de façon aléatoire
+        const quizContent = document.getElementById('quiz-content');
+
+        // Fonction pour mélanger le tableau des questions
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -376,201 +876,175 @@
             }
             return array;
         }
-        
-        // Initialiser les sections du quiz
-        function initializeQuiz() {
-            // Mélanger les questions de chaque section
-            const analyseVerbaleQuestions = quizQuestions.filter(q => q.section === "Analyse verbale");
-            const analysePhraseQuestions = quizQuestions.filter(q => q.section === "Analyse de la phrase");
-            const fonctionsGrammaticalesQuestions = quizQuestions.filter(q => q.section === "Fonctions grammaticales");
-            const orthographeGrammaticaleQuestions = quizQuestions.filter(q => q.section === "Orthographe grammaticale");
-            
-            const shuffledAnalyseVerbale = shuffleArray(analyseVerbaleQuestions);
-            const shuffledAnalysePhrase = shuffleArray(analysePhraseQuestions);
-            const shuffledFonctionsGrammaticales = shuffleArray(fonctionsGrammaticalesQuestions);
-            const shuffledOrthographeGrammaticale = shuffleArray(orthographeGrammaticaleQuestions);
-            
-            // Recréer le tableau de questions avec les questions mélangées de chaque section
-            const shuffledQuestions = [
-                ...shuffledAnalyseVerbale,
-                ...shuffledAnalysePhrase,
-                ...shuffledFonctionsGrammaticales,
-                ...shuffledOrthographeGrammaticale
-            ];
-            
-            // Réinitialiser les variables du quiz
-            currentQuestionIndex = 0;
+
+        // Initialiser le quiz
+        function initQuiz() {
+            // Mélanger les questions
+            shuffledQuizData = shuffleArray([...quizData]);
+            currentQuestion = 0;
             score = 0;
-            answeredQuestions = new Array(shuffledQuestions.length).fill(null);
+            answeredQuestions = 0;
             
-            // Mettre à jour l'affichage
-            totalQuestionsElement.textContent = shuffledQuestions.length;
-            currentScoreElement.textContent = score;
+            // Réinitialiser l'affichage
+            updateQuestion();
+            updateProgress();
+            updateScore();
             
-            // Afficher la première question
-            displayQuestion(shuffledQuestions[currentQuestionIndex]);
-            updateProgressBar();
-            
-            // Masquer les résultats et afficher le quiz
+            // Afficher le contenu du quiz et masquer les résultats
+            quizContent.style.display = 'block';
             resultsContainer.style.display = 'none';
-            questionContainer.style.display = 'block';
+            
+            // Désactiver le bouton précédent au début
             prevButton.disabled = true;
-            nextButton.disabled = false;
-            
-            return shuffledQuestions;
         }
-        
-        // Afficher une question
-        function displayQuestion(question) {
-            const sectionClass = question.section.toLowerCase().replace(' ', '-');
+
+        // Afficher la question courante
+        function updateQuestion() {
+            const question = shuffledQuizData[currentQuestion];
+            questionElement.innerHTML = `<span class="question-number">Question ${currentQuestion + 1}/50:</span> ${question.question}`;
             
-            questionContainer.innerHTML = `
-                <div class="section-tag ${sectionClass}">${question.section}</div>
-                <div class="question">${currentQuestionIndex + 1}. ${question.question}</div>
-                <ul class="options">
-                    ${question.options.map((option, index) => `
-                        <li class="option ${answeredQuestions[currentQuestionIndex] !== null ? 
-                            (index === question.correctAnswer ? 'correct' : 
-                                (index === answeredQuestions[currentQuestionIndex] && 
-                                index !== question.correctAnswer ? 'incorrect' : '')) : 
-                            (answeredQuestions[currentQuestionIndex] === index ? 'selected' : '')}" 
-                            data-index="${index}">
-                            ${option}
-                        </li>
-                    `).join('')}
-                </ul>
-                ${answeredQuestions[currentQuestionIndex] !== null ? 
-                    `<div class="feedback ${answeredQuestions[currentQuestionIndex] === question.correctAnswer ? 
-                        'correct' : 'incorrect'}" style="display: block;">
-                        ${answeredQuestions[currentQuestionIndex] === question.correctAnswer ? 
-                            'Bonne réponse !' : 'Réponse incorrecte !'}
-                    </div>` : ''}
-                <button class="help-btn">Aide</button>
-                <div class="explanation" style="${answeredQuestions[currentQuestionIndex] !== null ? 'display: block;' : ''}">
-                    ${question.explanation}
-                </div>
-            `;
+            // Réinitialiser l'aide
+            helpContent.innerHTML = question.help || '';
+            helpContent.classList.remove('active');
             
-            // Ajouter des écouteurs d'événements aux options
-            const options = questionContainer.querySelectorAll('.option');
-            options.forEach(option => {
-                option.addEventListener('click', () => {
-                    if (answeredQuestions[currentQuestionIndex] === null) {
-                        const selectedIndex = parseInt(option.getAttribute('data-index'));
-                        answeredQuestions[currentQuestionIndex] = selectedIndex;
-                        
-                        // Mettre à jour le score
-                        if (selectedIndex === shuffledQuestions[currentQuestionIndex].correctAnswer) {
-                            score++;
-                            currentScoreElement.textContent = score;
-                        }
-                        
-                        // Afficher la correction
-                        options.forEach((opt, index) => {
-                            if (index === shuffledQuestions[currentQuestionIndex].correctAnswer) {
-                                opt.classList.add('correct');
-                            } else if (index === selectedIndex && index !== shuffledQuestions[currentQuestionIndex].correctAnswer) {
-                                opt.classList.add('incorrect');
-                            }
-                        });
-                        
-                        // Afficher le feedback et l'explication
-                        const feedback = document.createElement('div');
-                        feedback.className = `feedback ${selectedIndex === shuffledQuestions[currentQuestionIndex].correctAnswer ? 'correct' : 'incorrect'}`;
-                        feedback.textContent = selectedIndex === shuffledQuestions[currentQuestionIndex].correctAnswer ? 'Bonne réponse !' : 'Réponse incorrecte !';
-                        
-                        const explanationDiv = questionContainer.querySelector('.explanation');
-                        explanationDiv.style.display = 'block';
-                        
-                        // Insérer le feedback avant l'explication
-                        questionContainer.insertBefore(feedback, explanationDiv.previousElementSibling.nextSibling);
+            // Vider le conteneur des options
+            optionsContainer.innerHTML = '';
+            
+            // Créer les boutons d'options
+            question.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.classList.add('option');
+                optionElement.textContent = option;
+                optionElement.dataset.index = index;
+                
+                // Vérifier si la question a déjà été répondue
+                if (question.answered !== undefined) {
+                    optionElement.classList.add('disabled');
+                    if (index === question.correct) {
+                        optionElement.classList.add('correct');
+                    } else if (index === question.userAnswer) {
+                        optionElement.classList.add('incorrect');
                     }
-                });
+                }
+                
+                optionElement.addEventListener('click', selectOption);
+                optionsContainer.appendChild(optionElement);
             });
             
-            // Ajouter un écouteur d'événement au bouton d'aide
-            const helpButton = questionContainer.querySelector('.help-btn');
-            helpButton.addEventListener('click', () => {
-                const explanation = questionContainer.querySelector('.explanation');
-                explanation.style.display = explanation.style.display === 'none' || explanation.style.display === '' ? 'block' : 'none';
-            });
+            // Mettre à jour les boutons de navigation
+            prevButton.disabled = currentQuestion === 0;
+            nextButton.textContent = currentQuestion === shuffledQuizData.length - 1 ? 'Terminer' : 'Suivant';
         }
-        
+
+        // Gérer l'affichage de l'aide
+        function toggleHelp() {
+            helpContent.classList.toggle('active');
+        }
+
+        // Gérer la sélection d'une option
+        function selectOption(e) {
+            const selectedOption = e.target;
+            const selectedIndex = parseInt(selectedOption.dataset.index);
+            const question = shuffledQuizData[currentQuestion];
+            
+            // Vérifier si la question a déjà été répondue
+            if (question.answered !== undefined) {
+                return;
+            }
+            
+            // Marquer la question comme répondue
+            question.answered = true;
+            question.userAnswer = selectedIndex;
+            
+            // Mettre à jour le score
+            if (selectedIndex === question.correct) {
+                score++;
+                updateScore();
+            }
+            
+            // Mettre à jour le nombre de questions répondues
+            answeredQuestions++;
+            updateProgress();
+            
+            // Afficher la réponse correcte/incorrecte
+            const options = optionsContainer.querySelectorAll('.option');
+            options.forEach(option => {
+                option.classList.add('disabled');
+                const optionIndex = parseInt(option.dataset.index);
+                if (optionIndex === question.correct) {
+                    option.classList.add('correct');
+                } else if (optionIndex === selectedIndex && optionIndex !== question.correct) {
+                    option.classList.add('incorrect');
+                }
+            });
+            
+            // Si toutes les questions ont été répondues et c'est la dernière question, afficher les résultats
+            if (answeredQuestions === shuffledQuizData.length && currentQuestion === shuffledQuizData.length - 1) {
+                showResults();
+            }
+        }
+
         // Mettre à jour la barre de progression
-        function updateProgressBar() {
-            const progressPercentage = ((currentQuestionIndex + 1) / shuffledQuestions.length) * 100;
-            progressBar.style.width = `${progressPercentage}%`;
+        function updateProgress() {
+            const percentage = (answeredQuestions / shuffledQuizData.length) * 100;
+            progressBar.style.width = `${percentage}%`;
         }
-        
+
+        // Mettre à jour l'affichage du score
+        function updateScore() {
+            scoreDisplay.textContent = score;
+        }
+
         // Afficher les résultats
-        function displayResults() {
-            questionContainer.style.display = 'none';
+        function showResults() {
+            quizContent.style.display = 'none';
             resultsContainer.style.display = 'block';
+            finalScoreDisplay.textContent = score;
             
-            finalScoreElement.textContent = score;
-            finalTotalElement.textContent = shuffledQuestions.length;
-            
-            // Personnaliser le message en fonction du score
-            const percentage = (score / shuffledQuestions.length) * 100;
+            // Message personnalisé en fonction du score
+            const percentage = (score / shuffledQuizData.length) * 100;
             let message = '';
             
             if (percentage >= 90) {
-                message = 'Excellent ! Vous maîtrisez parfaitement les notions d\'étude de la langue pour le CRPE.';
+                message = 'Excellent ! Vous maîtrisez parfaitement la grammaire française !';
             } else if (percentage >= 75) {
-                message = 'Très bien ! Vous avez une bonne maîtrise des notions d\'étude de la langue pour le CRPE.';
-            } else if (percentage >= 60) {
-                message = 'Bien ! Vous avez une compréhension satisfaisante des notions d\'étude de la langue pour le CRPE, mais quelques révisions seraient bénéfiques.';
-            } else if (percentage >= 40) {
-                message = 'Vous avez assimilé certaines notions d\'étude de la langue pour le CRPE, mais des révisions plus approfondies sont nécessaires.';
+                message = 'Très bien ! Vous avez de solides connaissances en grammaire.';
+            } else if (percentage >= 50) {
+                message = 'Bien ! Continuez à travailler pour améliorer vos connaissances.';
+            } else if (percentage >= 25) {
+                message = 'Des bases sont acquises, mais il faut approfondir vos connaissances.';
             } else {
-                message = 'Des révisions approfondies sont nécessaires pour maîtriser les notions d\'étude de la langue pour le CRPE.';
+                message = 'Il est nécessaire de revoir les concepts fondamentaux de grammaire.';
             }
             
-            feedbackMessage.textContent = message;
+            scoreMessage.textContent = message;
         }
+
+        // Gestionnaires d'événements
+        helpBtn.addEventListener('click', toggleHelp);
         
-        // Gestionnaire d'événement pour le bouton "Suivant"
-        nextButton.addEventListener('click', () => {
-            if (currentQuestionIndex < shuffledQuestions.length - 1) {
-                currentQuestionIndex++;
-                displayQuestion(shuffledQuestions[currentQuestionIndex]);
-                updateProgressBar();
-                
-                // Activer le bouton "Précédent"
-                prevButton.disabled = false;
-                
-                // Désactiver le bouton "Suivant" si on est à la dernière question
-                if (currentQuestionIndex === shuffledQuestions.length - 1) {
-                    nextButton.textContent = 'Terminer';
-                }
-            } else {
-                // Afficher les résultats
-                displayResults();
-            }
-        });
-        
-        // Gestionnaire d'événement pour le bouton "Précédent"
         prevButton.addEventListener('click', () => {
-            if (currentQuestionIndex > 0) {
-                currentQuestionIndex--;
-                displayQuestion(shuffledQuestions[currentQuestionIndex]);
-                updateProgressBar();
-                
-                // Désactiver le bouton "Précédent" si on est à la première question
-                prevButton.disabled = currentQuestionIndex === 0;
-                
-                // Changer le texte du bouton "Suivant" si on n'est plus à la dernière question
-                nextButton.textContent = 'Suivant';
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                updateQuestion();
             }
         });
-        
-        // Gestionnaire d'événement pour le bouton "Recommencer"
-        restartButton.addEventListener('click', () => {
-            shuffledQuestions = initializeQuiz();
+
+        nextButton.addEventListener('click', () => {
+            if (currentQuestion < shuffledQuizData.length - 1) {
+                currentQuestion++;
+                updateQuestion();
+            } else {
+                showResults();
+            }
         });
-        
-        // Initialiser le quiz
-        let shuffledQuestions = initializeQuiz();
+
+        // Gestionnaire d'événement pour le bouton Recommencer
+        restartButton.addEventListener('click', initQuiz);
+
+        // Initialiser le quiz au chargement de la page
+        initQuiz();
     </script>
 </body>
 </html>
+```
