@@ -1,120 +1,926 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Quiz Interactif</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-      background-color: #f9f9f9;
-    }
-    h1 {
-      text-align: center;
-    }
-    .question {
-      font-size: 1.2em;
-      margin-bottom: 10px;
-    }
-    .answers button {
-      margin: 5px;
-      padding: 10px 15px;
-      cursor: pointer;
-    }
-    .hidden {
-      display: none;
-    }
-    #quiz-container, #result {
-      max-width: 600px;
-      margin: auto;
-      background: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GrammaQuiz CRPE</title>
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --correct-color: #4caf50;
+            --incorrect-color: #f44336;
+            --neutral-color: #f5f5f5;
+            --text-color: #333;
+            --light-text: #666;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f9f9f9;
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .quiz-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 30px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .quiz-intro {
+            color: var(--light-text);
+            margin-bottom: 20px;
+        }
+        
+        .progress-container {
+            margin-bottom: 20px;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background-color: var(--neutral-color);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background-color: var(--primary-color);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .score-display {
+            text-align: right;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        
+        .question-container {
+            margin-bottom: 30px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 0.5s forwards;
+        }
+        
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .question {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+        
+        .option {
+            padding: 15px;
+            background-color: var(--neutral-color);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .option:hover {
+            background-color: #e9e9e9;
+            transform: translateY(-2px);
+            box-shadow: var(--box-shadow);
+        }
+        
+        .option.correct {
+            background-color: var(--correct-color);
+            color: white;
+        }
+        
+        .option.incorrect {
+            background-color: var(--incorrect-color);
+            color: white;
+        }
+        
+        .option.disabled {
+            pointer-events: none;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        button {
+            padding: 12px 24px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+        
+        button:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        button:disabled {
+            background-color: var(--light-text);
+            cursor: not-allowed;
+        }
+        
+        .results {
+            text-align: center;
+            display: none;
+        }
+        
+        .results h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+        
+        .score-result {
+            font-size: 3rem;
+            margin: 20px 0;
+            color: var(--secondary-color);
+        }
+        
+        .restart-btn {
+            margin-top: 20px;
+        }
+        
+        @media (min-width: 768px) {
+            .options {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .question-number {
+            font-weight: normal;
+            color: var(--primary-color);
+            margin-right: 8px;
+        }
+        
+    </style>
 </head>
 <body>
-  <h1>Quiz Interactif</h1>
-  <div id="quiz-container">
-    <div id="question" class="question"></div>
-    <div id="answers" class="answers"></div>
-    <button id="next" class="hidden">Question suivante</button>
-  </div>
-  <div id="result" class="hidden">
-    <h2>Résultats</h2>
-    <p id="score"></p>
-  </div>
+    <div class="quiz-container">
+        <header>
+            <h1>GrammaQuiz CRPE</h1>
+            <p class="quiz-intro">Testez vos connaissances en grammaire française pour la préparation au concours CRPE. 50 questions à choix multiple pour une révision complète.</p>
+        </header>
+        
+        <div class="progress-container">
+            <div class="score-display">Score: <span id="score">0</span>/<span id="total-questions">50</span></div>
+            <div class="progress-bar">
+                <div class="progress" id="progress"></div>
+            </div>
+        </div>
+        
+        <div id="quiz-content">
+            <div id="question-container" class="question-container">
+                <div id="question" class="question"></div>
+                <div id="options" class="options"></div>
+            </div>
+            
+            <div class="navigation">
+                <button id="prev-btn" disabled>Précédent</button>
+                <button id="next-btn">Suivant</button>
+            </div>
+        </div>
+        
+        <div id="results" class="results">
+            <h2>Résultats du quiz</h2>
+            <p>Vous avez terminé le quiz!</p>
+            <div class="score-result">
+                <span id="final-score">0</span>/50
+            </div>
+            <p id="score-message"></p>
+            <button id="restart-btn" class="restart-btn">Recommencer le quiz</button>
+        </div>
+    </div>
 
-  <script>
-    // Définition des questions et réponses
-    const quiz = [
-      {
-        question: "Quelle est la capitale de la France ?",
-        answers: ["Paris", "Lyon", "Marseille", "Toulouse"],
-        correct: 0
-      },
-      {
-        question: "Quelle est la formule de l'eau ?",
-        answers: ["H2O", "CO2", "NaCl", "O2"],
-        correct: 0
-      }
-      // Vous pouvez ajouter d'autres questions ici.
-    ];
+    <script>
+        const quizData = [
+            {
+                question: "Qu'est-ce qu'une phrase simple ?",
+                options: [
+                    "Une phrase contenant plusieurs propositions",
+                    "Une phrase formée d'une seule proposition",
+                    "Une phrase sans verbe conjugué",
+                    "Une phrase comportant uniquement un sujet et un verbe"
+                ],
+                correct: 1
+            },
+            {
+                question: "Comment définit-on une phrase complexe ?",
+                options: [
+                    "Une phrase contenant plusieurs verbes",
+                    "Une phrase comprenant plusieurs propositions",
+                    "Une phrase contenant un verbe au mode impersonnel",
+                    "Une phrase de plus de quinze mots"
+                ],
+                correct: 1
+            },
+            {
+                question: "Quels sont les deux principaux types de phrases complexes ?",
+                options: [
+                    "La phrase complexe par coordination et la phrase complexe par subordination",
+                    "La phrase complexe par subordination et la phrase complexe par juxtaposition",
+                    "La phrase complexe par coordination ou juxtaposition et la phrase complexe par subordination",
+                    "La phrase complexe verbale et la phrase complexe nominale"
+                ],
+                correct: 2
+            },
+            {
+                question: "Comment définit-on une proposition subordonnée ?",
+                options: [
+                    "Une proposition indépendante introduite par une conjonction",
+                    "Une proposition incluse dans une autre proposition et dépendant de celle-ci",
+                    "Une proposition reliée à une autre par une conjonction de coordination",
+                    "Une proposition sans verbe conjugué"
+                ],
+                correct: 1
+            },
+            {
+                question: "Qu'est-ce qu'un mot subordonnant ?",
+                options: [
+                    "Un mot qui relie deux propositions de même niveau",
+                    "Un mot qui introduit une proposition subordonnée (conjonction de subordination ou pronom relatif)",
+                    "Un mot qui remplace un groupe nominal",
+                    "Un mot qui introduit une proposition indépendante"
+                ],
+                correct: 1
+            },
+            {
+                question: "Quels sont les cas de subordination sans conjonction ?",
+                options: [
+                    "La proposition subordonnée infinitive, participiale et interrogative partielle",
+                    "La proposition subordonnée relative, infinitive et participiale",
+                    "La proposition subordonnée circonstancielle et la proposition subordonnée complétive",
+                    "La proposition subordonnée juxtaposée et coordonnée"
+                ],
+                correct: 0
+            },
+            {
+                question: "Combien de grands types de propositions subordonnées peut-on distinguer ?",
+                options: [
+                    "Deux types",
+                    "Trois types",
+                    "Quatre types",
+                    "Cinq types"
+                ],
+                correct: 2
+            },
+            {
+                question: "Quelle est la particularité des propositions subordonnées complétives ?",
+                options: [
+                    "Elles sont introduites par un pronom relatif",
+                    "Elles sont équivalentes à des groupes nominaux",
+                    "Elles expriment une circonstance",
+                    "Elles ont toujours une fonction d'attribut"
+                ],
+                correct: 1
+            },
+            {
+                question: "Quel est le rôle de la conjonction de subordination dans les complétives ?",
+                options: [
+                    "Elle apporte une information spécifique sur la relation entre la principale et la subordonnée",
+                    "Elle joue un rôle de pur outil grammatical sans apporter d'information spécifique",
+                    "Elle a une fonction grammaticale dans la subordonnée",
+                    "Elle remplace un pronom"
+                ],
+                correct: 1
+            },
+            {
+                question: "Dans la phrase \"Je crois qu'il va faire beau\", quelle est la fonction de la proposition subordonnée ?",
+                options: [
+                    "Sujet",
+                    "COD",
+                    "COI",
+                    "Complément circonstanciel"
+                ],
+                correct: 1
+            },
+            {
+                question: "Comment se forme une proposition subordonnée interrogative totale ?",
+                options: [
+                    "Elle est introduite par \"que\"",
+                    "Elle est introduite par \"si\"",
+                    "Elle est introduite par un pronom interrogatif",
+                    "Elle est introduite par un adverbe interrogatif"
+                ],
+                correct: 1
+            },
+            {
+                question: "Quelle est la caractéristique des propositions subordonnées circonstancielles ?",
+                options: [
+                    "Elles sont introduites par un pronom relatif",
+                    "Elles sont équivalentes à des groupes nominaux",
+                    "Elles indiquent une circonstance et sont introduites par une conjonction qui précise cette relation",
+                    "Elles ont toujours une fonction d'attribut"
+                ],
+                correct: 2
+            },
+            {
+                question: "Dans la phrase \"Je sortirai quand tu auras fini\", quelle est la valeur de la proposition subordonnée ?",
+                options: [
+                    "Causale",
+                    "Temporelle",
+                    "Consécutive",
+                    "Concessive"
+                ],
+                correct: 1
+            },
+            {
+                question: "Qu'est-ce qu'une proposition subordonnée corrélative ?",
+                options: [
+                    "Une subordonnée liée à la principale uniquement par une conjonction",
+                    "Une subordonnée liée à la principale par une conjonction et annoncée par un mot dans la principale",
+                    "Une subordonnée reliée à une autre subordonnée",
+                    "Une subordonnée introduite par un pronom relatif"
+                ],
+                correct: 1
+            },
+            {
+                question: "Quelle est la particularité des propositions subordonnées relatives ?",
+                options: [
+                    "Elles sont introduites par une conjonction de subordination",
+                    "Elles sont introduites par un pronom relatif qui a une fonction dans la subordonnée",
+                    "Elles ont toujours une fonction circonstancielle",
+                    "Elles n'ont jamais d'antécédent"
+                ],
+                correct: 1
+            },
+            {
+                question: "Dans la phrase \"L'homme que tu as vu est un ami\", quelle est la fonction du pronom relatif \"que\" ?",
+                options: [
+                    "Sujet de la subordonnée",
+                    "COD de la subordonnée",
+                    "COI de la subordonnée",
+                    "Complément circonstanciel"
+                ],
+                correct: 1
+            },
+            {
+                question: "Quels sont les deux principaux types de propositions subordonnées relatives ?",
+                options: [
+                    "Les relatives adjectives et les relatives substantives",
+                    "Les relatives complétives et les relatives circonstancielles",
+                    "Les relatives directes et les relatives indirectes",
+                    "Les relatives essentielles et les relatives accessoires"
+                ],
+                correct: 0
+            },
+            {
+                question: "Qu'est-ce qui caractérise une proposition subordonnée relative substantive ?",
+                options: [
+                    "Elle a une fonction adjectivale",
+                    "Elle a un nom comme antécédent",
+                    "Elle a des fonctions nominales et n'a pas un nom comme antécédent",
+                    "Elle est toujours introduite par \"que\""
+                ],
+                correct: 2
+            },
+            {
+                question: "Dans le proverbe \"Qui veut voyager loin ménage sa monture\", quelle est la fonction de la proposition relative \"Qui veut voyager loin\" ?",
+                options: [
+                    "Sujet",
+                    "COD",
+                    "COI",
+                    "Complément circonstanciel"
+                ],
+                correct: 0
+            },
+            {
+                question: "Qu'est-ce qu'une proposition subordonnée infinitive ?",
+                options: [
+                    "Un groupe infinitif ayant son propre sujet, distinct du sujet de la principale",
+                    "Un groupe infinitif dont le sujet est le même que celui de la principale",
+                    "Un groupe infinitif introduit par une conjonction de subordination",
+                    "Un groupe infinitif en fonction d'attribut"
+                ],
+                correct: 0
+            },
+            {
+                question: "Dans la phrase \"J'entends l'oiseau chanter\", quelle est la fonction de \"l'oiseau\" ?",
+                options: [
+                    "Sujet de la principale",
+                    "Sujet sémantique (agent) de \"chanter\" et COD de \"entendre\"",
+                    "COI de la principale",
+                    "Attribut du sujet"
+                ],
+                correct: 1
+            },
+            {
+                question: "Qu'est-ce qu'une proposition subordonnée participiale ?",
+                options: [
+                    "Une proposition dont le verbe est au participe présent ou passé avec un sujet propre",
+                    "Une proposition introduite par un participe présent",
+                    "Une proposition comportant un verbe au participe passé",
+                    "Une proposition qui a pour sujet un participe"
+                ],
+                correct: 0
+            },
+            {
+                question: "Quelle est la fonction de la proposition subordonnée participiale ?",
+                options: [
+                    "COD",
+                    "COI",
+                    "Attribut",
+                    "Complément circonstanciel"
+                ],
+                correct: 3
+            },
+            {
+                question: "Dans la phrase \"Le chat parti, les souris dansent\", à quel type de proposition circonstancielle équivaut la participiale ?",
+                options: [
+                    "Causale ou temporelle",
+                    "Concessive",
+                    "Conditionnelle",
+                    "Consécutive"
+                ],
+                correct: 0
+            },
+            {
+                question: "Comment se caractérise la proposition subordonnée interrogative partielle ?",
+                options: [
+                    "Elle est introduite par \"si\"",
+                    "Elle est introduite par un mot interrogatif (pronom, adverbe, déterminant)",
+                    "Elle est toujours précédée d'une négation",
+                    "Elle est introduite par une conjonction de subordination"
+                ],
+                correct: 1
+            },
+            {
+                question: "Dans la phrase \"Je me demande qui chante\", pourquoi le mot \"qui\" n'est-il pas considéré comme un mot subordonnant ?",
+                options: [
+                    "Parce qu'il a une fonction dans la subordonnée",
+                    "Parce qu'il introduit une relative",
+                    "Parce qu'on le trouve aussi en l'absence de subordination dans l'interrogation directe",
+                    "Parce qu'il ne peut pas être remplacé par \"que\""
+                ],
+                correct: 2
+            },
+            {
+                question: "Qu'est-ce que la coordination dans une phrase complexe ?",
+                options: [
+                    "Une relation entre deux propositions où l'une dépend de l'autre",
+                    "Une relation entre deux propositions qui se situent sur le même plan et sont reliées par une conjonction",
+                    "Une relation entre deux propositions introduites par un pronom relatif",
+                    "Une relation entre une proposition principale et une proposition subordonnée"
+                ],
+                correct: 1
+            },
+            {
+                question: "Qu'est-ce que la juxtaposition dans une phrase complexe ?",
+                options: [
+                    "Une relation entre deux propositions reliées par une conjonction de coordination",
+                    "Une relation entre deux propositions reliées par un signe de ponctuation (virgule, point-virgule, deux points)",
+                    "Une relation entre une proposition principale et une proposition subordonnée",
+                    "Une relation établie par un pronom relatif"
+                ],
+                correct: 1
+            },
+            {
+                question: "Dans quels cas la juxtaposition peut-elle avoir une valeur subordonnante ?",
+                options: [
+                    "Lorsqu'elle exprime une énumération",
+                    "Lorsqu'elle peut être remplacée par une subordination (comme dans \"Tu aurais travaillé, tu aurais eu de meilleurs résultats\" = \"Si tu avais travaillé...\")",
+                    "Lorsqu'elle est suivie d'une coordination",
+                    "Lorsqu'elle introduit un discours direct"
+                ],
+                correct: 1
+            },
+            {
+                question: "Quels sont les trois types d'actes fondamentaux correspondant aux types de phrases ?",
+                options: [
+                    "L'assertion, l'exclamation et l'injonction",
+                    "La déclaration, l'interrogation et l'ordre",
+                    "L'assertion, l'interrogation et l'injonction",
+                    "La narration, le dialogue et la description"
+                ],
+                correct: 2
+            },
+            {
+                question: "Qu'est-ce qui caractérise une phrase de type déclaratif ?",
+                options: [
+                    "Elle se termine par un point d'interrogation",
+                    "Elle exprime un ordre",
+                    "Elle présente généralement la forme canonique de la phrase (GS + GV)",
+                    "Elle se termine toujours par un point d'exclamation"
+                ],
+                correct: 2
+            },
+            {
+                question: "Quels sont les différents marqueurs possibles d'une phrase de type interrogatif ?",
+                options: [
+                    "Uniquement l'inversion du sujet",
+                    "Uniquement la locution \"est-ce que\"",
+                    "Inversion du sujet, locution \"est-ce que\", pronoms ou adverbes interrogatifs, intonation",
+                    "Uniquement les pronoms interrogatifs"
+                ],
+                correct: 2
+            },
+            {
+                question: "Quelle est la différence entre l'interrogation directe et l'interrogation indirecte ?",
+                options: [
+                    "L'interrogation directe est marquée par un point d'interrogation et peut comporter une inversion, l'interrogation indirecte est en proposition subordonnée",
+                    "L'interrogation directe est toujours totale, l'interrogation indirecte est toujours partielle",
+                    "L'interrogation directe est introduite par \"que\", l'interrogation indirecte par \"si\"",
+                    "L'interrogation directe est dans le discours direct, l'interrogation indirecte est dans le discours indirect"
+                ],
+                correct: 0
+            },
+            {
+                question: "Qu'est-ce qu'une interrogation totale ?",
+                options: [
+                    "Une interrogation qui porte sur l'ensemble de la phrase et appelle généralement une réponse par oui/non/si",
+                    "Une interrogation qui porte sur un constituant particulier de la phrase",
+                    "Une interrogation qui comporte plusieurs questions",
+                    "Une interrogation qui est nécessairement indirecte"
+                ],
+                correct: 0
+            },
+            {
+                question: "Dans la phrase \"Pourquoi vas-tu à la plage ?\", sur quel élément porte l'interrogation ?",
+                options: [
+                    "Le sujet",
+                    "Le COD",
+                    "Le COI",
+                    "Le complément circonstanciel"
+                ],
+                correct: 3
+            },
+            {
+                question: "Quel est le mode verbal principal utilisé dans les phrases de type impératif ?",
+                options: [
+                    "L'indicatif",
+                    "Le conditionnel",
+                    "L'impératif ou le subjonctif",
+                    "L'infinitif"
+                ],
+                correct: 2
+            },
+            {
+                question: "Comment peut-on exprimer un ordre de manière indirecte ?",
+                options: [
+                    "Uniquement par une phrase de type impératif",
+                    "Par une phrase de type déclaratif ou interrogatif avec certaines modalités",
+                    "Uniquement par un infinitif",
+                    "Uniquement par le futur"
+                ],
+                correct: 1
+            },
+            {
+                question: "Quelle est la différence entre les types de phrases et les formes de phrases ?",
+                options: [
+                    "Les types sont obligatoires (déclaratif, interrogatif, impératif), les formes sont facultatives",
+                    "Les types concernent la ponctuation, les formes concernent le sens",
+                    "Les types concernent le mode du verbe, les formes concernent le temps",
+                    "Les types et les formes sont synonymes"
+                ],
+                correct: 0
+            },
+            {
+                question: "Qu'est-ce qui caractérise la forme négative d'une phrase ?",
+                options: [
+                    "La présence d'un verbe à la voix passive",
+                    "La présence d'adverbes de négation (ne...pas, ne...plus, ne...jamais, etc.)",
+                    "L'inversion du sujet",
+                    "La présence d'un point d'exclamation"
+                ],
+                correct: 1
+            },
+            {
+                question: "Quels sont les trois types de négation qu'on peut distinguer ?",
+                options: [
+                    "La négation totale, partielle et exceptive",
+                    "La négation simple, double et triple",
+                    "La négation verbale, nominale et adverbiale",
+                    "La négation explicite, implicite et dérivée"
+                ],
+                correct: 0
+            },
+            {
+                question: "Dans la phrase \"Je n'aime que les films français\", quel type de négation est employé ?",
+                options: [
+                    "Négation totale",
+                    "Négation partielle",
+                    "Négation exceptive",
+                    "Double négation"
+                ],
+                correct: 2
+            },
+            {
+                question: "Qu'est-ce que le \"ne\" explétif ?",
+                options: [
+                    "Un \"ne\" qui fait partie de la négation",
+                    "Un \"ne\" employé dans certains contextes négatifs mais qui n'est pas une négation",
+                    "Un \"ne\" qui renforce la négation",
+                    "Un \"ne\" utilisé uniquement à l'oral"
+                ],
+                correct: 1
+            },
+            {
+                question: "Qu'est-ce qu'une phrase de forme passive ?",
+                options: [
+                    "Une phrase dont le sujet subit l'action",
+                    "Une phrase dont le verbe principal est employé à la voix passive",
+                    "Une phrase comportant un participe passé",
+                    "Une phrase avec un verbe pronominal"
+                ],
+                correct: 1
+            },
+            {
+                question: "Dans la transformation passive de la phrase \"Bérénice aime Titus\", quel est le complément d'agent ?",
+                options: [
+                    "Bérénice",
+                    "Titus",
+                    "par Bérénice",
+                    "par Titus"
+                ],
+                correct: 3
+            },
+            {
+                question: "Qu'est-ce qui caractérise une phrase de forme exclamative ?",
+                options: [
+                    "Elle se termine par un point d'exclamation ou comporte un mot exclamatif",
+                    "Elle contient nécessairement un verbe à l'impératif",
+                    "Elle est obligatoirement de type déclaratif",
+                    "Elle comporte toujours un verbe de sentiment"
+                ],
+                correct: 0
+            },
+            {
+                question: "Quels sont les moyens grammaticaux pour obtenir la forme emphatique d'une phrase ?",
+                options: [
+                    "La négation et l'exclamation",
+                    "L'interrogation et l'impératif",
+                    "L'extraction et le détachement",
+                    "La passivation et l'interrogation"
+                ],
+                correct: 2
+            },
+            {
+                question: "Quelle est la condition pour qu'une phrase soit considérée de forme impersonnelle ?",
+                options: [
+                    "Elle doit contenir un verbe impersonnel comme \"pleuvoir\"",
+                    "Son verbe principal doit être à la voix impersonnelle et elle doit être équivalente à une phrase non impersonnelle",
+                    "Elle doit commencer par \"il y a\"",
+                    "Elle ne doit pas avoir de sujet identifiable"
+                ],
+                correct: 1
+            },
+            {
+                question: "Qu'est-ce qu'une phrase averbale ?",
+                options: [
+                    "Une phrase sans verbe conjugué, comportant un sujet et un prédicat",
+                    "Une phrase comportant uniquement un verbe infinitif",
+                    "Une phrase dont le verbe est sous-entendu",
+                    "Une phrase nominale comportant uniquement un groupe nominal"
+                ],
+                correct: 0
+            },
+            {
+                question: "Quelle est la différence entre une phrase averbale et une phrase elliptique ?",
+                options: [
+                    "La phrase averbale contient un sujet et un prédicat, la phrase elliptique dépend du contexte pour être comprise",
+                    "La phrase averbale est plus longue que la phrase elliptique",
+                    "La phrase averbale est à l'écrit, la phrase elliptique est à l'oral",
+                    "La phrase averbale est au présent, la phrase elliptique est au passé"
+                ],
+                correct: 0
+            },
+            {
+                question: "Qu'est-ce qu'un mot-phrase ?",
+                options: [
+                    "Un mot qui à lui seul constitue une phrase (oui, non, bonjour, merci)",
+                    "Un mot qui introduit une phrase",
+                    "Un mot qui résume toute une phrase",
+                    "Un mot qui peut être utilisé comme verbe et comme nom"
+                ],
+                correct: 0
+            }
+        ];
 
-    let currentQuestion = 0;
-    let score = 0;
+        // Variables pour gérer l'état du quiz
+        let currentQuestion = 0;
+        let score = 0;
+        let answeredQuestions = 0;
+        let shuffledQuizData = [...quizData];
 
-    const questionEl = document.getElementById('question');
-    const answersEl = document.getElementById('answers');
-    const nextBtn = document.getElementById('next');
-    const resultDiv = document.getElementById('result');
-    const scoreEl = document.getElementById('score');
+        // Éléments DOM
+        const questionContainer = document.getElementById('question-container');
+        const questionElement = document.getElementById('question');
+        const optionsContainer = document.getElementById('options');
+        const prevButton = document.getElementById('prev-btn');
+        const nextButton = document.getElementById('next-btn');
+        const progressBar = document.getElementById('progress');
+        const scoreDisplay = document.getElementById('score');
+        const totalQuestionsDisplay = document.getElementById('total-questions');
+        const resultsContainer = document.getElementById('results');
+        const finalScoreDisplay = document.getElementById('final-score');
+        const scoreMessage = document.getElementById('score-message');
+        const restartButton = document.getElementById('restart-btn');
+        const quizContent = document.getElementById('quiz-content');
 
-    // Affichage de la question actuelle
-    function displayQuestion() {
-      nextBtn.classList.add('hidden');
-      questionEl.textContent = quiz[currentQuestion].question;
-      answersEl.innerHTML = '';
-      quiz[currentQuestion].answers.forEach((answer, index) => {
-        const btn = document.createElement('button');
-        btn.textContent = answer;
-        btn.onclick = () => checkAnswer(index);
-        answersEl.appendChild(btn);
-      });
-    }
+        // Fonction pour mélanger le tableau des questions
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
 
-    // Vérification de la réponse sélectionnée
-    function checkAnswer(selected) {
-      const isCorrect = selected === quiz[currentQuestion].correct;
-      if (isCorrect) {
-        score++;
-        alert("Bonne réponse !");
-      } else {
-        alert("Mauvaise réponse !");
-      }
-      nextBtn.classList.remove('hidden');
-    }
+        // Initialiser le quiz
+        function initQuiz() {
+            // Mélanger les questions
+            shuffledQuizData = shuffleArray([...quizData]);
+            currentQuestion = 0;
+            score = 0;
+            answeredQuestions = 0;
+            
+            // Réinitialiser l'affichage
+            updateQuestion();
+            updateProgress();
+            updateScore();
+            
+            // Afficher le contenu du quiz et masquer les résultats
+            quizContent.style.display = 'block';
+            resultsContainer.style.display = 'none';
+            
+            // Désactiver le bouton précédent au début
+            prevButton.disabled = true;
+        }
 
-    // Passage à la question suivante ou affichage du résultat final
-    nextBtn.addEventListener('click', () => {
-      currentQuestion++;
-      if (currentQuestion < quiz.length) {
-        displayQuestion();
-      } else {
-        displayResult();
-      }
-    });
+        // Afficher la question courante
+        function updateQuestion() {
+            const question = shuffledQuizData[currentQuestion];
+            questionElement.innerHTML = `<span class="question-number">Question ${currentQuestion + 1}/50:</span> ${question.question}`;
+            
+            // Vider le conteneur des options
+            optionsContainer.innerHTML = '';
+            
+            // Créer les boutons d'options
+            question.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.classList.add('option');
+                optionElement.textContent = option;
+                optionElement.dataset.index = index;
+                
+                // Vérifier si la question a déjà été répondue
+                if (question.answered !== undefined) {
+                    optionElement.classList.add('disabled');
+                    if (index === question.correct) {
+                        optionElement.classList.add('correct');
+                    } else if (index === question.userAnswer) {
+                        optionElement.classList.add('incorrect');
+                    }
+                }
+                
+                optionElement.addEventListener('click', selectOption);
+                optionsContainer.appendChild(optionElement);
+            });
+            
+            // Mettre à jour les boutons de navigation
+            prevButton.disabled = currentQuestion === 0;
+            nextButton.textContent = currentQuestion === shuffledQuizData.length - 1 ? 'Terminer' : 'Suivant';
+        }
 
-    // Affichage des résultats du quiz
-    function displayResult() {
-      document.getElementById('quiz-container').classList.add('hidden');
-      resultDiv.classList.remove('hidden');
-      scoreEl.textContent = "Votre score : " + score + " sur " + quiz.length;
-    }
+        // Gérer la sélection d'une option
+        function selectOption(e) {
+            const selectedOption = e.target;
+            const selectedIndex = parseInt(selectedOption.dataset.index);
+            const question = shuffledQuizData[currentQuestion];
+            
+            // Vérifier si la question a déjà été répondue
+            if (question.answered !== undefined) {
+                return;
+            }
+            
+            // Marquer la question comme répondue
+            question.answered = true;
+            question.userAnswer = selectedIndex;
+            
+            // Mettre à jour le score
+            if (selectedIndex === question.correct) {
+                score++;
+                updateScore();
+            }
+            
+            // Mettre à jour le nombre de questions répondues
+            answeredQuestions++;
+            updateProgress();
+            
+            // Afficher la réponse correcte/incorrecte
+            const options = optionsContainer.querySelectorAll('.option');
+            options.forEach(option => {
+                option.classList.add('disabled');
+                const optionIndex = parseInt(option.dataset.index);
+                if (optionIndex === question.correct) {
+                    option.classList.add('correct');
+                } else if (optionIndex === selectedIndex && optionIndex !== question.correct) {
+                    option.classList.add('incorrect');
+                }
+            });
+            
+            // Si toutes les questions ont été répondues et c'est la dernière question, afficher les résultats
+            if (answeredQuestions === shuffledQuizData.length && currentQuestion === shuffledQuizData.length - 1) {
+                showResults();
+            }
+        }
 
-    // Démarrage du quiz
-    displayQuestion();
-  </script>
+        // Mettre à jour la barre de progression
+        function updateProgress() {
+            const percentage = (answeredQuestions / shuffledQuizData.length) * 100;
+            progressBar.style.width = `${percentage}%`;
+        }
+
+        // Mettre à jour l'affichage du score
+        function updateScore() {
+            scoreDisplay.textContent = score;
+        }
+
+        // Afficher les résultats
+        function showResults() {
+            quizContent.style.display = 'none';
+            resultsContainer.style.display = 'block';
+            finalScoreDisplay.textContent = score;
+            
+            // Message personnalisé en fonction du score
+            const percentage = (score / shuffledQuizData.length) * 100;
+            let message = '';
+            
+            if (percentage >= 90) {
+                message = 'Excellent ! Vous maîtrisez parfaitement la grammaire française !';
+            } else if (percentage >= 75) {
+                message = 'Très bien ! Vous avez de solides connaissances en grammaire.';
+            } else if (percentage >= 50) {
+                message = 'Bien ! Continuez à travailler pour améliorer vos connaissances.';
+            } else if (percentage >= 25) {
+                message = 'Des bases sont acquises, mais il faut approfondir vos connaissances.';
+            } else {
+                message = 'Il est nécessaire de revoir les concepts fondamentaux de grammaire.';
+            }
+            
+            scoreMessage.textContent = message;
+        }
+
+        // Gestionnaires d'événements pour les boutons de navigation
+        prevButton.addEventListener('click', () => {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                updateQuestion();
+            }
+        });
+
+        nextButton.addEventListener('click', () => {
+            if (currentQuestion < shuffledQuizData.length - 1) {
+                currentQuestion++;
+                updateQuestion();
+            } else {
+                showResults();
+            }
+        });
+
+        // Gestionnaire d'événement pour le bouton Recommencer
+        restartButton.addEventListener('click', initQuiz);
+
+        // Initialiser le quiz au chargement de la page
+        initQuiz();
+    </script>
 </body>
 </html>
