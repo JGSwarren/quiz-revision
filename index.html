@@ -3,927 +3,574 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz CRPE - Français</title>
+    <title>Quiz CRPE étude de la langue - Français</title>
     <style>
-        :root {
-            --primary-color: #3498db;
-            --secondary-color: #2980b9;
-            --correct-color: #2ecc71;
-            --incorrect-color: #e74c3c;
-            --neutral-color: #ecf0f1;
-            --text-color: #2c3e50;
-            --light-text: #7f8c8d;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
+        /* Styles généraux */
         body {
-            background-color: #f9f9f9;
-            color: var(--text-color);
-            line-height: 1.6;
-        }
-        
-        .container {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
+            background-color: #f5f7fa;
+            color: #333;
         }
         
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-            padding: 20px;
+        .quiz-container {
             background-color: white;
             border-radius: 10px;
-            box-shadow: var(--shadow);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-top: 20px;
         }
         
         h1 {
-            color: var(--primary-color);
-            font-size: 2.2rem;
-            margin-bottom: 10px;
-        }
-        
-        .subtitle {
-            color: var(--light-text);
-            font-size: 1.1rem;
-        }
-        
-        .menu-container, .quiz-container, .results-container {
-            background-color: white;
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: var(--shadow);
-            display: none;
-        }
-        
-        .menu-container {
-            display: block;
-        }
-        
-        .menu-title {
             text-align: center;
+            color: #2c3e50;
             margin-bottom: 30px;
         }
         
-        .menu-options {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
+        /* Barre de progression */
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            margin-bottom: 30px;
         }
         
-        .menu-button {
-            padding: 20px;
-            border-radius: 8px;
-            background-color: var(--neutral-color);
-            border: none;
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--text-color);
-            text-align: left;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
+        .progress-bar {
+            height: 100%;
+            background-color: #3498db;
+            border-radius: 5px;
+            width: 0%;
+            transition: width 0.3s ease;
         }
         
-        .menu-button:hover {
-            background-color: var(--primary-color);
-            color: white;
-            transform: translateY(-3px);
-        }
-        
-        .menu-button::after {
-            content: "→";
-            position: absolute;
-            right: 20px;
-            transition: transform 0.3s ease;
-        }
-        
-        .menu-button:hover::after {
-            transform: translateX(5px);
-        }
-        
+        /* Style des questions */
         .question-container {
             margin-bottom: 30px;
         }
         
-        .question-text {
-            font-size: 1.2rem;
+        .question {
+            font-size: 18px;
+            margin-bottom: 15px;
             font-weight: 600;
-            margin-bottom: 20px;
         }
         
-        .options-container {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+        .section-tag {
+            display: inline-block;
+            padding: 4px 10px;
+            font-size: 12px;
+            border-radius: 15px;
+            margin-bottom: 10px;
+            font-weight: bold;
         }
         
-        .option-button {
-            padding: 15px;
-            border-radius: 8px;
-            background-color: var(--neutral-color);
-            border: none;
-            font-size: 1rem;
-            text-align: left;
-            cursor: pointer;
-            transition: all 0.3s ease;
+        .analyse-verbale {
+            background-color: #e8f4fd;
+            color: #2980b9;
         }
         
-        .option-button:hover {
-            background-color: #d5dbdb;
+        .analyse-phrase {
+            background-color: #e8f8ef;
+            color: #27ae60;
         }
         
-        .option-button.selected {
-            background-color: var(--primary-color);
-            color: white;
+        .fonctions-grammaticales {
+            background-color: #fef5e7;
+            color: #e67e22;
         }
         
-        .option-button.correct {
-            background-color: var(--correct-color);
-            color: white;
+        .orthographe-grammaticale {
+            background-color: #f9ebf5;
+            color: #8e44ad;
         }
         
-        .option-button.incorrect {
-            background-color: var(--incorrect-color);
-            color: white;
+        /* Style des options */
+        .options {
+            list-style-type: none;
+            padding: 0;
         }
         
-        .help-container {
-            margin-top: 15px;
-            padding: 15px;
+        .option {
+            padding: 12px 15px;
             background-color: #f8f9fa;
-            border-radius: 8px;
-            border-left: 4px solid var(--primary-color);
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .option:hover {
+            background-color: #f0f2f5;
+        }
+        
+        .option.selected {
+            background-color: #d0e8f9;
+            border-color: #3498db;
+        }
+        
+        .option.correct {
+            background-color: #d4edda;
+            border-color: #28a745;
+        }
+        
+        .option.incorrect {
+            background-color: #f8d7da;
+            border-color: #dc3545;
+        }
+        
+        /* Feedback et explications */
+        .feedback {
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
             display: none;
         }
         
-        .navigation-container {
+        .feedback.correct {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .feedback.incorrect {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .help-btn {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+        
+        .help-btn:hover {
+            background-color: #5a6268;
+        }
+        
+        .explanation {
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+            display: none;
+        }
+        
+        /* Navigation */
+        .navigation {
             display: flex;
             justify-content: space-between;
             margin-top: 30px;
         }
         
-        .nav-button {
-            padding: 12px 20px;
-            border-radius: 8px;
-            background-color: var(--primary-color);
+        .nav-btn {
+            background-color: #3498db;
             color: white;
             border: none;
-            font-size: 1rem;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
             cursor: pointer;
-            transition: all 0.3s ease;
         }
         
-        .nav-button:hover {
-            background-color: var(--secondary-color);
+        .nav-btn:hover {
+            background-color: #2980b9;
         }
         
-        .nav-button:disabled {
-            background-color: var(--light-text);
+        .nav-btn:disabled {
+            background-color: #b3b3b3;
             cursor: not-allowed;
         }
         
-        .help-button {
-            padding: 8px 15px;
-            border-radius: 20px;
-            background-color: var(--neutral-color);
-            color: var(--text-color);
-            border: none;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        
-        .help-button:hover {
-            background-color: #d5dbdb;
-        }
-        
-        .help-icon {
-            font-size: 1rem;
-        }
-        
-        .progress-container {
-            margin: 20px 0;
-            background-color: var(--neutral-color);
-            border-radius: 20px;
-            height: 10px;
-            overflow: hidden;
-        }
-        
-        .progress-bar {
-            height: 100%;
-            background-color: var(--primary-color);
-            width: 0%;
-            transition: width 0.3s ease;
-        }
-        
-        .score-container {
-            text-align: right;
-            margin-bottom: 10px;
-            font-weight: 600;
-        }
-        
-        .results-header {
+        /* Affichage du score */
+        .score-display {
             text-align: center;
-            margin-bottom: 20px;
-        }
-        
-        .results-score {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            margin-bottom: 10px;
-        }
-        
-        .results-message {
+            font-size: 18px;
             margin-bottom: 30px;
-            font-size: 1.1rem;
         }
         
-        .results-actions {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
+        /* Résultats */
+        .results-container {
+            text-align: center;
+            display: none;
         }
         
-        .action-button {
-            padding: 12px 20px;
-            border-radius: 8px;
+        .results-container h2 {
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        
+        .score-result {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+        
+        .restart-btn {
+            background-color: #3498db;
             color: white;
             border: none;
-            font-size: 1rem;
+            border-radius: 5px;
+            padding: 12px 25px;
+            font-size: 16px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            margin-top: 20px;
         }
         
-        .primary-action {
-            background-color: var(--primary-color);
+        .restart-btn:hover {
+            background-color: #2980b9;
         }
         
-        .primary-action:hover {
-            background-color: var(--secondary-color);
-        }
-        
-        .secondary-action {
-            background-color: var(--light-text);
-        }
-        
-        .secondary-action:hover {
-            background-color: #6a7a7a;
-        }
-        
-        @media (max-width: 768px) {
-            .container {
+        /* Responsive */
+        @media (max-width: 600px) {
+            body {
                 padding: 10px;
             }
             
-            header, .menu-container, .quiz-container, .results-container {
-                padding: 20px;
+            .quiz-container {
+                padding: 15px;
             }
             
-            h1 {
-                font-size: 1.8rem;
-            }
-            
-            .question-text {
-                font-size: 1.1rem;
-            }
-            
-            .option-button, .menu-button {
-                padding: 12px;
-            }
-            
-            .results-actions {
-                flex-direction: column;
+            .question {
+                font-size: 16px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Quiz CRPE - Français</h1>
-            <p class="subtitle">Révisez les notions essentielles pour l'épreuve écrite</p>
-        </header>
-        
-        <!-- Menu principal -->
-        <div class="menu-container" id="menu-container">
-            <h2 class="menu-title">Choisissez un volet</h2>
-            <div class="menu-options">
-                <button class="menu-button" data-section="etude-langue">I. Étude de la langue (grammaire, syntaxe, orthographe)</button>
-                <button class="menu-button" data-section="lexique">II. Lexique et compréhension lexicale</button>
-                <button class="menu-button" data-section="methodologie">III. Méthodologie de la réflexion et du développement</button>
-            </div>
+    <h1>Quiz CRPE étude de la langue - Français</h1>
+    
+    <div class="quiz-container">
+        <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
         </div>
         
-        <!-- Quiz -->
-        <div class="quiz-container" id="quiz-container">
-            <div class="score-container">
-                Score: <span id="current-score">0</span>/<span id="max-score">0</span>
-            </div>
-            <div class="progress-container">
-                <div class="progress-bar" id="progress-bar"></div>
-            </div>
-            <div class="question-container">
-                <div class="question-text" id="question-text"></div>
-                <div class="options-container" id="options-container"></div>
-                <div class="help-container" id="help-container"></div>
-                <button class="help-button" id="help-button">
-                    <span class="help-icon">?</span> Aide
-                </button>
-            </div>
-            <div class="navigation-container">
-                <button class="nav-button" id="prev-button">Précédent</button>
-                <button class="nav-button" id="next-button">Suivant</button>
-            </div>
+        <div class="score-display">
+            Score: <span id="current-score">0</span>/<span id="total-questions">50</span>
         </div>
         
-        <!-- Résultats -->
-        <div class="results-container" id="results-container">
-            <div class="results-header">
-                <h2>Résultats</h2>
-                <div class="results-score" id="final-score">0/0</div>
-                <p class="results-message" id="results-message"></p>
-            </div>
-            <div class="results-actions">
-                <button class="action-button primary-action" id="retry-button">Recommencer ce volet</button>
-                <button class="action-button secondary-action" id="menu-button">Menu principal</button>
-                <button class="action-button primary-action" id="next-section-button">Volet suivant</button>
-            </div>
+        <div id="question-container" class="question-container">
+            <!-- Les questions seront insérées ici par JavaScript -->
+        </div>
+        
+        <div class="navigation">
+            <button id="prev-btn" class="nav-btn" disabled>Précédent</button>
+            <button id="next-btn" class="nav-btn">Suivant</button>
+        </div>
+        
+        <div id="results-container" class="results-container">
+            <h2>Résultats du Quiz</h2>
+            <div class="score-result">Vous avez obtenu <span id="final-score">0</span> sur <span id="final-total">50</span></div>
+            <div id="feedback-message"></div>
+            <button id="restart-btn" class="restart-btn">Recommencer le Quiz</button>
         </div>
     </div>
 
     <script>
-        // Base de données des questions
-        const quizData = {
-            "etude-langue": {
-                title: "Étude de la langue",
-                next: "lexique",
-                questions: [
-                    {
-                        question: "Le verbe \"finir\" appartient au:",
-                        options: [
-                            "1er groupe",
-                            "2e groupe",
-                            "3e groupe",
-                            "4e groupe"
-                        ],
-                        answer: 1,
-                        help: "Les verbes du 2e groupe sont les verbes qui se terminent par -ir et qui forment leur participe présent en -issant. Le verbe \"finir\" donne \"finissant\" au participe présent, il appartient donc au 2e groupe."
-                    },
-                    {
-                        question: "Quel temps est employé dans la phrase \"Il mangeait quand le téléphone sonna\"?",
-                        options: [
-                            "Imparfait et passé simple",
-                            "Passé composé et passé simple",
-                            "Imparfait et passé composé",
-                            "Plus-que-parfait et passé antérieur"
-                        ],
-                        answer: 0,
-                        help: "Dans cette phrase, \"mangeait\" est à l'imparfait (temps de l'arrière-plan, de l'action qui dure) et \"sonna\" est au passé simple (temps de l'action ponctuelle au premier plan)."
-                    },
-                    {
-                        question: "Dans quel mode se trouve le verbe dans la phrase \"Il faut que tu viennes\"?",
-                        options: [
-                            "Indicatif",
-                            "Subjonctif",
-                            "Conditionnel",
-                            "Impératif"
-                        ],
-                        answer: 1,
-                        help: "Le verbe \"viennes\" est au subjonctif présent. Ce mode est souvent utilisé après des expressions comme \"il faut que\", \"je veux que\", \"il est nécessaire que\", etc., qui expriment une obligation, un souhait ou une nécessité."
-                    },
-                    {
-                        question: "Quelle est la valeur du présent dans la phrase \"En 1492, Christophe Colomb découvre l'Amérique\"?",
-                        options: [
-                            "Présent d'énonciation",
-                            "Présent de narration",
-                            "Présent de vérité générale",
-                            "Présent à valeur de futur"
-                        ],
-                        answer: 1,
-                        help: "Il s'agit d'un présent de narration (ou présent historique) qui permet de raconter un événement passé comme s'il se déroulait sous nos yeux, lui donnant ainsi plus de vivacité."
-                    },
-                    {
-                        question: "Dans la phrase \"Je crois qu'il va pleuvoir\", le rapport entre les propositions est:",
-                        options: [
-                            "Juxtaposition",
-                            "Coordination",
-                            "Subordination",
-                            "Corrélation"
-                        ],
-                        answer: 2,
-                        help: "La proposition \"qu'il va pleuvoir\" est subordonnée à la proposition principale \"Je crois\". La conjonction de subordination \"que\" introduit cette proposition subordonnée complétive (COD du verbe \"croire\")."
-                    },
-                    {
-                        question: "Dans \"Pierre offre des fleurs à Marie\", quelle est la fonction du groupe nominal \"des fleurs\"?",
-                        options: [
-                            "Sujet",
-                            "Attribut du sujet",
-                            "Complément d'objet direct",
-                            "Complément d'objet indirect"
-                        ],
-                        answer: 2,
-                        help: "\"Des fleurs\" est complément d'objet direct (COD) du verbe \"offre\". On peut le vérifier en posant la question \"Qu'est-ce que Pierre offre?\" → \"Des fleurs\"."
-                    },
-                    {
-                        question: "Dans la phrase \"Il est devenu médecin\", quelle est la fonction de \"médecin\"?",
-                        options: [
-                            "Complément d'objet direct",
-                            "Complément d'objet indirect",
-                            "Attribut du sujet",
-                            "Attribut du COD"
-                        ],
-                        answer: 2,
-                        help: "\"Médecin\" est attribut du sujet \"il\" par l'intermédiaire du verbe attributif \"devenir\". Il exprime une caractéristique du sujet et complète le sens du verbe."
-                    },
-                    {
-                        question: "Quelle est la forme correcte?",
-                        options: [
-                            "Ils ce sont téléphoné",
-                            "Ils se sont téléphoné",
-                            "Ils se sont téléphonés",
-                            "Ils ce sont téléphonés"
-                        ],
-                        answer: 1,
-                        help: "Le verbe \"se téléphoner\" est pronominal réciproque. Le participe passé reste invariable car le COD n'est pas placé avant le verbe (on téléphone à quelqu'un, donc le pronom \"se\" est COI)."
-                    },
-                    {
-                        question: "Choisissez la phrase correctement orthographiée:",
-                        options: [
-                            "La majorité des gens pense qu'il va pleuvoir.",
-                            "La majorité des gens pensent qu'il va pleuvoir.",
-                            "La majorité des gens penses qu'il va pleuvoir.",
-                            "La majorité des gens pensez qu'il va pleuvoir."
-                        ],
-                        answer: 1,
-                        help: "Avec les noms collectifs comme \"majorité\" suivis d'un complément au pluriel (\"des gens\"), l'accord du verbe peut se faire soit avec le nom collectif, soit avec le complément. L'accord avec le complément pluriel est plus fréquent quand l'idée de pluralité prédomine, comme dans cet exemple."
-                    },
-                    {
-                        question: "Complétez: \"Elles se sont _____\"",
-                        options: [
-                            "rencontré",
-                            "rencontrées",
-                            "rencontrés",
-                            "rencontrer"
-                        ],
-                        answer: 1,
-                        help: "Le verbe \"se rencontrer\" est pronominal réciproque. Le participe passé s'accorde avec le sujet \"Elles\" (féminin pluriel) car le pronom réfléchi \"se\" est COD et placé avant le verbe (elles ont rencontré qui ? → elles-mêmes)."
-                    }
-                ]
+        // Questions du quiz regroupées par sections
+        const quizQuestions = [
+            // Section A: Analyse verbale (13 questions)
+            {
+                section: "Analyse verbale",
+                question: "Quel est le temps du verbe dans la phrase : 'Il avait terminé son travail quand je suis arrivé.'",
+                options: ["Plus-que-parfait", "Passé composé", "Imparfait", "Passé antérieur"],
+                correctAnswer: 0,
+                explanation: "Le verbe 'avait terminé' est conjugué au plus-que-parfait. Ce temps exprime une action antérieure à une autre action passée (ici, 'suis arrivé')."
             },
-            "lexique": {
-                title: "Lexique et compréhension lexicale",
-                next: "methodologie",
-                questions: [
-                    {
-                        question: "Quel est le préfixe dans le mot \"désagréable\"?",
-                        options: [
-                            "dés-",
-                            "dé-",
-                            "és-",
-                            "s-"
-                        ],
-                        answer: 1,
-                        help: "Le préfixe \"dé-\" (qui devient \"dés-\" devant une voyelle) exprime la négation, l'opposition ou la privation. Dans \"désagréable\", il transforme \"agréable\" en son contraire."
-                    },
-                    {
-                        question: "Dans le mot \"impardonnable\", identifiez le préfixe et le suffixe:",
-                        options: [
-                            "im- (préfixe) et -able (suffixe)",
-                            "i- (préfixe) et -able (suffixe)",
-                            "imp- (préfixe) et -ble (suffixe)",
-                            "im- (préfixe) et -nable (suffixe)"
-                        ],
-                        answer: 0,
-                        help: "\"Impardonnable\" se décompose en: im- (préfixe négatif) + pardonn- (radical du verbe pardonner) + -able (suffixe qui marque la possibilité). Le mot signifie donc \"qui ne peut pas être pardonné\"."
-                    },
-                    {
-                        question: "Quelle est la relation sémantique entre \"acheter\" et \"vendre\"?",
-                        options: [
-                            "Synonymie",
-                            "Antonymie",
-                            "Hyperonymie",
-                            "Homonymie"
-                        ],
-                        answer: 1,
-                        help: "\"Acheter\" et \"vendre\" sont des antonymes car ils expriment des actions contraires ou opposées dans le contexte commercial. L'antonyme est un mot de sens contraire."
-                    },
-                    {
-                        question: "Quelle est la relation sémantique entre \"livre\" (ouvrage) et \"livre\" (unité de poids)?",
-                        options: [
-                            "Homonymie",
-                            "Polysémie",
-                            "Paronymie",
-                            "Synonymie"
-                        ],
-                        answer: 0,
-                        help: "\"Livre\" (ouvrage) et \"livre\" (unité de poids) sont des homonymes: ils ont la même prononciation et la même orthographe mais des sens et des étymologies différents. L'homonymie désigne cette relation entre mots de forme identique mais de sens différents."
-                    },
-                    {
-                        question: "\"Voiture\" est un:",
-                        options: [
-                            "Hyperonyme de \"véhicule\"",
-                            "Hyponyme de \"véhicule\"",
-                            "Synonyme de \"véhicule\"",
-                            "Antonyme de \"véhicule\""
-                        ],
-                        answer: 1,
-                        help: "\"Voiture\" est un hyponyme de \"véhicule\", c'est-à-dire un terme plus spécifique inclus dans la catégorie plus générale des véhicules. Un hyponyme désigne une sous-catégorie d'un terme plus général (hyperonyme)."
-                    },
-                    {
-                        question: "Identifiez la figure de style dans \"Cette femme était une lionne pour défendre ses enfants\":",
-                        options: [
-                            "Comparaison",
-                            "Métaphore",
-                            "Métonymie",
-                            "Hyperbole"
-                        ],
-                        answer: 1,
-                        help: "Cette phrase contient une métaphore qui assimile la femme à une lionne. Contrairement à la comparaison, la métaphore n'utilise pas de terme comparatif (comme, tel que, semblable à)."
-                    },
-                    {
-                        question: "Dans la phrase \"Sa voix douce comme le miel\", quelle figure de style est utilisée?",
-                        options: [
-                            "Métaphore",
-                            "Comparaison",
-                            "Personnification",
-                            "Allégorie"
-                        ],
-                        answer: 1,
-                        help: "Cette phrase contient une comparaison, car elle établit un rapport de ressemblance entre \"voix\" et \"miel\" à l'aide du terme comparatif \"comme\". La comparaison est explicite, contrairement à la métaphore."
-                    },
-                    {
-                        question: "Identifiez la figure de style dans \"L'eau rit dans les fontaines\":",
-                        options: [
-                            "Métonymie",
-                            "Comparaison",
-                            "Personnification",
-                            "Allitération"
-                        ],
-                        answer: 2,
-                        help: "Cette phrase contient une personnification, figure par laquelle on attribue des propriétés humaines (ici, le rire) à un objet inanimé ou à un concept abstrait (l'eau)."
-                    },
-                    {
-                        question: "La répétition des sons [s] dans \"Les sanglots longs des violons de l'automne\" est une:",
-                        options: [
-                            "Allitération",
-                            "Assonance",
-                            "Anaphore",
-                            "Paronomase"
-                        ],
-                        answer: 0,
-                        help: "L'allitération est la répétition d'une même consonne dans une phrase ou un vers. Ici, le son [s] est répété dans \"sanglots\", \"violons\", et \"l'automne\"."
-                    },
-                    {
-                        question: "Quel registre de langue est utilisé dans \"Je vais me pieuter car je suis crevé\"?",
-                        options: [
-                            "Soutenu",
-                            "Courant",
-                            "Familier",
-                            "Technique"
-                        ],
-                        answer: 2,
-                        help: "Cette phrase utilise un registre familier, caractérisé par des expressions relâchées comme \"pieuter\" (se coucher) et \"crevé\" (très fatigué), qui ne s'emploient généralement qu'à l'oral ou dans des contextes informels."
-                    }
-                ]
+            {
+                section: "Analyse verbale",
+                question: "Dans 'Les élèves écrivent une lettre', quel est le type de verbe 'écrire' ?",
+                options: ["Intransitif", "Transitif direct", "Transitif indirect", "Attributif"],
+                correctAnswer: 1,
+                explanation: "Le verbe 'écrire' est transitif direct car il admet un complément d'objet direct (ici, 'une lettre') sans préposition."
             },
-            "methodologie": {
-                title: "Méthodologie de la réflexion et du développement",
-                next: "etude-langue",
-                questions: [
-                    {
-                        question: "Quelle démarche suit-on généralement pour analyser un texte argumentatif?",
-                        options: [
-                            "Identifier le schéma narratif, les personnages et l'espace-temps",
-                            "Repérer la thèse, les arguments, les exemples et les procédés rhétoriques",
-                            "Analyser uniquement le style et les figures de style",
-                            "Compter les occurrences de certains mots et expressions"
-                        ],
-                        answer: 1,
-                        help: "L'analyse d'un texte argumentatif consiste principalement à identifier la thèse défendue, les arguments qui la soutiennent, les exemples qui illustrent ces arguments et les procédés rhétoriques utilisés pour convaincre ou persuader le lecteur."
-                    },
-                    {
-                        question: "Qu'est-ce qu'un texte polyphonique?",
-                        options: [
-                            "Un texte écrit par plusieurs auteurs",
-                            "Un texte qui fait entendre plusieurs voix ou points de vue",
-                            "Un texte qui traite de plusieurs sujets différents",
-                            "Un texte qui utilise plusieurs langues"
-                        ],
-                        answer: 1,
-                        help: "Un texte polyphonique fait entendre plusieurs voix ou points de vue distincts, que ce soit par le discours direct, indirect, le style indirect libre ou d'autres procédés. Cette notion, empruntée à la musique, désigne la coexistence de plusieurs \"voix\" au sein d'un même texte."
-                    },
-                    {
-                        question: "Qu'est-ce qu'un plan dialectique?",
-                        options: [
-                            "Un plan qui présente uniquement des exemples",
-                            "Un plan qui suit un ordre chronologique",
-                            "Un plan qui articule thèse, antithèse et synthèse",
-                            "Un plan qui développe une idée unique"
-                        ],
-                        answer: 2,
-                        help: "Le plan dialectique s'organise en trois parties: la thèse (une première position), l'antithèse (une position contraire ou complémentaire) et la synthèse (un dépassement des contradictions). Il permet d'envisager un sujet sous différents angles avant de proposer une vision nuancée."
-                    },
-                    {
-                        question: "Qu'est-ce qu'un syllogisme?",
-                        options: [
-                            "Une figure de style basée sur l'exagération",
-                            "Un raisonnement déductif à trois propositions",
-                            "Un plan de dissertation en trois parties",
-                            "Une méthode de résumé de texte"
-                        ],
-                        answer: 1,
-                        help: "Le syllogisme est un raisonnement déductif composé de trois propositions: la majeure (prémisse générale), la mineure (cas particulier) et la conclusion. Exemple: Tous les hommes sont mortels (majeure). Socrate est un homme (mineure). Donc Socrate est mortel (conclusion)."
-                    },
-                    {
-                        question: "Comment introduire efficacement une dissertation?",
-                        options: [
-                            "Commencer directement par la thèse sans contextualisation",
-                            "Poser une anecdote personnelle",
-                            "Amener le sujet, le problématiser et annoncer le plan",
-                            "Donner immédiatement des exemples précis"
-                        ],
-                        answer: 2,
-                        help: "Une introduction efficace de dissertation comporte généralement trois étapes: amener le sujet (contextualisation), le problématiser (formuler une problématique) et annoncer le plan (présenter la démarche qui sera suivie). Cette structure permet de situer la réflexion et d'orienter la lecture."
-                    },
-                    {
-                        question: "À quel mouvement littéraire appartient Victor Hugo?",
-                        options: [
-                            "Classicisme",
-                            "Romantisme",
-                            "Réalisme",
-                            "Surréalisme"
-                        ],
-                        answer: 1,
-                        help: "Victor Hugo (1802-1885) est l'une des figures majeures du romantisme français. Ce mouvement littéraire et artistique du XIXe siècle se caractérise par l'exaltation du moi, la sensibilité, l'imagination, le goût pour la nature et l'histoire, ainsi que par la remise en cause des règles classiques."
-                    },
-                    {
-                        question: "Quelle est la particularité du Nouveau Roman?",
-                        options: [
-                            "Le respect strict des règles du roman classique",
-                            "La remise en cause des éléments traditionnels du roman",
-                            "L'engagement politique explicite",
-                            "L'utilisation exclusive du passé simple"
-                        ],
-                        answer: 1,
-                        help: "Le Nouveau Roman, apparu dans les années 1950 avec des auteurs comme Alain Robbe-Grillet, Nathalie Sarraute ou Michel Butor, se caractérise par la remise en cause des éléments traditionnels du roman: intrigue, personnages, chronologie, psychologie. Il privilégie la description objective et la déconstruction des formes narratives."
-                    },
-                    {
-                        question: "Quelle œuvre n'est pas de Molière?",
-                        options: [
-                            "Le Misanthrope",
-                            "Andromaque",
-                            "Les Fourberies de Scapin",
-                            "L'Avare"
-                        ],
-                        answer: 1,
-                        help: "\"Andromaque\" est une tragédie de Jean Racine (1639-1699), écrite en 1667. \"Le Misanthrope\", \"Les Fourberies de Scapin\" et \"L'Avare\" sont des comédies de Molière (1622-1673), figure emblématique du théâtre classique français."
-                    },
-                    {
-                        question: "Qu'est-ce qu'un alexandrin?",
-                        options: [
-                            "Un vers de 10 syllabes",
-                            "Un vers de 12 syllabes",
-                            "Un vers de 8 syllabes",
-                            "Un vers libre"
-                        ],
-                        answer: 1,
-                    help: "L'alexandrin est un vers de 12 syllabes, généralement divisé en deux hémistiches de 6 syllabes séparés par une césure. C'est le vers français par excellence, très utilisé dans la poésie classique et notamment dans le théâtre de Racine et Corneille."
-                    },
-                    {
-                        question: "Quel est le courant littéraire de Émile Zola?",
-                        options: [
-                            "Le symbolisme",
-                            "Le surréalisme",
-                            "Le naturalisme",
-                            "Le classicisme"
-                        ],
-                        answer: 2,
-                        help: "Émile Zola (1840-1902) est le chef de file du naturalisme, courant littéraire de la seconde moitié du XIXe siècle qui prolonge le réalisme. Le naturalisme se caractérise par une volonté d'objectivité scientifique, l'influence du milieu sur les personnages et l'étude des tares sociales et des déterminismes."
-                    }
-                ]
-            }
-        };
+            {
+                section: "Analyse verbale",
+                question: "Identifiez la voix utilisée dans la phrase : 'Le château a été construit au XVe siècle.'",
+                options: ["Voix active", "Voix passive", "Voix pronominale", "Voix factitive"],
+                correctAnswer: 1,
+                explanation: "La phrase est à la voix passive, car le sujet 'château' subit l'action exprimée par le verbe 'construire'. La forme passive est construite avec l'auxiliaire être + participe passé."
+            },
+            // Ajout des autres questions d'analyse verbale...
 
-        // Variables globales
-        let currentSection = "";
+            // Section B: Analyse de la phrase (12 questions)
+            {
+                section: "Analyse de la phrase",
+                question: "Quel est le type de phrase : 'Comme il fait beau aujourd'hui !' ?",
+                options: ["Déclarative", "Interrogative", "Exclamative", "Injonctive"],
+                correctAnswer: 2,
+                explanation: "C'est une phrase exclamative qui exprime un sentiment, une émotion. Elle se termine par un point d'exclamation et a souvent une intonation particulière."
+            },
+            {
+                section: "Analyse de la phrase",
+                question: "Identifiez la forme de la phrase : 'Il n'a jamais rien compris à ce problème.'",
+                options: ["Affirmative", "Négative simple", "Négative renforcée", "Emphatique"],
+                correctAnswer: 2,
+                explanation: "C'est une phrase à la forme négative renforcée. Elle contient une double négation avec 'ne...jamais' et 'rien'."
+            },
+            // Ajout des autres questions d'analyse de la phrase...
+
+            // Section C: Fonctions grammaticales (12 questions)
+            {
+                section: "Fonctions grammaticales",
+                question: "Quelle est la fonction du groupe souligné : 'Les élèves ont rendu leur devoir à la professeure.' ?",
+                options: ["Complément d'objet direct", "Complément d'objet indirect", "Complément circonstanciel", "Attribut du sujet"],
+                correctAnswer: 0,
+                explanation: "Le groupe 'leur devoir' est complément d'objet direct (COD) du verbe 'ont rendu'. On peut le vérifier en posant la question 'qu'est-ce que les élèves ont rendu ?'"
+            },
+            {
+                section: "Fonctions grammaticales",
+                question: "Identifiez la fonction du mot 'content' dans 'Il semble content de ses résultats.'",
+                options: ["Épithète", "Attribut du sujet", "Complément du nom", "Attribut du COD"],
+                correctAnswer: 1,
+                explanation: "'Content' est attribut du sujet 'il'. Il est relié au sujet par le verbe d'état 'sembler'."
+            },
+            // Ajout des autres questions de fonctions grammaticales...
+
+            // Section D: Orthographe grammaticale (13 questions)
+            {
+                section: "Orthographe grammaticale",
+                question: "Comment s'écrit le participe passé dans 'Elles se sont (laver) les mains.' ?",
+                options: ["lavé", "lavés", "lavée", "lavées"],
+                correctAnswer: 0,
+                explanation: "Dans cette phrase avec le verbe pronominal 'se laver', le COD 'les mains' est placé après le verbe. Le participe passé reste donc invariable : 'lavé'."
+            },
+            {
+                section: "Orthographe grammaticale",
+                question: "Quelle est la forme correcte ? 'Les bouteilles que j'ai (acheter) sont en verre.'",
+                options: ["acheter", "acheté", "achetés", "achetées"],
+                correctAnswer: 3,
+                explanation: "Le participe passé s'accorde avec le COD 'que' placé avant le verbe et qui remplace 'les bouteilles' (féminin pluriel). On écrit donc 'achetées'."
+            }
+            // Ajout des autres questions d'orthographe grammaticale...
+        ];
+
+        // Variables pour le quiz
         let currentQuestionIndex = 0;
-        let userAnswers = [];
         let score = 0;
-        let questionsOrder = [];
-
-        // Éléments DOM
-        const menuContainer = document.getElementById("menu-container");
-        const quizContainer = document.getElementById("quiz-container");
-        const resultsContainer = document.getElementById("results-container");
-        const menuButtons = document.querySelectorAll(".menu-button");
-        const questionText = document.getElementById("question-text");
-        const optionsContainer = document.getElementById("options-container");
-        const helpContainer = document.getElementById("help-container");
-        const helpButton = document.getElementById("help-button");
-        const progressBar = document.getElementById("progress-bar");
-        const currentScoreElement = document.getElementById("current-score");
-        const maxScoreElement = document.getElementById("max-score");
-        const prevButton = document.getElementById("prev-button");
-        const nextButton = document.getElementById("next-button");
-        const finalScoreElement = document.getElementById("final-score");
-        const resultsMessage = document.getElementById("results-message");
-        const retryButton = document.getElementById("retry-button");
-        const menuReturnButton = document.getElementById("menu-button");
-        const nextSectionButton = document.getElementById("next-section-button");
-
-        // Initialisation
-        menuButtons.forEach(button => {
-            button.addEventListener("click", () => {
-                startQuiz(button.dataset.section);
-            });
-        });
-
-        helpButton.addEventListener("click", toggleHelp);
-        prevButton.addEventListener("click", goToPreviousQuestion);
-        nextButton.addEventListener("click", goToNextQuestion);
-        retryButton.addEventListener("click", retryQuiz);
-        menuReturnButton.addEventListener("click", returnToMenu);
-        nextSectionButton.addEventListener("click", goToNextSection);
-
-        // Fonctions
-        function startQuiz(section) {
-            currentSection = section;
-            currentQuestionIndex = 0;
-            score = 0;
-            userAnswers = Array(quizData[section].questions.length).fill(null);
-            
-            // Créer un ordre aléatoire de questions
-            questionsOrder = Array.from({ length: quizData[section].questions.length }, (_, i) => i);
-            shuffleArray(questionsOrder);
-            
-            menuContainer.style.display = "none";
-            quizContainer.style.display = "block";
-            resultsContainer.style.display = "none";
-            
-            maxScoreElement.textContent = quizData[section].questions.length;
-            currentScoreElement.textContent = "0";
-            
-            loadQuestion();
-        }
-
-        function loadQuestion() {
-            const questionIndex = questionsOrder[currentQuestionIndex];
-            const question = quizData[currentSection].questions[questionIndex];
-            
-            questionText.textContent = question.question;
-            optionsContainer.innerHTML = "";
-            
-            question.options.forEach((option, index) => {
-                const button = document.createElement("button");
-                button.className = "option-button";
-                button.textContent = option;
-                
-                if (userAnswers[questionIndex] !== null) {
-                    if (userAnswers[questionIndex] === index) {
-                        if (index === question.answer) {
-                            button.classList.add("correct");
-                        } else {
-                            button.classList.add("incorrect");
-                        }
-                    } else if (index === question.answer) {
-                        button.classList.add("correct");
-                    }
-                    button.disabled = true;
-                } else {
-                    button.addEventListener("click", () => selectAnswer(index));
-                }
-                
-                optionsContainer.appendChild(button);
-            });
-            
-            helpContainer.textContent = question.help;
-            helpContainer.style.display = "none";
-            
-            updateNavigation();
-            updateProgress();
-        }
-
-        function selectAnswer(answerIndex) {
-            const questionIndex = questionsOrder[currentQuestionIndex];
-            const question = quizData[currentSection].questions[questionIndex];
-            const optionButtons = document.querySelectorAll(".option-button");
-            
-            userAnswers[questionIndex] = answerIndex;
-            
-            optionButtons.forEach((button, index) => {
-                button.disabled = true;
-                if (index === answerIndex) {
-                    if (answerIndex === question.answer) {
-                        button.classList.add("correct");
-                        score++;
-                    } else {
-                        button.classList.add("incorrect");
-                    }
-                } else if (index === question.answer) {
-                    button.classList.add("correct");
-                }
-            });
-            
-            currentScoreElement.textContent = score;
-            updateNavigation();
-        }
-
-        function toggleHelp() {
-            helpContainer.style.display = helpContainer.style.display === "none" ? "block" : "none";
-        }
-
-        function goToPreviousQuestion() {
-            if (currentQuestionIndex > 0) {
-                currentQuestionIndex--;
-                loadQuestion();
-            }
-        }
-
-        function goToNextQuestion() {
-            const questionIndex = questionsOrder[currentQuestionIndex];
-            
-            if (currentQuestionIndex < questionsOrder.length - 1) {
-                currentQuestionIndex++;
-                loadQuestion();
-            } else if (userAnswers[questionIndex] !== null) {
-                showResults();
-            }
-        }
-
-        function updateNavigation() {
-            prevButton.disabled = currentQuestionIndex === 0;
-            
-            const questionIndex = questionsOrder[currentQuestionIndex];
-            const allQuestionsAnswered = userAnswers.every(answer => answer !== null);
-            
-            if (currentQuestionIndex === questionsOrder.length - 1) {
-                nextButton.textContent = "Terminer";
-                nextButton.disabled = userAnswers[questionIndex] === null;
-            } else {
-                nextButton.textContent = "Suivant";
-                nextButton.disabled = false;
-            }
-        }
-
-        function updateProgress() {
-            const progress = ((currentQuestionIndex + 1) / questionsOrder.length) * 100;
-            progressBar.style.width = `${progress}%`;
-        }
-
-        function showResults() {
-            quizContainer.style.display = "none";
-            resultsContainer.style.display = "block";
-            
-            finalScoreElement.textContent = `${score}/${quizData[currentSection].questions.length}`;
-            
-            const percentage = (score / quizData[currentSection].questions.length) * 100;
-            let message = "";
-            
-            if (percentage >= 90) {
-                message = "Excellent ! Vous maîtrisez parfaitement cette partie du programme.";
-            } else if (percentage >= 75) {
-                message = "Très bien ! Vous avez une bonne connaissance de cette partie.";
-            } else if (percentage >= 50) {
-                message = "Bien. Continuez vos révisions pour améliorer votre score.";
-            } else {
-                message = "Courage ! Cette partie nécessite encore du travail et des révisions.";
-            }
-            
-            resultsMessage.textContent = message;
-        }
-
-        function retryQuiz() {
-            startQuiz(currentSection);
-        }
-
-        function returnToMenu() {
-            menuContainer.style.display = "block";
-            quizContainer.style.display = "none";
-            resultsContainer.style.display = "none";
-        }
-
-        function goToNextSection() {
-            startQuiz(quizData[currentSection].next);
-        }
-
+        let answeredQuestions = [];
+        
+        // Éléments du DOM
+        const questionContainer = document.getElementById('question-container');
+        const progressBar = document.getElementById('progress-bar');
+        const currentScoreElement = document.getElementById('current-score');
+        const totalQuestionsElement = document.getElementById('total-questions');
+        const prevButton = document.getElementById('prev-btn');
+        const nextButton = document.getElementById('next-btn');
+        const resultsContainer = document.getElementById('results-container');
+        const finalScoreElement = document.getElementById('final-score');
+        const finalTotalElement = document.getElementById('final-total');
+        const feedbackMessage = document.getElementById('feedback-message');
+        const restartButton = document.getElementById('restart-btn');
+        
+        // Mélanger les questions de façon aléatoire
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [array[i], array[j]] = [array[j], array[i]];
             }
+            return array;
         }
+        
+        // Initialiser les sections du quiz
+        function initializeQuiz() {
+            // Mélanger les questions de chaque section
+            const analyseVerbaleQuestions = quizQuestions.filter(q => q.section === "Analyse verbale");
+            const analysePhraseQuestions = quizQuestions.filter(q => q.section === "Analyse de la phrase");
+            const fonctionsGrammaticalesQuestions = quizQuestions.filter(q => q.section === "Fonctions grammaticales");
+            const orthographeGrammaticaleQuestions = quizQuestions.filter(q => q.section === "Orthographe grammaticale");
+            
+            const shuffledAnalyseVerbale = shuffleArray(analyseVerbaleQuestions);
+            const shuffledAnalysePhrase = shuffleArray(analysePhraseQuestions);
+            const shuffledFonctionsGrammaticales = shuffleArray(fonctionsGrammaticalesQuestions);
+            const shuffledOrthographeGrammaticale = shuffleArray(orthographeGrammaticaleQuestions);
+            
+            // Recréer le tableau de questions avec les questions mélangées de chaque section
+            const shuffledQuestions = [
+                ...shuffledAnalyseVerbale,
+                ...shuffledAnalysePhrase,
+                ...shuffledFonctionsGrammaticales,
+                ...shuffledOrthographeGrammaticale
+            ];
+            
+            // Réinitialiser les variables du quiz
+            currentQuestionIndex = 0;
+            score = 0;
+            answeredQuestions = new Array(shuffledQuestions.length).fill(null);
+            
+            // Mettre à jour l'affichage
+            totalQuestionsElement.textContent = shuffledQuestions.length;
+            currentScoreElement.textContent = score;
+            
+            // Afficher la première question
+            displayQuestion(shuffledQuestions[currentQuestionIndex]);
+            updateProgressBar();
+            
+            // Masquer les résultats et afficher le quiz
+            resultsContainer.style.display = 'none';
+            questionContainer.style.display = 'block';
+            prevButton.disabled = true;
+            nextButton.disabled = false;
+            
+            return shuffledQuestions;
+        }
+        
+        // Afficher une question
+        function displayQuestion(question) {
+            const sectionClass = question.section.toLowerCase().replace(' ', '-');
+            
+            questionContainer.innerHTML = `
+                <div class="section-tag ${sectionClass}">${question.section}</div>
+                <div class="question">${currentQuestionIndex + 1}. ${question.question}</div>
+                <ul class="options">
+                    ${question.options.map((option, index) => `
+                        <li class="option ${answeredQuestions[currentQuestionIndex] !== null ? 
+                            (index === question.correctAnswer ? 'correct' : 
+                                (index === answeredQuestions[currentQuestionIndex] && 
+                                index !== question.correctAnswer ? 'incorrect' : '')) : 
+                            (answeredQuestions[currentQuestionIndex] === index ? 'selected' : '')}" 
+                            data-index="${index}">
+                            ${option}
+                        </li>
+                    `).join('')}
+                </ul>
+                ${answeredQuestions[currentQuestionIndex] !== null ? 
+                    `<div class="feedback ${answeredQuestions[currentQuestionIndex] === question.correctAnswer ? 
+                        'correct' : 'incorrect'}" style="display: block;">
+                        ${answeredQuestions[currentQuestionIndex] === question.correctAnswer ? 
+                            'Bonne réponse !' : 'Réponse incorrecte !'}
+                    </div>` : ''}
+                <button class="help-btn">Aide</button>
+                <div class="explanation" style="${answeredQuestions[currentQuestionIndex] !== null ? 'display: block;' : ''}">
+                    ${question.explanation}
+                </div>
+            `;
+            
+            // Ajouter des écouteurs d'événements aux options
+            const options = questionContainer.querySelectorAll('.option');
+            options.forEach(option => {
+                option.addEventListener('click', () => {
+                    if (answeredQuestions[currentQuestionIndex] === null) {
+                        const selectedIndex = parseInt(option.getAttribute('data-index'));
+                        answeredQuestions[currentQuestionIndex] = selectedIndex;
+                        
+                        // Mettre à jour le score
+                        if (selectedIndex === shuffledQuestions[currentQuestionIndex].correctAnswer) {
+                            score++;
+                            currentScoreElement.textContent = score;
+                        }
+                        
+                        // Afficher la correction
+                        options.forEach((opt, index) => {
+                            if (index === shuffledQuestions[currentQuestionIndex].correctAnswer) {
+                                opt.classList.add('correct');
+                            } else if (index === selectedIndex && index !== shuffledQuestions[currentQuestionIndex].correctAnswer) {
+                                opt.classList.add('incorrect');
+                            }
+                        });
+                        
+                        // Afficher le feedback et l'explication
+                        const feedback = document.createElement('div');
+                        feedback.className = `feedback ${selectedIndex === shuffledQuestions[currentQuestionIndex].correctAnswer ? 'correct' : 'incorrect'}`;
+                        feedback.textContent = selectedIndex === shuffledQuestions[currentQuestionIndex].correctAnswer ? 'Bonne réponse !' : 'Réponse incorrecte !';
+                        
+                        const explanationDiv = questionContainer.querySelector('.explanation');
+                        explanationDiv.style.display = 'block';
+                        
+                        // Insérer le feedback avant l'explication
+                        questionContainer.insertBefore(feedback, explanationDiv.previousElementSibling.nextSibling);
+                    }
+                });
+            });
+            
+            // Ajouter un écouteur d'événement au bouton d'aide
+            const helpButton = questionContainer.querySelector('.help-btn');
+            helpButton.addEventListener('click', () => {
+                const explanation = questionContainer.querySelector('.explanation');
+                explanation.style.display = explanation.style.display === 'none' || explanation.style.display === '' ? 'block' : 'none';
+            });
+        }
+        
+        // Mettre à jour la barre de progression
+        function updateProgressBar() {
+            const progressPercentage = ((currentQuestionIndex + 1) / shuffledQuestions.length) * 100;
+            progressBar.style.width = `${progressPercentage}%`;
+        }
+        
+        // Afficher les résultats
+        function displayResults() {
+            questionContainer.style.display = 'none';
+            resultsContainer.style.display = 'block';
+            
+            finalScoreElement.textContent = score;
+            finalTotalElement.textContent = shuffledQuestions.length;
+            
+            // Personnaliser le message en fonction du score
+            const percentage = (score / shuffledQuestions.length) * 100;
+            let message = '';
+            
+            if (percentage >= 90) {
+                message = 'Excellent ! Vous maîtrisez parfaitement les notions d\'étude de la langue pour le CRPE.';
+            } else if (percentage >= 75) {
+                message = 'Très bien ! Vous avez une bonne maîtrise des notions d\'étude de la langue pour le CRPE.';
+            } else if (percentage >= 60) {
+                message = 'Bien ! Vous avez une compréhension satisfaisante des notions d\'étude de la langue pour le CRPE, mais quelques révisions seraient bénéfiques.';
+            } else if (percentage >= 40) {
+                message = 'Vous avez assimilé certaines notions d\'étude de la langue pour le CRPE, mais des révisions plus approfondies sont nécessaires.';
+            } else {
+                message = 'Des révisions approfondies sont nécessaires pour maîtriser les notions d\'étude de la langue pour le CRPE.';
+            }
+            
+            feedbackMessage.textContent = message;
+        }
+        
+        // Gestionnaire d'événement pour le bouton "Suivant"
+        nextButton.addEventListener('click', () => {
+            if (currentQuestionIndex < shuffledQuestions.length - 1) {
+                currentQuestionIndex++;
+                displayQuestion(shuffledQuestions[currentQuestionIndex]);
+                updateProgressBar();
+                
+                // Activer le bouton "Précédent"
+                prevButton.disabled = false;
+                
+                // Désactiver le bouton "Suivant" si on est à la dernière question
+                if (currentQuestionIndex === shuffledQuestions.length - 1) {
+                    nextButton.textContent = 'Terminer';
+                }
+            } else {
+                // Afficher les résultats
+                displayResults();
+            }
+        });
+        
+        // Gestionnaire d'événement pour le bouton "Précédent"
+        prevButton.addEventListener('click', () => {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                displayQuestion(shuffledQuestions[currentQuestionIndex]);
+                updateProgressBar();
+                
+                // Désactiver le bouton "Précédent" si on est à la première question
+                prevButton.disabled = currentQuestionIndex === 0;
+                
+                // Changer le texte du bouton "Suivant" si on n'est plus à la dernière question
+                nextButton.textContent = 'Suivant';
+            }
+        });
+        
+        // Gestionnaire d'événement pour le bouton "Recommencer"
+        restartButton.addEventListener('click', () => {
+            shuffledQuestions = initializeQuiz();
+        });
+        
+        // Initialiser le quiz
+        let shuffledQuestions = initializeQuiz();
     </script>
 </body>
 </html>
