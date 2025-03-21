@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -94,10 +95,65 @@
             }
         }
         
+        .question-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        
         .question {
             font-size: 1.2rem;
             font-weight: bold;
+            flex-grow: 1;
+        }
+        
+        .help-btn {
+            background-color: #f0f0f0;
+            color: var(--primary-color);
+            border: 1px solid #ddd;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .help-btn:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .help-content {
+            display: none;
+            background-color: #f9f9f9;
+            border-left: 4px solid var(--primary-color);
+            padding: 15px;
             margin-bottom: 15px;
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+            font-size: 0.95rem;
+        }
+        
+        .help-content.active {
+            display: block;
+            animation: slideDown 0.3s forwards;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
         .options {
@@ -210,7 +266,11 @@
         
         <div id="quiz-content">
             <div id="question-container" class="question-container">
-                <div id="question" class="question"></div>
+                <div class="question-header">
+                    <div id="question" class="question"></div>
+                    <button id="help-btn" class="help-btn" title="Aide">?</button>
+                </div>
+                <div id="help-content" class="help-content"></div>
                 <div id="options" class="options"></div>
             </div>
             
@@ -241,7 +301,8 @@
                     "Une phrase sans verbe conjugué",
                     "Une phrase comportant uniquement un sujet et un verbe"
                 ],
-                correct: 1
+                correct: 1,
+                help: "Une phrase simple contient une seule proposition avec un seul verbe conjugué à un mode personnel. Elle peut être analysée selon la formule P = [GS + GV] (+ GC), où GS est le groupe sujet, GV le groupe verbal et GC un éventuel groupe circonstanciel."
             },
             {
                 question: "Comment définit-on une phrase complexe ?",
@@ -251,7 +312,8 @@
                     "Une phrase contenant un verbe au mode impersonnel",
                     "Une phrase de plus de quinze mots"
                 ],
-                correct: 1
+                correct: 1,
+                help: "Une phrase complexe contient plusieurs propositions, chacune avec son propre verbe conjugué à un mode personnel. Elle se distingue de la phrase simple qui ne contient qu'une seule proposition."
             },
             {
                 question: "Quels sont les deux principaux types de phrases complexes ?",
@@ -261,7 +323,8 @@
                     "La phrase complexe par coordination ou juxtaposition et la phrase complexe par subordination",
                     "La phrase complexe verbale et la phrase complexe nominale"
                 ],
-                correct: 2
+                correct: 2,
+                help: "On distingue deux principaux types de phrases complexes : 1) la phrase complexe par coordination ou juxtaposition, où les propositions sont sur le même plan et reliées par une conjonction de coordination ou un signe de ponctuation; 2) la phrase complexe par subordination, où une proposition est incluse dans une autre et en dépend grammaticalement."
             },
             {
                 question: "Comment définit-on une proposition subordonnée ?",
@@ -271,7 +334,8 @@
                     "Une proposition reliée à une autre par une conjonction de coordination",
                     "Une proposition sans verbe conjugué"
                 ],
-                correct: 1
+                correct: 1,
+                help: "Une proposition subordonnée est une proposition incluse dans une autre proposition, dite 'principale', et dépendant grammaticalement de celle-ci. Elle ne peut pas exister seule et est généralement introduite par un mot subordonnant (conjonction ou pronom relatif)."
             },
             {
                 question: "Qu'est-ce qu'un mot subordonnant ?",
@@ -281,7 +345,8 @@
                     "Un mot qui remplace un groupe nominal",
                     "Un mot qui introduit une proposition indépendante"
                 ],
-                correct: 1
+                correct: 1,
+                help: "Un mot subordonnant est un outil grammatical qui introduit une proposition subordonnée. Il peut s'agir d'une conjonction de subordination (que, si, quand, parce que, etc.) ou d'un pronom relatif (qui, que, dont, où, etc.). Il établit un lien de dépendance entre la subordonnée et la principale."
             },
             {
                 question: "Quels sont les cas de subordination sans conjonction ?",
@@ -291,7 +356,8 @@
                     "La proposition subordonnée circonstancielle et la proposition subordonnée complétive",
                     "La proposition subordonnée juxtaposée et coordonnée"
                 ],
-                correct: 0
+                correct: 0,
+                help: "Il existe trois cas de subordination sans conjonction : 1) la proposition subordonnée infinitive (J'entends l'oiseau chanter), 2) la proposition subordonnée participiale (Le chat parti, les souris dansent), et 3) la proposition subordonnée interrogative partielle (Je me demande qui chante)."
             },
             {
                 question: "Combien de grands types de propositions subordonnées peut-on distinguer ?",
@@ -301,7 +367,8 @@
                     "Quatre types",
                     "Cinq types"
                 ],
-                correct: 2
+                correct: 2,
+                help: "On distingue quatre grands types de propositions subordonnées : 1) les propositions subordonnées complétives, 2) les propositions subordonnées circonstancielles, 3) les propositions subordonnées relatives, et 4) les propositions subordonnées sans conjonction de subordination."
             },
             {
                 question: "Quelle est la particularité des propositions subordonnées complétives ?",
@@ -311,7 +378,8 @@
                     "Elles expriment une circonstance",
                     "Elles ont toujours une fonction d'attribut"
                 ],
-                correct: 1
+                correct: 1,
+                help: "Les propositions subordonnées complétives sont équivalentes à des groupes nominaux et peuvent donc avoir les fonctions du GN : sujet, COD, attribut, etc. Par exemple, 'Je souhaite qu'elle réussisse' = 'Je souhaite sa réussite'. Elles sont généralement introduites par 'que' ou 'si'."
             },
             {
                 question: "Quel est le rôle de la conjonction de subordination dans les complétives ?",
@@ -321,7 +389,8 @@
                     "Elle a une fonction grammaticale dans la subordonnée",
                     "Elle remplace un pronom"
                 ],
-                correct: 1
+                correct: 1,
+                help: "Dans les propositions subordonnées complétives, la conjonction de subordination (que, si) joue uniquement un rôle de pur outil grammatical pour relier la subordonnée à la principale, sans apporter d'information spécifique sur leur relation sémantique, contrairement aux conjonctions des circonstancielles."
             },
             {
                 question: "Dans la phrase \"Je crois qu'il va faire beau\", quelle est la fonction de la proposition subordonnée ?",
@@ -331,7 +400,8 @@
                     "COI",
                     "Complément circonstanciel"
                 ],
-                correct: 1
+                correct: 1,
+                help: "Dans la phrase 'Je crois qu'il va faire beau', la proposition subordonnée 'qu'il va faire beau' est COD du verbe 'croire' dans la principale. On peut la remplacer par le pronom 'cela' : 'Je crois cela'. Les complétives ont souvent la fonction de COD."
             },
             {
                 question: "Comment se forme une proposition subordonnée interrogative totale ?",
@@ -341,7 +411,8 @@
                     "Elle est introduite par un pronom interrogatif",
                     "Elle est introduite par un adverbe interrogatif"
                 ],
-                correct: 1
+                correct: 1,
+                help: "Une proposition subordonnée interrogative totale est introduite par la conjonction 'si'. Elle constitue une interrogation indirecte portant sur l'ensemble de la phrase, à laquelle on pourrait répondre par 'oui' ou 'non'. Exemple : 'Je me demande s'il fera beau' (interrogation indirecte) correspond à 'Fera-t-il beau ?' (interrogation directe)."
             },
             {
                 question: "Quelle est la caractéristique des propositions subordonnées circonstancielles ?",
@@ -351,7 +422,8 @@
                     "Elles indiquent une circonstance et sont introduites par une conjonction qui précise cette relation",
                     "Elles ont toujours une fonction d'attribut"
                 ],
-                correct: 2
+                correct: 2,
+                help: "Les propositions subordonnées circonstancielles indiquent une circonstance (temps, cause, but, condition, etc.) et sont introduites par une conjonction de subordination qui, en plus de son rôle d'outil de subordination, précise la nature de la relation entre la subordonnée et la principale (quand, parce que, pour que, si, etc.)."
             },
             {
                 question: "Dans la phrase \"Je sortirai quand tu auras fini\", quelle est la valeur de la proposition subordonnée ?",
@@ -361,7 +433,8 @@
                     "Consécutive",
                     "Concessive"
                 ],
-                correct: 1
+                correct: 1,
+                help: "Dans 'Je sortirai quand tu auras fini', la proposition subordonnée 'quand tu auras fini' a une valeur temporelle. La conjonction 'quand' indique une relation de temps entre les deux actions : l'action de sortir se produira au moment où l'autre personne aura fini."
             },
             {
                 question: "Qu'est-ce qu'une proposition subordonnée corrélative ?",
@@ -371,7 +444,8 @@
                     "Une subordonnée reliée à une autre subordonnée",
                     "Une subordonnée introduite par un pronom relatif"
                 ],
-                correct: 1
+                correct: 1,
+                help: "Une proposition subordonnée corrélative est liée à la principale non seulement par une conjonction de subordination mais aussi par un mot dans la principale qui l'annonce. Exemple : 'Il a tant plu que la rivière a débordé' (tant... que), 'Elle est aussi intelligente que sa mère l'était' (aussi... que)."
             },
             {
                 question: "Quelle est la particularité des propositions subordonnées relatives ?",
@@ -381,7 +455,8 @@
                     "Elles ont toujours une fonction circonstancielle",
                     "Elles n'ont jamais d'antécédent"
                 ],
-                correct: 1
+                correct: 1,
+                help: "Les propositions subordonnées relatives sont introduites par un pronom relatif (qui, que, dont, où, etc.) qui a une double fonction : 1) il joue un rôle de subordonnant en reliant la relative à la principale, et 2) il a une fonction grammaticale dans la subordonnée (sujet, COD, complément, etc.)."
             },
             {
                 question: "Dans la phrase \"L'homme que tu as vu est un ami\", quelle est la fonction du pronom relatif \"que\" ?",
@@ -391,7 +466,8 @@
                     "COI de la subordonnée",
                     "Complément circonstanciel"
                 ],
-                correct: 1
+                correct: 1,
+                help: "Dans 'L'homme que tu as vu est un ami', le pronom relatif 'que' est COD du verbe 'voir' dans la subordonnée. Il remplace 'l'homme' (tu as vu l'homme). Contrairement à 'qui' qui serait sujet, 'que' est toujours COD dans la relative."
             },
             {
                 question: "Quels sont les deux principaux types de propositions subordonnées relatives ?",
@@ -401,7 +477,8 @@
                     "Les relatives directes et les relatives indirectes",
                     "Les relatives essentielles et les relatives accessoires"
                 ],
-                correct: 0
+                correct: 0,
+                help: "On distingue deux principaux types de relatives : 1) les relatives adjectives, qui ont des fonctions adjectivales (épithète, apposition) et se rapportent à un antécédent nominal, et 2) les relatives substantives, qui ont des fonctions nominales (sujet, COD, etc.) et n'ont pas d'antécédent nominal explicite."
             },
             {
                 question: "Qu'est-ce qui caractérise une proposition subordonnée relative substantive ?",
@@ -411,7 +488,8 @@
                     "Elle a des fonctions nominales et n'a pas un nom comme antécédent",
                     "Elle est toujours introduite par \"que\""
                 ],
-                correct: 2
+                correct: 2,
+                help: "Une proposition subordonnée relative substantive a des fonctions nominales (sujet, COD, etc.) et n'a pas un nom comme antécédent, mais renvoie à un ensemble indéterminé. Exemple : 'Qui veut voyager loin ménage sa monture' (= 'Celui qui veut voyager loin...'). Elle est souvent introduite par 'qui', 'quiconque' ou précédée d'un démonstratif."
             },
             {
                 question: "Dans le proverbe \"Qui veut voyager loin ménage sa monture\", quelle est la fonction de la proposition relative \"Qui veut voyager loin\" ?",
@@ -421,7 +499,8 @@
                     "COI",
                     "Complément circonstanciel"
                 ],
-                correct: 0
+                correct: 0,
+                help: "Dans le proverbe 'Qui veut voyager loin ménage sa monture', la proposition relative substantive 'Qui veut voyager loin' est sujet du verbe 'ménage'. Elle équivaut à 'Celui qui veut voyager loin' et joue le rôle d'un groupe nominal sujet."
             },
             {
                 question: "Qu'est-ce qu'une proposition subordonnée infinitive ?",
@@ -431,7 +510,8 @@
                     "Un groupe infinitif introduit par une conjonction de subordination",
                     "Un groupe infinitif en fonction d'attribut"
                 ],
-                correct: 0
+                correct: 0,
+                help: "Une proposition subordonnée infinitive est un groupe infinitif qui a son propre sujet, distinct de celui de la proposition principale. Exemple : 'J'entends l'oiseau chanter', où 'l'oiseau' est sujet sémantique de l'infinitif 'chanter', alors que 'je' est sujet de 'entends'."
             },
             {
                 question: "Dans la phrase \"J'entends l'oiseau chanter\", quelle est la fonction de \"l'oiseau\" ?",
@@ -441,7 +521,8 @@
                     "COI de la principale",
                     "Attribut du sujet"
                 ],
-                correct: 1
+                correct: 1,
+                help: "Dans 'J'entends l'oiseau chanter', 'l'oiseau' est à la fois COD du verbe 'entendre' et sujet sémantique (agent) de l'infinitif 'chanter'. Si on pronominalise : 'Je l'entends chanter', le pronom 'l'' remplace 'l'oiseau' en position de COD du verbe principal."
             },
             {
                 question: "Qu'est-ce qu'une proposition subordonnée participiale ?",
@@ -451,7 +532,8 @@
                     "Une proposition comportant un verbe au participe passé",
                     "Une proposition qui a pour sujet un participe"
                 ],
-                correct: 0
+                correct: 0,
+                help: "Une proposition subordonnée participiale est une proposition dont le verbe est au participe présent ou passé et qui possède un sujet propre, distinct de celui de la principale. Exemples : 'Le temps s'améliorant, ils décidèrent de sortir' (participe présent), 'Le chat parti, les souris dansent' (participe passé)."
             },
             {
                 question: "Quelle est la fonction de la proposition subordonnée participiale ?",
@@ -461,7 +543,8 @@
                     "Attribut",
                     "Complément circonstanciel"
                 ],
-                correct: 3
+                correct: 3,
+                help: "La proposition subordonnée participiale a généralement une fonction de complément circonstanciel (temps, cause, condition, etc.). Elle peut souvent être remplacée par une proposition subordonnée circonstancielle introduite par une conjonction appropriée."
             },
             {
                 question: "Dans la phrase \"Le chat parti, les souris dansent\", à quel type de proposition circonstancielle équivaut la participiale ?",
@@ -471,7 +554,8 @@
                     "Conditionnelle",
                     "Consécutive"
                 ],
-                correct: 0
+                correct: 0,
+                help: "Dans 'Le chat parti, les souris dansent', la proposition participiale 'Le chat parti' équivaut à une proposition circonstancielle de temps ('Quand le chat est parti, les souris dansent') ou de cause ('Puisque le chat est parti, les souris dansent')."
             },
             {
                 question: "Comment se caractérise la proposition subordonnée interrogative partielle ?",
@@ -481,7 +565,8 @@
                     "Elle est toujours précédée d'une négation",
                     "Elle est introduite par une conjonction de subordination"
                 ],
-                correct: 1
+                correct: 1,
+                help: "Une proposition subordonnée interrogative partielle est introduite par un mot interrogatif : pronom (qui, que), adverbe (où, quand, comment, pourquoi) ou déterminant (quel). Elle correspond à une interrogation indirecte portant sur un constituant particulier de la phrase. Exemple : 'Je me demande qui chante', 'Je me demande quand il viendra'."
             },
             {
                 question: "Dans la phrase \"Je me demande qui chante\", pourquoi le mot \"qui\" n'est-il pas considéré comme un mot subordonnant ?",
@@ -491,7 +576,8 @@
                     "Parce qu'on le trouve aussi en l'absence de subordination dans l'interrogation directe",
                     "Parce qu'il ne peut pas être remplacé par \"que\""
                 ],
-                correct: 2
+                correct: 2,
+                help: "Dans 'Je me demande qui chante', le mot 'qui' n'est pas considéré comme un mot subordonnant car on le trouve aussi dans l'interrogation directe 'Qui chante ?'. C'est un pronom interrogatif qui a une fonction dans la proposition (sujet de 'chante') et non un pur outil de subordination."
             },
             {
                 question: "Qu'est-ce que la coordination dans une phrase complexe ?",
@@ -501,7 +587,8 @@
                     "Une relation entre deux propositions introduites par un pronom relatif",
                     "Une relation entre une proposition principale et une proposition subordonnée"
                 ],
-                correct: 1
+                correct: 1,
+                help: "La coordination dans une phrase complexe est une relation entre deux propositions indépendantes qui se situent sur le même plan syntaxique et sont reliées par une conjonction de coordination (mais, ou, et, donc, or, ni, car). Exemple : 'Il fait beau et les oiseaux chantent'."
             },
             {
                 question: "Qu'est-ce que la juxtaposition dans une phrase complexe ?",
@@ -511,7 +598,8 @@
                     "Une relation entre une proposition principale et une proposition subordonnée",
                     "Une relation établie par un pronom relatif"
                 ],
-                correct: 1
+                correct: 1,
+                help: "La juxtaposition dans une phrase complexe est une relation entre deux propositions indépendantes qui se situent sur le même plan syntaxique et sont reliées par un signe de ponctuation (virgule, point-virgule, deux points) sans conjonction. Exemple : 'Il fait beau ; les oiseaux chantent'."
             },
             {
                 question: "Dans quels cas la juxtaposition peut-elle avoir une valeur subordonnante ?",
@@ -521,7 +609,8 @@
                     "Lorsqu'elle est suivie d'une coordination",
                     "Lorsqu'elle introduit un discours direct"
                 ],
-                correct: 1
+                correct: 1,
+                help: "La juxtaposition peut avoir une valeur subordonnante implicite lorsqu'elle peut être remplacée par une subordination sans changer le sens. Exemple : 'Tu aurais travaillé, tu aurais eu de meilleurs résultats' équivaut à 'Si tu avais travaillé, tu aurais eu de meilleurs résultats'. On parle de 'subordination implicite'."
             },
             {
                 question: "Quels sont les trois types d'actes fondamentaux correspondant aux types de phrases ?",
@@ -531,7 +620,8 @@
                     "L'assertion, l'interrogation et l'injonction",
                     "La narration, le dialogue et la description"
                 ],
-                correct: 2
+                correct: 2,
+                help: "Les trois types d'actes fondamentaux correspondant aux types de phrases sont : 1) l'assertion (affirmer quelque chose comme vrai, type déclaratif), 2) l'interrogation (poser une question, type interrogatif), et 3) l'injonction (donner un ordre, type impératif)."
             },
             {
                 question: "Qu'est-ce qui caractérise une phrase de type déclaratif ?",
@@ -541,7 +631,8 @@
                     "Elle présente généralement la forme canonique de la phrase (GS + GV)",
                     "Elle se termine toujours par un point d'exclamation"
                 ],
-                correct: 2
+                correct: 2,
+                help: "Une phrase de type déclaratif se caractérise par la forme canonique P = [GS + GV] (+ GC) et a une valeur d'assertion (affirmer quelque chose comme vrai). Elle se termine généralement par un point. C'est le type de phrase le plus courant. Exemple : 'Le soleil brille aujourd'hui'."
             },
             {
                 question: "Quels sont les différents marqueurs possibles d'une phrase de type interrogatif ?",
@@ -551,7 +642,8 @@
                     "Inversion du sujet, locution \"est-ce que\", pronoms ou adverbes interrogatifs, intonation",
                     "Uniquement les pronoms interrogatifs"
                 ],
-                correct: 2
+                correct: 2,
+                help: "Une phrase de type interrogatif peut être marquée par différents procédés : l'inversion du sujet ('Viens-tu ?'), la locution 'est-ce que' ('Est-ce que tu viens ?'), des pronoms ou adverbes interrogatifs ('Qui vient ?', 'Quand viens-tu ?'), ou simplement par l'intonation et le point d'interrogation ('Tu viens ?')."
             },
             {
                 question: "Quelle est la différence entre l'interrogation directe et l'interrogation indirecte ?",
@@ -561,7 +653,8 @@
                     "L'interrogation directe est introduite par \"que\", l'interrogation indirecte par \"si\"",
                     "L'interrogation directe est dans le discours direct, l'interrogation indirecte est dans le discours indirect"
                 ],
-                correct: 0
+                correct: 0,
+                help: "L'interrogation directe est une phrase interrogative indépendante, marquée par un point d'interrogation et pouvant comporter une inversion du sujet. L'interrogation indirecte est une construction interrogative en proposition subordonnée, sans point d'interrogation ni inversion. Exemple : 'Viendras-tu ?' (directe) → 'Je te demande si tu viendras' (indirecte)."
             },
             {
                 question: "Qu'est-ce qu'une interrogation totale ?",
@@ -571,7 +664,8 @@
                     "Une interrogation qui comporte plusieurs questions",
                     "Une interrogation qui est nécessairement indirecte"
                 ],
-                correct: 0
+                correct: 0,
+                help: "Une interrogation totale porte sur l'ensemble de la phrase et appelle généralement une réponse par 'oui', 'non' ou 'si'. Elle peut être formée par l'inversion du sujet, la locution 'est-ce que' ou l'intonation. Exemples : 'Viens-tu ?', 'Est-ce que tu viens ?', 'Tu viens ?'."
             },
             {
                 question: "Dans la phrase \"Pourquoi vas-tu à la plage ?\", sur quel élément porte l'interrogation ?",
@@ -581,7 +675,8 @@
                     "Le COI",
                     "Le complément circonstanciel"
                 ],
-                correct: 3
+                correct: 3,
+                help: "Dans la phrase 'Pourquoi vas-tu à la plage ?', l'interrogation porte sur le complément circonstanciel de cause. L'adverbe interrogatif 'pourquoi' interroge sur la raison ou le motif de l'action (= pour quelle raison vas-tu à la plage ?)."
             },
             {
                 question: "Quel est le mode verbal principal utilisé dans les phrases de type impératif ?",
@@ -591,7 +686,8 @@
                     "L'impératif ou le subjonctif",
                     "L'infinitif"
                 ],
-                correct: 2
+                correct: 2,
+                help: "Dans les phrases de type impératif, on utilise principalement le mode impératif pour la 2e personne du singulier et du pluriel et la 1re personne du pluriel ('Viens', 'Venez', 'Venons') ou le subjonctif pour la 3e personne ('Qu'il vienne', 'Qu'ils viennent')."
             },
             {
                 question: "Comment peut-on exprimer un ordre de manière indirecte ?",
@@ -601,7 +697,8 @@
                     "Uniquement par un infinitif",
                     "Uniquement par le futur"
                 ],
-                correct: 1
+                correct: 1,
+                help: "On peut exprimer un ordre indirectement par : 1) une phrase déclarative ('Tu fermes la porte', 'Tu fermeras la porte'), 2) une phrase interrogative ('Peux-tu fermer la porte ?'), 3) un infinitif ('Fermer la porte'). Ces formes peuvent adoucir l'ordre ou le rendre plus autoritaire selon le contexte."
             },
             {
                 question: "Quelle est la différence entre les types de phrases et les formes de phrases ?",
@@ -611,7 +708,8 @@
                     "Les types concernent le mode du verbe, les formes concernent le temps",
                     "Les types et les formes sont synonymes"
                 ],
-                correct: 0
+                correct: 0,
+                help: "Les types de phrases sont obligatoires : toute phrase appartient nécessairement à l'un des trois types (déclaratif, interrogatif, impératif). Les formes de phrases sont facultatives : une phrase peut être à la forme négative, passive, exclamative, emphatique ou impersonnelle, mais ne l'est pas nécessairement."
             },
             {
                 question: "Qu'est-ce qui caractérise la forme négative d'une phrase ?",
@@ -621,7 +719,8 @@
                     "L'inversion du sujet",
                     "La présence d'un point d'exclamation"
                 ],
-                correct: 1
+                correct: 1,
+                help: "La forme négative d'une phrase se caractérise par la présence d'adverbes de négation comme ne...pas, ne...plus, ne...jamais, ne...guère, ne...point, etc. La négation inverse généralement la valeur de vérité de la proposition. Exemple : 'Elle viendra' → 'Elle ne viendra pas'."
             },
             {
                 question: "Quels sont les trois types de négation qu'on peut distinguer ?",
@@ -631,7 +730,8 @@
                     "La négation verbale, nominale et adverbiale",
                     "La négation explicite, implicite et dérivée"
                 ],
-                correct: 0
+                correct: 0,
+                help: "On distingue trois types de négation : 1) la négation totale, qui porte sur l'ensemble de l'énoncé ('Elle n'aime pas le cinéma'), 2) la négation partielle, qui porte sur un constituant particulier ('Personne ne vient', 'Aucun détail ne lui échappe'), et 3) la négation exceptive ('Je n'aime que les films français')."
             },
             {
                 question: "Dans la phrase \"Je n'aime que les films français\", quel type de négation est employé ?",
@@ -641,7 +741,8 @@
                     "Négation exceptive",
                     "Double négation"
                 ],
-                correct: 2
+                correct: 2,
+                help: "Dans 'Je n'aime que les films français', il s'agit d'une négation exceptive (ne...que). Elle signifie à la fois 'J'aime les films français' (valeur positive explicite) et 'Je n'aime pas les films qui ne sont pas français' (valeur négative implicite). La négation ne porte que sur ce qui n'est pas mentionné après 'que'."
             },
             {
                 question: "Qu'est-ce que le \"ne\" explétif ?",
@@ -651,7 +752,8 @@
                     "Un \"ne\" qui renforce la négation",
                     "Un \"ne\" utilisé uniquement à l'oral"
                 ],
-                correct: 1
+                correct: 1,
+                help: "Le 'ne' explétif est un 'ne' employé dans certains contextes supposant un contexte négatif (après craindre, avant que, à moins que), mais qui n'a pas de valeur négative. Son emploi est facultatif. Exemple : 'Je crains qu'il ne pleuve' = 'Je crains qu'il pleuve' (le 'ne' n'a pas de valeur négative ici)."
             },
             {
                 question: "Qu'est-ce qu'une phrase de forme passive ?",
@@ -661,7 +763,8 @@
                     "Une phrase comportant un participe passé",
                     "Une phrase avec un verbe pronominal"
                 ],
-                correct: 1
+                correct: 1,
+                help: "Une phrase est à la forme passive lorsque son verbe principal est employé à la voix passive (être + participe passé). Dans une transformation passive, le COD de la phrase active devient sujet, et le sujet devient complément d'agent introduit par 'par' ou 'de'. Exemple : 'Le chat mange la souris' → 'La souris est mangée par le chat'."
             },
             {
                 question: "Dans la transformation passive de la phrase \"Bérénice aime Titus\", quel est le complément d'agent ?",
@@ -671,7 +774,8 @@
                     "par Bérénice",
                     "par Titus"
                 ],
-                correct: 3
+                correct: 3,
+                help: "Dans la transformation passive de 'Bérénice aime Titus' → 'Titus est aimé par Bérénice', le complément d'agent est 'par Titus'. Le complément d'agent correspond au sujet de la phrase active (Bérénice) et est introduit par la préposition 'par' (ou parfois 'de')."
             },
             {
                 question: "Qu'est-ce qui caractérise une phrase de forme exclamative ?",
@@ -681,7 +785,8 @@
                     "Elle est obligatoirement de type déclaratif",
                     "Elle comporte toujours un verbe de sentiment"
                 ],
-                correct: 0
+                correct: 0,
+                help: "Une phrase de forme exclamative se caractérise par la présence d'un point d'exclamation et/ou de mots exclamatifs (que, comme, quel). Elle exprime une émotion ou un sentiment intense du locuteur. Elle peut être de type déclaratif ('Qu'il fait beau !'), interrogatif ('Quand vas-tu comprendre !') ou impératif ('Viens ici !')."
             },
             {
                 question: "Quels sont les moyens grammaticaux pour obtenir la forme emphatique d'une phrase ?",
@@ -691,7 +796,8 @@
                     "L'extraction et le détachement",
                     "La passivation et l'interrogation"
                 ],
-                correct: 2
+                correct: 2,
+                help: "La forme emphatique d'une phrase s'obtient par deux moyens grammaticaux principaux : 1) l'extraction, qui consiste à encadrer un constituant par 'c'est... qui/que' ('C'est Pierre qui a gagné'), et 2) le détachement, qui consiste à placer en tête ou en fin de phrase un constituant et à le détacher par une virgule ('Pierre, il a gagné')."
             },
             {
                 question: "Quelle est la condition pour qu'une phrase soit considérée de forme impersonnelle ?",
@@ -701,7 +807,8 @@
                     "Elle doit commencer par \"il y a\"",
                     "Elle ne doit pas avoir de sujet identifiable"
                 ],
-                correct: 1
+                correct: 1,
+                help: "Pour qu'une phrase soit considérée de forme impersonnelle, deux conditions doivent être réunies : 1) son verbe principal doit être à la voix impersonnelle (avec le sujet apparent 'il'), et 2) la phrase doit pouvoir être transformée en phrase non impersonnelle. Exemple : 'Il souffle un vent de panique' = 'Un vent de panique souffle'."
             },
             {
                 question: "Qu'est-ce qu'une phrase averbale ?",
@@ -711,7 +818,8 @@
                     "Une phrase dont le verbe est sous-entendu",
                     "Une phrase nominale comportant uniquement un groupe nominal"
                 ],
-                correct: 0
+                correct: 0,
+                help: "Une phrase averbale est une phrase sans verbe conjugué à un mode personnel, mais qui comporte néanmoins un sujet et un prédicat (ce qu'on dit du sujet). Exemple : 'Excellent, ce rôti !' (sujet = ce rôti, prédicat = excellent). Le sujet peut être implicite : 'Incroyable !' (= Cela est incroyable)."
             },
             {
                 question: "Quelle est la différence entre une phrase averbale et une phrase elliptique ?",
@@ -721,7 +829,8 @@
                     "La phrase averbale est à l'écrit, la phrase elliptique est à l'oral",
                     "La phrase averbale est au présent, la phrase elliptique est au passé"
                 ],
-                correct: 0
+                correct: 0,
+                help: "La phrase averbale est une phrase sans verbe conjugué mais avec une structure complète (sujet-prédicat). La phrase elliptique est une phrase incomplète qui dépend du contexte pour être comprise, où certains éléments sont omis mais peuvent être récupérés dans le contexte. Exemple phrase elliptique : '—Où vas-tu ? —À la plage' (= Je vais à la plage)."
             },
             {
                 question: "Qu'est-ce qu'un mot-phrase ?",
@@ -731,7 +840,8 @@
                     "Un mot qui résume toute une phrase",
                     "Un mot qui peut être utilisé comme verbe et comme nom"
                 ],
-                correct: 0
+                correct: 0,
+                help: "Un mot-phrase est un mot qui, à lui seul, constitue une phrase complète et autonome, sans nécessiter d'autres éléments. Il s'agit notamment des adverbes d'affirmation (oui, si), de négation (non), des formules de politesse (bonjour, merci) et des interjections (oh !, ah !). Ces mots forment des phrases réduites à un seul mot."
             }
         ];
 
@@ -745,6 +855,8 @@
         const questionContainer = document.getElementById('question-container');
         const questionElement = document.getElementById('question');
         const optionsContainer = document.getElementById('options');
+        const helpBtn = document.getElementById('help-btn');
+        const helpContent = document.getElementById('help-content');
         const prevButton = document.getElementById('prev-btn');
         const nextButton = document.getElementById('next-btn');
         const progressBar = document.getElementById('progress');
@@ -791,6 +903,10 @@
             const question = shuffledQuizData[currentQuestion];
             questionElement.innerHTML = `<span class="question-number">Question ${currentQuestion + 1}/50:</span> ${question.question}`;
             
+            // Réinitialiser l'aide
+            helpContent.innerHTML = question.help || '';
+            helpContent.classList.remove('active');
+            
             // Vider le conteneur des options
             optionsContainer.innerHTML = '';
             
@@ -818,6 +934,11 @@
             // Mettre à jour les boutons de navigation
             prevButton.disabled = currentQuestion === 0;
             nextButton.textContent = currentQuestion === shuffledQuizData.length - 1 ? 'Terminer' : 'Suivant';
+        }
+
+        // Gérer l'affichage de l'aide
+        function toggleHelp() {
+            helpContent.classList.toggle('active');
         }
 
         // Gérer la sélection d'une option
@@ -899,7 +1020,9 @@
             scoreMessage.textContent = message;
         }
 
-        // Gestionnaires d'événements pour les boutons de navigation
+        // Gestionnaires d'événements
+        helpBtn.addEventListener('click', toggleHelp);
+        
         prevButton.addEventListener('click', () => {
             if (currentQuestion > 0) {
                 currentQuestion--;
@@ -924,3 +1047,4 @@
     </script>
 </body>
 </html>
+```
