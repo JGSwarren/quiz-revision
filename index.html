@@ -1,224 +1,260 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz CRPE - La nature des mots ou groupes de mots</title>
-    <style>
-        :root {
-            --primary-color: #3498db;
-            --secondary-color: #2ecc71;
-            --error-color: #e74c3c;
-            --text-color: #333;
-            --light-bg: #f9f9f9;
-            --border-radius: 8px;
-            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz - Phrase simple et complexe</title>
+  <style>
+    :root {
+      --primary-color: #3498db;
+      --secondary-color: #2980b9;
+      --correct-color: #2ecc71;
+      --incorrect-color: #e74c3c;
+      --neutral-color: #ecf0f1;
+      --text-color: #2c3e50;
+      --light-text: #7f8c8d;
+    }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
 
-        body {
-            background-color: var(--light-bg);
-            color: var(--text-color);
-            line-height: 1.6;
-            padding: 20px;
-        }
+    body {
+      background-color: #f9f9f9;
+      color: var(--text-color);
+      line-height: 1.6;
+    }
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background-color: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            padding: 30px;
-        }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
 
-        h1 {
-            text-align: center;
-            color: var(--primary-color);
-            margin-bottom: 30px;
-        }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: var(--primary-color);
+      font-size: 2.5rem;
+    }
 
-        .quiz-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
+    .quiz-container {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
 
-        .progress-container {
-            width: 100%;
-            height: 10px;
-            background-color: #eee;
-            border-radius: 10px;
-            margin: 20px 0;
-            overflow: hidden;
-        }
+    .quiz-header {
+      position: relative;
+    }
 
-        .progress-bar {
-            height: 100%;
-            background-color: var(--secondary-color);
-            width: 0%;
-            transition: width 0.3s ease;
-        }
+    .progress-container {
+      height: 10px;
+      width: 100%;
+      background: var(--neutral-color);
+      border-radius: 5px;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
 
-        .question {
-            margin-bottom: 20px;
-        }
+    .progress-bar {
+      height: 100%;
+      background: var(--primary-color);
+      width: 0%;
+      transition: width 0.3s ease-in-out;
+    }
 
-        .options {
-            list-style-type: none;
-        }
+    .question-counter {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 1.2rem;
+      color: var(--light-text);
+    }
 
-        .option {
-            background-color: #f1f1f1;
-            border: 1px solid #ddd;
-            border-radius: var(--border-radius);
-            padding: 15px;
-            margin-bottom: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+    .question {
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+      line-height: 1.4;
+    }
 
-        .option:hover {
-            background-color: #e9e9e9;
-        }
+    .options {
+      list-style-type: none;
+    }
 
-        .selected {
-            background-color: var(--primary-color);
-            color: white;
-        }
+    .option {
+      background: var(--neutral-color);
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 15px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
 
-        .correct {
-            background-color: var(--secondary-color);
-            color: white;
-        }
+    .option:hover {
+      background: #e3e3e3;
+    }
 
-        .incorrect {
-            background-color: var(--error-color);
-            color: white;
-        }
+    .option.selected {
+      background: var(--primary-color);
+      color: white;
+    }
 
-        .btn-container {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-        }
+    .option.correct {
+      background: var(--correct-color);
+      color: white;
+    }
 
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: var(--border-radius);
-            background-color: var(--primary-color);
-            color: white;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
+    .option.incorrect {
+      background: var(--incorrect-color);
+      color: white;
+    }
 
-        .btn:hover {
-            background-color: #2980b9;
-        }
+    .score-display {
+      text-align: right;
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin: 10px 0;
+    }
 
-        .btn:disabled {
-            background-color: #bdc3c7;
-            cursor: not-allowed;
-        }
+    .help-btn {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: var(--neutral-color);
+      border: none;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-        .results {
-            text-align: center;
-            display: none;
-        }
+    .help-content {
+      display: none;
+      background: #f8f9fa;
+      border-left: 4px solid var(--primary-color);
+      padding: 15px;
+      margin: 20px 0;
+      font-size: 0.9rem;
+      border-radius: 5px;
+    }
 
-        .results h2 {
-            margin-bottom: 20px;
-        }
+    .help-content.show {
+      display: block;
+    }
 
-        .score {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
+    .buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
 
-        .help-btn {
-            background-color: #f39c12;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-left: 10px;
-        }
+    button {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.2s;
+    }
 
-        .help-text {
-            display: none;
-            background-color: #f8f9fa;
-            border-left: 4px solid #f39c12;
-            padding: 15px;
-            margin-top: 10px;
-            border-radius: var(--border-radius);
-        }
+    button:hover {
+      background: var(--secondary-color);
+    }
 
-        .score-display {
-            font-weight: bold;
-            color: var(--primary-color);
-        }
+    button:disabled {
+      background: #cccccc;
+      cursor: not-allowed;
+    }
 
-        @media (max-width: 768px) {
-            .container {
-                padding: 15px;
-            }
-            
-            .option {
-                padding: 12px;
-            }
-            
-            .btn {
-                padding: 8px 16px;
-            }
-        }
-    </style>
+    .results {
+      text-align: center;
+      display: none;
+    }
+
+    .results h2 {
+      margin-bottom: 20px;
+      font-size: 2rem;
+    }
+
+    .results p {
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+    }
+
+    .results button {
+      margin-top: 20px;
+    }
+
+    .results .score {
+      font-size: 3rem;
+      color: var(--primary-color);
+      margin: 20px 0;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 10px;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .question {
+        font-size: 1.1rem;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Quiz CRPE - La nature des mots ou groupes de mots</h1>
-        
-        <div class="quiz-container">
-            <div class="quiz-header">
-                <div class="score-display">Score: <span id="score">0</span>/<span id="total-questions">50</span></div>
-                <div class="question-count">Question <span id="current-question">1</span>/<span id="total">50</span></div>
-            </div>
-            
-            <div class="progress-container">
-                <div class="progress-bar" id="progress"></div>
-            </div>
-            
-            <div id="question-container">
-                <div class="question" id="question"></div>
-                <button class="help-btn" id="help-btn">?</button>
-                <div class="help-text" id="help-text"></div>
-                <ul class="options" id="options"></ul>
-            </div>
-            
-            <div class="btn-container">
-                <button class="btn" id="prev-btn" disabled>Précédent</button>
-                <button class="btn" id="next-btn" disabled>Suivant</button>
-            </div>
-        </div>
-        
-        <div class="results" id="results">
-            <h2>Résultats du Quiz</h2>
-            <div class="score" id="final-score"></div>
-            <div id="message"></div>
-            <button class="btn" id="restart-btn">Recommencer le Quiz</button>
-        </div>
+  <div class="container">
+    <h1>Phrase simple et complexe</h1>
+    
+    <div class="quiz-container">
+      <div class="progress-container">
+        <div class="progress-bar"></div>
+      </div>
+      
+      <div class="quiz-header">
+        <div class="question-counter">Question <span id="current-question">1</span> sur <span id="total-questions">50</span></div>
+        <button class="help-btn" id="help-btn">?</button>
+      </div>
+      
+      <div class="score-display">Score: <span id="score">0</span>/<span id="total-answered">0</span></div>
+      
+      <div id="question-container">
+        <div class="question" id="question"></div>
+        <ul class="options" id="options"></ul>
+        <div class="help-content" id="help-content"></div>
+      </div>
+      
+      <div class="buttons">
+        <button id="prev-btn" disabled>Précédent</button>
+        <button id="next-btn" disabled>Suivant</button>
+      </div>
     </div>
+    
+    <div class="results" id="results">
+      <h2>Résultats du quiz</h2>
+      <div class="score">
+        <span id="final-score">0</span>/50
+      </div>
+      <p id="result-message"></p>
+      <button id="restart-btn">Recommencer</button>
+    </div>
+  </div>
 
     <script>
         // Données du quiz
